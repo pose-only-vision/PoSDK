@@ -10,7 +10,7 @@ set -e
 
 # Script configuration | 脚本配置
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEPS_VERSION=${1:-"1.0.0_test"}
+DEPS_VERSION=${1:-"v1.0.0"}
 GITHUB_REPO="pose-only-vision/PoSDK"
 
 # Color output functions | 彩色输出函数
@@ -27,7 +27,7 @@ print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 # Function to check local package and extract | 检查本地压缩包并解压函数
 check_local_package() {
-    local package_file="PoSDK_dependencies_v1.0.0.tar.gz"
+    local package_file="PoSDK_dependencies_${DEPS_VERSION}.tar.gz"
     local local_package_path="${SCRIPT_DIR}/${package_file}"
 
     # Check if local package exists | 检查本地压缩包是否存在
@@ -199,7 +199,7 @@ extract_package() {
 
 # Function to download dependencies package | 下载依赖包函数
 download_dependencies() {
-    local package_name="PoSDK_dependencies_v1.0.0"
+    local package_name="PoSDK_dependencies_${DEPS_VERSION}"
     local package_file="${package_name}.tar.gz"
     local download_url="https://github.com/${GITHUB_REPO}/releases/download/${DEPS_VERSION}/${package_file}"
     local local_package_path="${SCRIPT_DIR}/${package_file}"
@@ -257,12 +257,13 @@ show_help() {
     echo "从GitHub Releases下载PoSDK依赖包"
     echo ""
     echo "Arguments:"
-    echo "  DEPS_VERSION    Dependencies version to download (default: 1.0.0_test)"
-    echo "                  要下载的依赖版本（默认：1.0.0_test）"
+    echo "  DEPS_VERSION    Dependencies version to download (default: v1.0.0)"
+    echo "                  要下载的依赖版本（默认：v1.0.0）"
     echo ""
     echo "Examples:"
     echo "  $0                    # Use default version"
-    echo "  $0 1.0.0_test        # Use specific version"
+    echo "  $0 v1.0.0            # Use specific version"
+    echo "  $0 v1.1.0            # Use different version"
     echo ""
     echo "Requirements:"
     echo "  curl              Required for downloading packages"

@@ -10,7 +10,7 @@ set -e
 
 # Script configuration | 脚本配置
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TESTS_VERSION=${1:-"1.0.0_test"}
+TESTS_VERSION=${1:-"v1.0.0"}
 GITHUB_REPO="pose-only-vision/PoSDK"
 
 # Color output functions | 彩色输出函数
@@ -60,7 +60,7 @@ check_existing_test_data() {
 
 # Function to download test data package | 下载测试数据包函数
 download_test_data() {
-    local package_name="PoSDK_test_data_v1.0.0"
+    local package_name="PoSDK_test_data_${TESTS_VERSION}"
     local package_file="${package_name}.tar.gz"
     local download_url="https://github.com/${GITHUB_REPO}/releases/download/${TESTS_VERSION}/${package_file}"
     local temp_dir="/tmp/posdk_test_$$"
@@ -217,12 +217,13 @@ show_help() {
     echo "从GitHub Releases下载PoSDK测试数据包"
     echo ""
     echo "Arguments:"
-    echo "  TESTS_VERSION   Test data version to download (default: 1.0.0_test)"
-    echo "                  要下载的测试数据版本（默认：1.0.0_test）"
+    echo "  TESTS_VERSION   Test data version to download (default: v1.0.0)"
+    echo "                  要下载的测试数据版本（默认：v1.0.0）"
     echo ""
     echo "Examples:"
     echo "  $0                       # Use default version"
-    echo "  $0 1.0.0_test           # Use specific version"
+    echo "  $0 v1.0.0               # Use specific version"
+    echo "  $0 v1.1.0               # Use different version"
     echo ""
     echo "Note: This script downloads Strecha dataset and other test data"
     echo "注意：此脚本下载Strecha数据集和其他测试数据"

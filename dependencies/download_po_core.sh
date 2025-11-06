@@ -11,7 +11,7 @@ set -e
 # Script configuration | 脚本配置
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 POSDK_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-PO_CORE_VERSION=${1:-"1.0.0_test"}
+PO_CORE_VERSION=${1:-"v1.0.0"}
 GITHUB_REPO="pose-only-vision/PoSDK"  # Using the main repository
 
 # Color output functions
@@ -105,7 +105,7 @@ check_existing_po_core() {
 # Function to download po_core release
 download_po_core() {
     local deps_dir="${POSDK_ROOT}/dependencies"
-    local package_name="po_core_${PLATFORM_ARCH}_v1.0.0"
+    local package_name="po_core_${PLATFORM_ARCH}_${PO_CORE_VERSION}"
     local package_file="${package_name}.tar.gz"
     local download_url="https://github.com/${GITHUB_REPO}/releases/download/${PO_CORE_VERSION}/${package_file}"
     local local_package_path="${deps_dir}/${package_file}"
@@ -400,11 +400,12 @@ show_help() {
     echo "Download and install precompiled po_core for PoSDK development"
     echo ""
     echo "Arguments:"
-    echo "  VERSION    po_core version to download (default: 1.0.0_test)"
+    echo "  VERSION    po_core version to download (default: v1.0.0)"
     echo ""
     echo "Examples:"
-    echo "  $0 1.0.0_test    # Download specific version"
-    echo "  $0               # Download default version (1.0.0_test)"
+    echo "  $0 v1.0.0        # Download specific version"
+    echo "  $0 v1.1.0        # Download different version"
+    echo "  $0               # Download default version (v1.0.0)"
     echo ""
     echo "Environment:"
     echo "  The script automatically detects your platform and downloads"
