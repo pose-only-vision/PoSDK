@@ -1,0 +1,21 @@
+# Sphinx documentation dependencies - 与现有系统匹配
+# Sphinx文档构建依赖 - 匹配现有的构建环境
+
+# Core Sphinx (与install_docs.sh一致)
+sphinx>=5.0.0
+sphinx-rtd-theme>=1.0.0
+
+# Markdown支持 (与现有conf.py一致)
+myst-parser>=0.18.0
+
+# 数学公式支持 (与现有conf.py一致)
+sphinx-math-dollar>=1.2.0
+
+# 复制按钮功能
+sphinx-copybutton>=0.5.0
+
+# 自动构建支持 (开发时使用)
+sphinx-autobuild>=2021.3.14
+
+# Napoleon风格文档支持 (与install_docs.sh一致)
+sphinxcontrib-napoleon>=0.7

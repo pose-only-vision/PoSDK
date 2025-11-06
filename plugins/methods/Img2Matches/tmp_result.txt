@@ -1,0 +1,28 @@
+PoSDK | method_img2matches] >>> RootSIFT normalization completed
+[PoSDK | method_img2matches] >>> Extracted view_id 18 with 26648 features
+[PoSDK | method_img2matches] >>> Starting pairwise matching for 19 views
+[PoSDK | method_img2matches] >>> Matching view pair (0, 1)
+[PoSDK | method_img2matches] >>> Using LightGlue deep learning matcher
+[LightGlueMatcher] Python environment check passed for: /Users/caiqi/Documents/PoMVG/src/plugins/methods/Img2Features/conda_env/bin/python
+[LightGlueMatcher] Found LightGlue script at: ../../output/plugins/methods/lightglue_matcher.py
+[LightGlueMatcher] LightGlue matcher initialized successfully
+[LightGlueMatcher] Script path: /Users/caiqi/Documents/PoMVG/src/build/Desktop_arm_darwin_generic_mach_o_64bit-Release/output/bin/../../output/plugins/methods/lightglue_matcher.py
+[LightGlueMatcher] Temp dir: /var/folders/wc/ppjdnf3x2vg0pqjt7cfs85p80000gn/T/lightglue_temp_7754
+[LightGlueMatcher] Feature type: superpoint
+[LightGlueMatcher] Executing Python command: /Users/caiqi/Documents/PoMVG/src/plugins/methods/Img2Features/conda_env/bin/python "/Users/caiqi/Documents/PoMVG/src/build/Desktop_arm_darwin_generic_mach_o_64bit-Release/output/bin/../../output/plugins/methods/lightglue_matcher.py" --img1 "/var/folders/wc/ppjdnf3x2vg0pqjt7cfs85p80000gn/T/lightglue_temp_7754/img1_16807.png" --img2 "/var/folders/wc/ppjdnf3x2vg0pqjt7cfs85p80000gn/T/lightglue_temp_7754/img2_16807.png" --features1 "/var/folders/wc/ppjdnf3x2vg0pqjt7cfs85p80000gn/T/lightglue_temp_7754/features1_16807.txt" --features2 "/var/folders/wc/ppjdnf3x2vg0pqjt7cfs85p80000gn/T/lightglue_temp_7754/features2_16807.txt" --output "/var/folders/wc/ppjdnf3x2vg0pqjt7cfs85p80000gn/T/lightglue_temp_7754/matches_16807.txt" --feature_type superpoint --max_keypoints 2048 --depth_confidence 0.95 --width_confidence 0.99 --filter_threshold 0.1 --flash_attention 2>&1
+Downloading: "https://github.com/cvg/LightGlue/releases/download/v0.1_arxiv/sift_lightglue.pth" to /Users/caiqi/.cache/torch/hub/checkpoints/sift_lightglue_v0-1_arxiv.pth
+100.0%
+Traceback (most recent call last):
+  File "/Users/caiqi/Documents/PoMVG/src/build/Desktop_arm_darwin_generic_mach_o_64bit-Release/output/bin/../../output/plugins/methods/lightglue_matcher.py", line 349, in perform_matching
+    matches01 = matcher({'image0': feats0, 'image1': feats1})
+  File "/Users/caiqi/Documents/PoMVG/src/plugins/methods/Img2Features/conda_env/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/Users/caiqi/Documents/PoMVG/src/plugins/methods/Img2Features/conda_env/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/Users/caiqi/Documents/PoMVG/src/dependencies/LightGlue-main/lightglue/lightglue.py", line 481, in forward
+    return self._forward(data)
+  File "/Users/caiqi/Documents/PoMVG/src/dependencies/LightGlue-main/lightglue/lightglue.py", line 497, in _forward
+    [kpts0] + [data0[k].unsqueeze(-1) for k in ("scales", "oris")], -1
+  File "/Users/caiqi/Documents/PoMVG/src/dependencies/LightGlue-main/lightglue/lightglue.py", line 497, in <listcomp>
+    [kpts0] + [data0[k].unsqueeze(-1) for k in ("scales", "oris")], -1
+KeyError: 'scales'

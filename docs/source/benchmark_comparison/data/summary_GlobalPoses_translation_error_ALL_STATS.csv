@@ -1,0 +1,25 @@
+Dataset,Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev
+castle-P30,"PoSDK","GlobalSfM Pipeline Demo",0.021345,0.016665,0.008723,0.068417,0.011851
+castle-P30,"colmap_pipeline","GlobalSfM Pipeline Demo",0.259654,0.142448,0.011,3.192225,0.551886
+castle-P30,"glomap_pipeline","GlobalSfM Pipeline Demo",0.055455,0.05651,0.013378,0.090983,0.021157
+castle-P30,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.021127,0.019663,0.004132,0.061605,0.010931
+entry-P10,"PoSDK","GlobalSfM Pipeline Demo",0.006428,0.004981,0.003802,0.012958,0.003099
+entry-P10,"colmap_pipeline","GlobalSfM Pipeline Demo",0.030437,0.024376,0.01389,0.054064,0.012842
+entry-P10,"glomap_pipeline","GlobalSfM Pipeline Demo",0.020744,0.021055,0.011436,0.029364,0.006064
+entry-P10,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.006295,0.005206,0.002787,0.012619,0.003222
+Herz-Jesus-P8,"PoSDK","GlobalSfM Pipeline Demo",0.003695,0.003659,0.001571,0.006364,0.001234
+Herz-Jesus-P8,"colmap_pipeline","GlobalSfM Pipeline Demo",0.004331,0.004493,0.001979,0.006027,0.001389
+Herz-Jesus-P8,"glomap_pipeline","GlobalSfM Pipeline Demo",0.004154,0.004163,0.002521,0.006126,0.001188
+Herz-Jesus-P8,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.003843,0.003563,0.001828,0.006727,0.001342
+castle-P19,"PoSDK","GlobalSfM Pipeline Demo",0.024474,0.019522,0.005336,0.060992,0.014773
+castle-P19,"colmap_pipeline","GlobalSfM Pipeline Demo",0.196994,0.103279,0.05698,1.398635,0.293606
+castle-P19,"glomap_pipeline","GlobalSfM Pipeline Demo",0.029734,0.027212,0.004027,0.059335,0.016433
+castle-P19,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.030539,0.02239,0.013211,0.071411,0.016759
+fountain-P11,"PoSDK","GlobalSfM Pipeline Demo",0.002528,0.002157,0.000833,0.004072,0.001138
+fountain-P11,"colmap_pipeline","GlobalSfM Pipeline Demo",0.004191,0.004041,0.001365,0.00707,0.001825
+fountain-P11,"glomap_pipeline","GlobalSfM Pipeline Demo",0.003715,0.004191,0.001121,0.005942,0.001653
+fountain-P11,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.00264,0.002278,0.00052,0.004252,0.001175
+Herz-Jesus-P25,"PoSDK","GlobalSfM Pipeline Demo",0.00534,0.005623,0.001413,0.012641,0.002413
+Herz-Jesus-P25,"colmap_pipeline","GlobalSfM Pipeline Demo",0.010818,0.011165,0.001426,0.026751,0.005706
+Herz-Jesus-P25,"glomap_pipeline","GlobalSfM Pipeline Demo",0.011126,0.01171,0.001182,0.027321,0.005915
+Herz-Jesus-P25,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.005331,0.005875,0.000865,0.012248,0.002429

@@ -1,0 +1,220 @@
+/**
+ * Benchmark Comparison Table Styles
+ * 基准测试对比表格样式
+ *
+ * This CSS file provides styling for benchmark comparison tables,
+ * including conditional formatting for best and second-best values.
+ * 此 CSS 文件为基准测试对比表格提供样式，包括最优和次优值的条件格式化。
+ */
+
+/* ==================== Container ==================== */
+.benchmark-table-container {
+    margin: 30px 0;
+    overflow-x: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.benchmark-table-container h3 {
+    margin: 0 0 15px 0;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+}
+
+/* ==================== Table Base Styles ==================== */
+.benchmark-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ==================== Table Header ==================== */
+.benchmark-table thead {
+    background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 2px solid #dee2e6;
+}
+
+.benchmark-table th {
+    padding: 12px 15px;
+    text-align: center;
+    font-weight: 600;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+/* First column header (Dataset/数据集) - left aligned */
+.benchmark-table th:first-child {
+    text-align: left;
+    min-width: 150px;
+}
+
+/* ==================== Table Body ==================== */
+.benchmark-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+/* Dataset group alternating colors - Different background colors for different datasets */
+/* 数据集分组交替颜色 - 不同数据集使用不同背景色 */
+
+/* Dataset group 0: Light blue tint */
+/* 数据集组 0: 浅蓝色调 */
+.benchmark-table tbody tr.dataset-group-0 {
+    background-color: #f0f7ff;
+}
+
+/* Dataset group 1: Light green tint */
+/* 数据集组 1: 浅绿色调 */
+.benchmark-table tbody tr.dataset-group-1 {
+    background-color: #f0fff4;
+}
+
+.benchmark-table tbody tr:hover {
+    background-color: #e7f3ff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Dataset separator: Simple thin line for visual separation between different datasets */
+/* 数据集分隔符：简洁细线分隔不同数据集 */
+.benchmark-table tbody tr.dataset-separator {
+    border-top: 1px solid #667eea;
+}
+
+.benchmark-table tbody tr.dataset-separator td {
+    padding-top: 15px;
+}
+
+.benchmark-table td {
+    padding: 10px 15px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    color: #212529;
+}
+
+/* First column (Dataset name) - left aligned and bold */
+.benchmark-table td:first-child {
+    text-align: left;
+    font-weight: 500;
+    color: #495057;
+}
+
+/* ==================== Conditional Formatting ==================== */
+
+/* Best value: Bold + Red */
+.benchmark-table .best-value {
+    font-weight: 700;
+    color: #d32f2f;
+    background-color: rgba(211, 47, 47, 0.05);
+    position: relative;
+}
+
+/* Optional: Add subtle border to best values */
+.benchmark-table .best-value::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: #d32f2f;
+}
+
+/* Second-best value: Bold only */
+.benchmark-table .second-best-value {
+    font-weight: 700;
+    color: #333;
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* ==================== Responsive Design ==================== */
+@media screen and (max-width: 768px) {
+    .benchmark-table {
+        font-size: 12px;
+    }
+
+    .benchmark-table th,
+    .benchmark-table td {
+        padding: 8px 10px;
+    }
+
+    .benchmark-table-container h3 {
+        font-size: 1em;
+        padding: 12px 15px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .benchmark-table {
+        font-size: 11px;
+    }
+
+    .benchmark-table th,
+    .benchmark-table td {
+        padding: 6px 8px;
+    }
+}
+
+/* ==================== Print Styles ==================== */
+@media print {
+    .benchmark-table-container {
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+
+    .benchmark-table {
+        border: 1px solid #000;
+    }
+
+    .benchmark-table th,
+    .benchmark-table td {
+        border: 1px solid #666;
+    }
+
+    .benchmark-table tbody tr:hover {
+        background-color: transparent !important;
+    }
+
+    /* Ensure colors are visible in print */
+    .benchmark-table .best-value {
+        color: #000 !important;
+        font-weight: 900;
+        text-decoration: underline;
+    }
+
+    .benchmark-table .second-best-value {
+        color: #000 !important;
+        font-weight: 700;
+    }
+}
+
+/* ==================== Additional Utilities ==================== */
+
+/* Highlight entire row on hover (optional) */
+.benchmark-table.highlight-row tbody tr:hover td {
+    background-color: inherit;
+}
+
+/* Compact mode (optional) */
+.benchmark-table.compact th,
+.benchmark-table.compact td {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+/* Striped mode (alternative) */
+.benchmark-table.striped tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+.benchmark-table.striped tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}

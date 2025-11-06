@@ -1,0 +1,400 @@
+# 示例：如何创建可选插件
+# Example: How to Create an Optional Plugin
+
+## 场景 | Scenario
+
+你有一个实验性的插件，可能在某些系统上无法构建，但你不想让它阻止整个构建过程。
+
+You have an experimental plugin that might not build on some systems, but you don't want it to block the entire build.
+
+## 方法1：在插件CMakeLists.txt中使用OPTIONAL
+## Method 1: Use OPTIONAL in Plugin CMakeLists.txt
+
+### 文件结构 | File Structure
+
+```
+plugins/methods/ExperimentalPlugin/
+├── CMakeLists.txt        ← 在这里添加OPTIONAL
+├── experimental.cpp
+└── experimental.hpp
+```
+
+### CMakeLists.txt (带OPTIONAL)
+
+```cmake
+# plugins/methods/ExperimentalPlugin/CMakeLists.txt
+
+# ============================================================
+# 实验性插件 - 标记为OPTIONAL以避免阻止构建
+# Experimental Plugin - Mark as OPTIONAL to avoid blocking build
+# ============================================================
+
+# Check if dependencies are available (optional check)
+# 检查依赖是否可用（可选检查）
+find_package(SomeOptionalLib QUIET)
+
+if(NOT SomeOptionalLib_FOUND)
+    message(WARNING "SomeOptionalLib not found, experimental plugin may fail to build")
+    # But we still try to add it as OPTIONAL
+endif()
+
+# Add plugin with OPTIONAL flag
+# 使用OPTIONAL标志添加插件
+add_posdk_plugin(experimental
+    PLUGIN_TYPE methods
+    OPTIONAL                    # ← 关键：标记为可选
+    
+    SOURCES
+        experimental.cpp
+    
+    HEADERS
+        experimental.hpp
+    
+    LINK_LIBRARIES
+        ${SomeOptionalLib_LIBRARIES}  # May not exist
+    
+    INCLUDE_DIRS
+        ${SomeOptionalLib_INCLUDE_DIRS}
+    
+    COMPILE_DEFINITIONS
+        USE_EXPERIMENTAL_FEATURES
+)
+
+# Even if SomeOptionalLib is not found, CMake configuration will succeed
+# Build may fail at make stage, but with make -k, other plugins continue
+```
+
+## 方法2：条件性地添加插件
+## Method 2: Conditionally Add Plugin
+
+```cmake
+# plugins/methods/ConditionalPlugin/CMakeLists.txt
+
+# ============================================================
+# 条件性插件 - 只在满足条件时构建
+# Conditional Plugin - Only build when conditions are met
+# ============================================================
+
+# Check for required dependency
+find_package(RequiredLib QUIET)
+
+if(RequiredLib_FOUND)
+    # Only add plugin if dependency is found
+    # 只有找到依赖时才添加插件
+    add_posdk_plugin(conditional_feature
+        PLUGIN_TYPE methods
+        OPTIONAL  # Still mark as optional for extra safety
+        
+        SOURCES
+            conditional.cpp
+        
+        LINK_LIBRARIES
+            RequiredLib::RequiredLib
+    )
+    
+    message(STATUS "✓ Conditional plugin enabled (RequiredLib found)")
+else()
+    # Record as skipped
+    # 记录为跳过
+    _increment_plugin_count()
+    _record_plugin_skipped("conditional_feature" "RequiredLib not found")
+    
+    message(STATUS "⊘ Conditional plugin skipped (RequiredLib not found)")
+endif()
+```
+
+## 方法3：平台特定插件
+## Method 3: Platform-Specific Plugin
+
+```cmake
+# plugins/methods/PlatformSpecific/CMakeLists.txt
+
+# ============================================================
+# 平台特定插件 - 只在特定平台构建
+# Platform-Specific Plugin - Only build on specific platforms
+# ============================================================
+
+if(WIN32)
+    # Windows-only plugin
+    add_posdk_plugin(windows_specific
+        PLUGIN_TYPE methods
+        OPTIONAL  # Optional because it won't build on other platforms
+        
+        SOURCES
+            windows_specific.cpp
+        
+        LINK_LIBRARIES
+            # Windows-specific libraries
+    )
+    
+    message(STATUS "✓ Windows-specific plugin added")
+    
+elseif(APPLE)
+    # macOS-only plugin
+    add_posdk_plugin(macos_specific
+        PLUGIN_TYPE methods
+        OPTIONAL
+        
+        SOURCES
+            macos_specific.cpp
+    )
+    
+    message(STATUS "✓ macOS-specific plugin added")
+    
+elseif(UNIX)
+    # Linux-only plugin
+    add_posdk_plugin(linux_specific
+        PLUGIN_TYPE methods
+        OPTIONAL
+        
+        SOURCES
+            linux_specific.cpp
+    )
+    
+    message(STATUS "✓ Linux-specific plugin added")
+else()
+    _increment_plugin_count()
+    _record_plugin_skipped("platform_specific" "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
+    
+    message(STATUS "⊘ Platform-specific plugin skipped (unsupported platform)")
+endif()
+```
+
+## 方法4：复杂依赖检查
+## Method 4: Complex Dependency Check
+
+```cmake
+# plugins/methods/ComplexPlugin/CMakeLists.txt
+
+# ============================================================
+# 复杂依赖插件 - 多个可选依赖
+# Complex Dependency Plugin - Multiple optional dependencies
+# ============================================================
+
+# Check multiple dependencies
+set(ALL_DEPS_FOUND TRUE)
+set(MISSING_DEPS "")
+
+# Check Dep1
+find_package(Dep1 QUIET)
+if(NOT Dep1_FOUND)
+    set(ALL_DEPS_FOUND FALSE)
+    list(APPEND MISSING_DEPS "Dep1")
+endif()
+
+# Check Dep2
+find_package(Dep2 QUIET)
+if(NOT Dep2_FOUND)
+    set(ALL_DEPS_FOUND FALSE)
+    list(APPEND MISSING_DEPS "Dep2")
+endif()
+
+# Check Dep3
+find_package(Dep3 QUIET)
+if(NOT Dep3_FOUND)
+    set(ALL_DEPS_FOUND FALSE)
+    list(APPEND MISSING_DEPS "Dep3")
+endif()
+
+if(ALL_DEPS_FOUND)
+    # All dependencies satisfied, add plugin normally
+    add_posdk_plugin(complex_feature
+        PLUGIN_TYPE methods
+        # No OPTIONAL needed - all deps are available
+        
+        SOURCES
+            complex.cpp
+        
+        LINK_LIBRARIES
+            Dep1::Dep1
+            Dep2::Dep2
+            Dep3::Dep3
+    )
+    
+    message(STATUS "✓ Complex plugin added (all dependencies found)")
+else()
+    # Some dependencies missing
+    string(REPLACE ";" ", " MISSING_DEPS_STR "${MISSING_DEPS}")
+    
+    _increment_plugin_count()
+    _record_plugin_skipped("complex_feature" "Missing: ${MISSING_DEPS_STR}")
+    
+    message(WARNING "⊘ Complex plugin skipped")
+    message(WARNING "   Missing dependencies: ${MISSING_DEPS_STR}")
+    message(WARNING "   Install missing packages and reconfigure")
+endif()
+```
+
+## 构建时的行为 | Build-Time Behavior
+
+### 1. OPTIONAL插件成功构建 | OPTIONAL Plugin Builds Successfully
+
+```bash
+$ make -k -j8
+
+...
+[ 45%] Building CXX object plugins/methods/experimental/...
+[ 46%] Linking CXX shared library posdk_plugin_experimental.so
+[ 46%] Built target experimental
+...
+
+# Report shows:
+✓ experimental
+```
+
+### 2. OPTIONAL插件构建失败（使用 -k）| OPTIONAL Plugin Fails (with -k)
+
+```bash
+$ make -k -j8
+
+...
+[ 45%] Building CXX object plugins/methods/experimental/...
+experimental.cpp:10:10: fatal error: missing_header.hpp: No such file or directory
+[ 46%] Building CXX object plugins/methods/other_plugin/...
+[ 47%] Linking CXX shared library posdk_plugin_other.so
+[ 47%] Built target other_plugin
+...
+
+# Build continues despite experimental plugin failure
+
+# Report shows:
+✓ other_plugin
+✗ experimental (compilation failed)
+```
+
+### 3. 条件性跳过 | Conditional Skip
+
+```bash
+$ cmake ..
+
+...
+-- Checking for RequiredLib...
+-- RequiredLib not found
+⊘ Conditional plugin skipped (RequiredLib not found)
+...
+
+# Report shows:
+⊘ conditional_feature
+  Reason: RequiredLib not found
+```
+
+## 实际使用示例 | Real-World Example
+
+### 场景：有个依赖CUDA的插件 | Scenario: Plugin Requiring CUDA
+
+```cmake
+# plugins/methods/CudaAccelerated/CMakeLists.txt
+
+find_package(CUDA QUIET)
+
+if(CUDA_FOUND AND CUDA_VERSION VERSION_GREATER_EQUAL "10.0")
+    # CUDA available and version is sufficient
+    add_posdk_plugin(cuda_accelerated
+        PLUGIN_TYPE methods
+        OPTIONAL  # Still optional in case CUDA environment issues
+        
+        SOURCES
+            cuda_accelerated.cpp
+            cuda_kernels.cu
+        
+        LINK_LIBRARIES
+            ${CUDA_LIBRARIES}
+        
+        INCLUDE_DIRS
+            ${CUDA_INCLUDE_DIRS}
+        
+        COMPILE_DEFINITIONS
+            USE_CUDA
+    )
+    
+    # Enable CUDA compilation for .cu files
+    set_source_files_properties(cuda_kernels.cu PROPERTIES
+        LANGUAGE CUDA
+    )
+    
+    message(STATUS "✓ CUDA plugin added (CUDA ${CUDA_VERSION})")
+    
+elseif(CUDA_FOUND)
+    _increment_plugin_count()
+    _record_plugin_skipped("cuda_accelerated" 
+        "CUDA version too old (${CUDA_VERSION} < 10.0)")
+    
+    message(WARNING "⊘ CUDA plugin skipped (version ${CUDA_VERSION} too old)")
+    
+else()
+    _increment_plugin_count()
+    _record_plugin_skipped("cuda_accelerated" "CUDA not found")
+    
+    message(STATUS "⊘ CUDA plugin skipped (CUDA not available)")
+    message(STATUS "   Install CUDA Toolkit 10.0+ to enable GPU acceleration")
+endif()
+```
+
+## 测试插件容错 | Testing Plugin Fault Tolerance
+
+### 创建一个测试性失败插件 | Create a Test Failing Plugin
+
+```bash
+# Create test plugin directory
+mkdir -p plugins/methods/TestFailingPlugin
+
+# Create CMakeLists.txt
+cat > plugins/methods/TestFailingPlugin/CMakeLists.txt << 'EOF'
+add_posdk_plugin(test_failing
+    PLUGIN_TYPE methods
+    OPTIONAL
+    
+    SOURCES
+        failing.cpp
+    
+    LINK_LIBRARIES
+        NonExistentLib::NonExistentLib  # This will fail
+)
+EOF
+
+# Create intentionally broken source
+cat > plugins/methods/TestFailingPlugin/failing.cpp << 'EOF'
+#include "non_existent_header.hpp"  // This will fail
+
+void broken_function() {
+    undefined_function();  // This will fail
+}
+EOF
+
+# Try to build
+cd ../../..
+cmake -B build
+make -C build -k -j8
+
+# Check report
+# Should show:
+# ✗ test_failing
+#   Build continued for other plugins
+```
+
+## 总结 | Summary
+
+使用OPTIONAL标志的最佳实践：
+
+Best practices for using OPTIONAL flag:
+
+1. **实验性功能** - 标记为OPTIONAL
+   Experimental features - Mark as OPTIONAL
+
+2. **平台特定插件** - 标记为OPTIONAL
+   Platform-specific plugins - Mark as OPTIONAL
+
+3. **需要罕见依赖的插件** - 标记为OPTIONAL或条件性添加
+   Plugins requiring rare dependencies - Mark as OPTIONAL or add conditionally
+
+4. **核心插件** - 不要标记为OPTIONAL
+   Core plugins - Do NOT mark as OPTIONAL
+
+5. **总是使用 `make -k`** - 在CI/CD环境中
+   Always use `make -k` - In CI/CD environments
+
+---
+
+*这个文件是使用示例，不是实际代码*
+*This file is for demonstration purposes, not actual code*
+

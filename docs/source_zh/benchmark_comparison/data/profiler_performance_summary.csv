@@ -1,0 +1,25 @@
+dataset,pipeline,Label,Total Time(ms)
+"Herz-Jesus-P25","OpenMVG","dataset=Herz-Jesus-P25_pipeline=OpenMVG",26549.21
+"fountain-P11","GlOMAP","dataset=fountain-P11_pipeline=GlOMAP",32239.02
+"fountain-P11","OpenMVG","dataset=fountain-P11_pipeline=OpenMVG",12610.40
+"castle-P19","GlOMAP","dataset=castle-P19_pipeline=GlOMAP",59279.77
+"Herz-Jesus-P25","COLMAP","dataset=Herz-Jesus-P25_pipeline=COLMAP",91957.95
+"castle-P19","OpenMVG","dataset=castle-P19_pipeline=OpenMVG",12011.34
+"castle-P19","COLMAP","dataset=castle-P19_pipeline=COLMAP",63818.22
+"castle-P30","PoSDK","dataset=castle-P30_pipeline=PoSDK",14688.02
+"Herz-Jesus-P25","PoSDK","dataset=Herz-Jesus-P25_pipeline=PoSDK",14434.11
+"castle-P30","OpenMVG","dataset=castle-P30_pipeline=OpenMVG",23789.66
+"castle-P30","COLMAP","dataset=castle-P30_pipeline=COLMAP",121657.20
+"fountain-P11","COLMAP","dataset=fountain-P11_pipeline=COLMAP",37517.06
+"entry-P10","PoSDK","dataset=entry-P10_pipeline=PoSDK",4186.56
+"Herz-Jesus-P25","GlOMAP","dataset=Herz-Jesus-P25_pipeline=GlOMAP",83248.56
+"Herz-Jesus-P8","COLMAP","dataset=Herz-Jesus-P8_pipeline=COLMAP",22312.64
+"entry-P10","OpenMVG","dataset=entry-P10_pipeline=OpenMVG",8727.00
+"castle-P30","GlOMAP","dataset=castle-P30_pipeline=GlOMAP",105849.12
+"Herz-Jesus-P8","OpenMVG","dataset=Herz-Jesus-P8_pipeline=OpenMVG",6670.91
+"Herz-Jesus-P8","GlOMAP","dataset=Herz-Jesus-P8_pipeline=GlOMAP",19539.55
+"fountain-P11","PoSDK","dataset=fountain-P11_pipeline=PoSDK",5465.25
+"entry-P10","COLMAP","dataset=entry-P10_pipeline=COLMAP",31481.58
+"entry-P10","GlOMAP","dataset=entry-P10_pipeline=GlOMAP",30002.01
+"Herz-Jesus-P8","PoSDK","dataset=Herz-Jesus-P8_pipeline=PoSDK",3639.30
+"castle-P19","PoSDK","dataset=castle-P19_pipeline=PoSDK",7278.11

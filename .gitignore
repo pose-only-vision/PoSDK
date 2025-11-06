@@ -1,0 +1,166 @@
+# 忽略构建产物目录
+build/
+build*/
+
+# 忽略所有 .DS_Store 文件
+.DS_Store
+/.DS_Store
+
+# 忽略dependences目录
+dependences/
+
+# 忽略.vscode目录
+.vscode/
+
+# 忽略.cursorignore文件
+.cursorignore
+CMakeLists.txt.bk
+# ==================== Dependencies 构建和安装目录 ====================
+# 只忽略install_local构建安装目录，保留源代码目录
+dependencies/*/install_local/
+dependencies/*/build/
+dependencies/*/build*/
+dependencies/ceres-solver-2.2.0
+# 忽略各种构建产物
+dependencies/**/*.so
+dependencies/**/*.a
+dependencies/**/*.dylib
+dependencies/**/*.dll
+dependencies/**/*.o
+dependencies/**/*.obj
+
+# 忽略CMake构建缓存
+dependencies/**/CMakeCache.txt
+dependencies/**/CMakeFiles/
+dependencies/**/cmake_install.cmake
+dependencies/**/Makefile
+
+# 忽略下载的压缩包
+dependencies/*.tar.gz
+dependencies/*.zip
+dependencies/*.tar.bz2
+dependencies/*.tar.xz
+dependencies/*.sha256
+
+# 忽略po_core预编译包（这些从GitHub Releases下载）
+dependencies/po_core_lib/
+
+# ==================== 大型依赖源代码目录（通过GitHub Release下载）====================
+# 这些大型依赖通过download_dependencies.sh从GitHub Release下载，不需要在仓库中保存
+dependencies/eigen3/
+dependencies/abseil-cpp/
+dependencies/protobuf/
+dependencies/cereal/
+dependencies/PoseLib/
+dependencies/GraphOptim/
+dependencies/openMVG/
+dependencies/colmap-main/
+dependencies/ceres-solver/
+dependencies/magsac/
+dependencies/magsac-master/
+dependencies/pycolmap/
+dependencies/opengv/
+dependencies/opencv/
+dependencies/glomap/
+dependencies/glomap-main/
+dependencies/lemon/
+dependencies/LightGlue-main/
+dependencies/superansac-main/
+dependencies/boost_1_85_0/
+dependencies/boost_1_85_0/*
+# 排除依赖打包脚本（仅本地使用）
+dependencies/package_deps_for_release.sh
+dependencies/nlohmann/
+dependencies/cmake_3_28/
+# 排除测试数据打包脚本（仅本地使用）
+tests/package_test_data.sh
+
+dependencies/CERES_DEPENDENCY_ANALYSIS.md
+dependencies/GLOG_VERSION_COMPATIBILITY_ANALYSIS.md
+dependencies/OPENSSL_VERSION_COMPATIBILITY_ANALYSIS.md
+dependencies/PLATFORM_SOLIDIFICATION_DIFFERENCES.md
+dependencies/CROSS_ENVIRONMENT_COMPATIBILITY.md
+# ==================== 大型测试数据目录（通过GitHub Release下载）====================
+# 这些测试数据通过download_Strecha.sh从GitHub Release下载，不需要在仓库中保存
+tests/Strecha/
+
+# ==================== 测试代码文件（本版本不对外提供）====================
+# 只保留 download_Strecha.sh 下载脚本，其他测试代码暂不对外开放
+tests/*
+!tests/download_Strecha.sh
+
+# ==================== Documentation ====================
+# Documentation virtual environment
+docs/venv/
+
+# Python cache
+docs/**/__pycache__/
+docs/**/*.pyc
+
+# Sphinx build directories
+docs/build/
+docs/_build/
+docs/.doctrees/
+
+# Additional documentation build artifacts
+docs/.buildinfo
+docs/objects.inv
+
+# ==================== 忽略指定的文档和日志文件 ====================
+# Ignore specific documentation and version log files
+docs/source/basic_development/method_types.md
+docs/source/benchmark_comparison/README.md
+docs/source/version_log/PoSDK 项目更新日志 (2025-5-17).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-5-19).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-5-22).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-5-30).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-5).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-6).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-7).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-9).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-12).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-14).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-15).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-19).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-22).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-23).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-24).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-25).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-26).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-6-27).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-2).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-3).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-6).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-8).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-9).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-10).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-21).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-25).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-28).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-7-31).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-8-2).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-8-18).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-8-25).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-8-28).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-8-29).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-8-30).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-9-15).md
+docs/source/version_log/PoSDK 项目更新日志 (2025-9-19).md
+docs/source/task_list
+
+# ==================== 系统和编辑器文件 ====================
+# OS files
+.DS_Store
+**/.DS_Store
+
+# IDE
+.vscode/
+.idea/
+.cursorignore
+
+# Temporary files
+*.tmp
+*.temp
+*~
+CMakeLists.txt.user
+dependencies/opencv_install/

@@ -1,0 +1,17 @@
+# LightGlue and SuperPoint Dependencies
+# 使用方法: pip install -r requirements.txt
+
+# 深度学习框架
+torch>=1.9.0
+torchvision>=0.10.0
+
+# 数值计算和图像处理
+numpy>=1.21.0,<2.0.0  # 限制在1.x版本，避免与PyTorch 2.2.2冲突
+opencv-python>=4.5.0
+
+# LightGlue依赖
+kornia>=0.6.0          # LightGlue需要的计算机视觉库
+
+# 可选依赖 (用于更好的性能)
+# pillow>=8.0.0          # 图像处理增强
+# scipy>=1.7.0           # 科学计算支持

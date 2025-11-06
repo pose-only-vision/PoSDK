@@ -1,0 +1,501 @@
+/* 自定义CSS样式 v3.0 - 增强标题样式美化 | Enhanced Heading Styles */
+
+/* ================== 拓宽内容区域宽度 | Expand Content Area Width ================== */
+
+/* 拓宽 Sphinx RTD 主题的内容区域 */
+.wy-nav-content {
+    max-width: 1400px !important;
+    padding: 2em 3em !important;
+}
+
+/* 确保文档内容容器也使用更大宽度 */
+.document {
+    max-width: 100% !important;
+}
+
+.rst-content {
+    max-width: 100% !important;
+}
+
+/* 针对大屏幕进一步优化 */
+@media (min-width: 1600px) {
+    .wy-nav-content {
+        max-width: 1600px !important;
+        padding: 2em 4em !important;
+    }
+}
+
+/* 中等屏幕保持合理宽度 */
+@media (min-width: 1200px) and (max-width: 1599px) {
+    .wy-nav-content {
+        max-width: 1400px !important;
+        padding: 2em 3em !important;
+    }
+}
+
+/* 小屏幕保持响应式 */
+@media (max-width: 1199px) {
+    .wy-nav-content {
+        max-width: 100% !important;
+        padding: 1.5em 2em !important;
+    }
+}
+
+/* 优化表格和图片在更宽内容区域中的显示 */
+.rst-content table {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+}
+
+.rst-content img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* 确保代码块也能充分利用宽度 */
+.rst-content .highlight {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+}
+
+.rst-content pre {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+}
+
+/* ================== 简约大气标题样式 | Clean & Elegant Heading Styles ================== */
+
+/* H1 主标题 - 美观渐变背景，优化高度 | Beautiful gradient background heading with optimized height */
+h1 {
+    background: linear-gradient(135deg, #1e3c72 0%, #4472C4 25%, #5a82d4 50%, #6fa3e0 75%, #85c1e9 100%) !important;
+    color: white !important;
+    font-family: 'Microsoft YaHei', '微软雅黑', 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1.8em !important;
+    padding: 12px 24px !important;
+    margin: 32px 0 24px 0 !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    border: none !important;
+    line-height: 1.2 !important;
+    box-shadow: 0 4px 12px rgba(68, 114, 196, 0.3),
+        0 2px 6px rgba(30, 60, 114, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+
+/* H2 标题 - 精美渐变胶囊，优化高度 | Beautiful gradient capsule with optimized height */
+h2 {
+    background: linear-gradient(135deg, #4472C4 0%, #5a82d4 50%, #6fa3e0 100%) !important;
+    color: white !important;
+    font-family: 'Microsoft YaHei', '微软雅黑', 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.3em !important;
+    padding: 8px 18px !important;
+    margin: 28px 0 20px 0 !important;
+    border-radius: 16px !important;
+    display: inline-block !important;
+    line-height: 1.2 !important;
+    box-shadow: 0 3px 10px rgba(68, 114, 196, 0.4),
+        0 1px 4px rgba(68, 114, 196, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+    max-width: fit-content !important;
+    position: relative !important;
+    overflow: hidden !important;
+    vertical-align: middle !important;
+}
+
+
+/* H3 标题 - 蓝色加粗字体 | Subsection heading with blue bold font */
+h3 {
+    background: none !important;
+    color: #4472C4 !important;
+    font-family: 'Microsoft YaHei', '微软雅黑', 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1.25em !important;
+    padding: 8px 0 !important;
+    margin: 24px 0 16px 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    line-height: 1.4 !important;
+    position: relative !important;
+}
+
+/* H3 标题分隔符 | Separator for H3 headings */
+h3::after {
+    content: '' !important;
+    display: block !important;
+    width: 60% !important;
+    height: 1px !important;
+    background: linear-gradient(90deg, #4472C4, transparent) !important;
+    margin: 8px 0 0 0 !important;
+}
+
+/* H4 标题 - 微软雅黑常规，无背景 | Feature heading with regular font weight */
+h4 {
+    background: none !important;
+    color: #444444 !important;
+    font-family: 'Microsoft YaHei', '微软雅黑', 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.15em !important;
+    padding: 0 !important;
+    margin: 20px 0 12px 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    line-height: 1.4 !important;
+}
+
+/* H5 标题 - 微软雅黑常规，较小字体 | Detail heading with smaller font */
+h5 {
+    background: none !important;
+    color: #555555 !important;
+    font-family: 'Microsoft YaHei', '微软雅黑', 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 1.05em !important;
+    padding: 0 !important;
+    margin: 16px 0 10px 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    line-height: 1.4 !important;
+}
+
+/* H6 标题 - 微软雅黑常规，最小字体 | Minor heading with smallest font */
+h6 {
+    background: none !important;
+    color: #666666 !important;
+    font-family: 'Microsoft YaHei', '微软雅黑', 'SF Pro Text', 'Helvetica Neue', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 1em !important;
+    padding: 0 !important;
+    margin: 14px 0 8px 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    line-height: 1.4 !important;
+}
+
+/* 标题悬停效果 - 简化版本 | Simplified hover effects */
+h1:hover,
+h2:hover {
+    opacity: 0.9 !important;
+    transition: opacity 0.2s ease !important;
+}
+
+h3:hover {
+    color: #2a5298 !important;
+    transition: color 0.2s ease !important;
+}
+
+h4:hover,
+h5:hover,
+h6:hover {
+    color: #4472C4 !important;
+    transition: color 0.2s ease !important;
+}
+
+/* 标题选中状态背景 | Selected heading background */
+h1:target,
+h2:target,
+h3:target,
+h4:target,
+h5:target,
+h6:target {
+    background-color: #fffbf0 !important;
+    border-left: 4px solid #ffd700 !important;
+    padding-left: 16px !important;
+    margin-left: -20px !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* H1/H2 选中状态特殊处理 | Special handling for selected H1/H2 */
+h1:target {
+    background: linear-gradient(135deg, #1e3c72 0%, #4472C4 50%, #2a5298 100%),
+        linear-gradient(90deg, rgba(255, 251, 240, 0.2), rgba(255, 251, 240, 0.1)) !important;
+    background-blend-mode: overlay !important;
+    border: none !important;
+    padding-left: 28px !important;
+    margin-left: 0px !important;
+}
+
+h2:target {
+    background: linear-gradient(90deg, #4472C4, #5a82d4) !important;
+    border: none !important;
+    padding-left: 20px !important;
+    margin-left: 0px !important;
+}
+
+/* 标题锚点选中动画 | Heading anchor selection animation */
+@keyframes highlight {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+    }
+}
+
+h1:target,
+h2:target,
+h3:target,
+h4:target,
+h5:target,
+h6:target {
+    animation: highlight 1.5s ease-in-out !important;
+}
+
+/* 响应式标题设计 | Responsive heading design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.6em !important;
+        padding: 14px 20px !important;
+        margin: 24px 0 18px 0 !important;
+    }
+
+    h2 {
+        font-size: 1.3em !important;
+        padding: 10px 16px !important;
+        margin: 20px 0 16px 0 !important;
+    }
+
+    h3 {
+        font-size: 1.2em !important;
+        margin: 18px 0 14px 0 !important;
+    }
+
+    h4 {
+        font-size: 1.1em !important;
+        margin: 16px 0 10px 0 !important;
+    }
+
+    h5 {
+        font-size: 1.02em !important;
+        margin: 14px 0 8px 0 !important;
+    }
+
+    h6 {
+        font-size: 0.98em !important;
+        margin: 12px 0 6px 0 !important;
+    }
+}
+
+/* 深色主题标题适配 | Dark theme heading adaptation */
+@media (prefers-color-scheme: dark) {
+
+    h1,
+    h2 {
+        background-color: #5B9BD5 !important;
+    }
+
+    h3 {
+        color: #E6E6E6 !important;
+    }
+
+    h4 {
+        color: #CCCCCC !important;
+    }
+
+    h5 {
+        color: #B3B3B3 !important;
+    }
+
+    h6 {
+        color: #999999 !important;
+    }
+
+    h3:hover,
+    h4:hover,
+    h5:hover,
+    h6:hover {
+        color: #5B9BD5 !important;
+    }
+}
+
+/* ================== 原有任务列表样式保持不变 ================== */
+.task-list-item {
+    list-style-type: none !important;
+    margin: 8px 0 !important;
+    position: relative !important;
+    padding-left: 0 !important;
+}
+
+/* 确保任务列表项和复选框的交互性 */
+ul.task-list,
+ol.task-list {
+    pointer-events: auto !important;
+}
+
+li.task-list-item {
+    pointer-events: auto !important;
+}
+
+input.task-list-item-checkbox {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.task-list-item-checkbox {
+    appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    border: 2px solid #007acc !important;
+    border-radius: 3px !important;
+    margin-right: 12px !important;
+    position: relative !important;
+    cursor: pointer !important;
+    background-color: #fff !important;
+    transition: all 0.2s ease !important;
+    pointer-events: auto !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+}
+
+.task-list-item-checkbox:hover {
+    border-color: #005fa3 !important;
+    box-shadow: 0 0 5px rgba(0, 122, 204, 0.3) !important;
+    cursor: pointer !important;
+}
+
+.task-list-item-checkbox:checked {
+    background-color: #007acc;
+    border-color: #007acc;
+}
+
+.task-list-item-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    left: 3px;
+    top: -1px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* 已完成任务的文本样式 */
+.task-list-item-checkbox:checked+* {
+    text-decoration: line-through;
+    opacity: 0.7;
+    color: #666;
+}
+
+/* 任务优先级颜色 */
+.task-list-item:has([data-priority="high"]) {
+    border-left: 4px solid #ff4757;
+    padding-left: 8px;
+    background-color: #fff5f5;
+}
+
+.task-list-item:has([data-priority="medium"]) {
+    border-left: 4px solid #ffa502;
+    padding-left: 8px;
+    background-color: #fffaf0;
+}
+
+.task-list-item:has([data-priority="low"]) {
+    border-left: 4px solid #2ed573;
+    padding-left: 8px;
+    background-color: #f0fff4;
+}
+
+/* 工时显示样式已移除 - 工时信息直接包含在任务描述中 */
+
+/* 任务状态统计 */
+.task-progress {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px 0;
+}
+
+.task-progress h4 {
+    margin-top: 0;
+    color: #495057;
+}
+
+.progress-bar {
+    background-color: #e9ecef;
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, #007acc, #00a8ff);
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .task-list-item-checkbox {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+    }
+
+
+}
+
+/* 动画效果 */
+@keyframes checkmark {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.task-list-item-checkbox:checked::after {
+    animation: checkmark 0.2s ease-in-out;
+}
+
+/* 深色主题支持 */
+@media (prefers-color-scheme: dark) {
+    .task-list-item-checkbox {
+        border-color: #4a9eff;
+        background-color: #2d3748;
+    }
+
+    .task-list-item-checkbox:checked {
+        background-color: #4a9eff;
+        border-color: #4a9eff;
+    }
+}

@@ -1,0 +1,215 @@
+[DataMatches] Converting matches to proto format
+[DataMatches] Number of view pairs: 171
+[DataMatches] Processing view pair (0,1) with 1987 matches
+[DataMatches] Processing view pair (0,2) with 1470 matches
+[DataMatches] Processing view pair (0,3) with 1107 matches
+[DataMatches] Processing view pair (0,4) with 476 matches
+[DataMatches] Processing view pair (0,5) with 421 matches
+[DataMatches] Processing view pair (0,6) with 395 matches
+[DataMatches] Processing view pair (0,7) with 352 matches
+[DataMatches] Processing view pair (0,8) with 438 matches
+[DataMatches] Processing view pair (0,9) with 362 matches
+[DataMatches] Processing view pair (0,10) with 492 matches
+[DataMatches] Processing view pair (0,11) with 612 matches
+[DataMatches] Processing view pair (0,12) with 382 matches
+[DataMatches] Processing view pair (0,13) with 395 matches
+[DataMatches] Processing view pair (0,14) with 424 matches
+[DataMatches] Processing view pair (0,15) with 415 matches
+[DataMatches] Processing view pair (0,16) with 544 matches
+[DataMatches] Processing view pair (0,17) with 639 matches
+[DataMatches] Processing view pair (0,18) with 1199 matches
+[DataMatches] Processing view pair (1,2) with 2848 matches
+[DataMatches] Processing view pair (1,3) with 2010 matches
+[DataMatches] Processing view pair (1,4) with 884 matches
+[DataMatches] Processing view pair (1,5) with 717 matches
+[DataMatches] Processing view pair (1,6) with 627 matches
+[DataMatches] Processing view pair (1,7) with 542 matches
+[DataMatches] Processing view pair (1,8) with 582 matches
+[DataMatches] Processing view pair (1,9) with 548 matches
+[DataMatches] Processing view pair (1,10) with 520 matches
+[DataMatches] Processing view pair (1,11) with 522 matches
+[DataMatches] Processing view pair (1,12) with 468 matches
+[DataMatches] Processing view pair (1,13) with 418 matches
+[DataMatches] Processing view pair (1,14) with 356 matches
+[DataMatches] Processing view pair (1,15) with 375 matches
+[DataMatches] Processing view pair (1,16) with 536 matches
+[DataMatches] Processing view pair (1,17) with 528 matches
+[DataMatches] Processing view pair (1,18) with 903 matches
+[DataMatches] Processing view pair (2,3) with 3504 matches
+[DataMatches] Processing view pair (2,4) with 1627 matches
+[DataMatches] Processing view pair (2,5) with 1280 matches
+[DataMatches] Processing view pair (2,6) with 1139 matches
+[DataMatches] Processing view pair (2,7) with 889 matches
+[DataMatches] Processing view pair (2,8) with 861 matches
+[DataMatches] Processing view pair (2,9) with 720 matches
+[DataMatches] Processing view pair (2,10) with 605 matches
+[DataMatches] Processing view pair (2,11) with 637 matches
+[DataMatches] Processing view pair (2,12) with 593 matches
+[DataMatches] Processing view pair (2,13) with 352 matches
+[DataMatches] Processing view pair (2,14) with 227 matches
+[DataMatches] Processing view pair (2,15) with 392 matches
+[DataMatches] Processing view pair (2,16) with 606 matches
+[DataMatches] Processing view pair (2,17) with 598 matches
+[DataMatches] Processing view pair (2,18) with 1053 matches
+[DataMatches] Processing view pair (3,4) with 2028 matches
+[DataMatches] Processing view pair (3,5) with 1576 matches
+[DataMatches] Processing view pair (3,6) with 1271 matches
+[DataMatches] Processing view pair (3,7) with 1017 matches
+[DataMatches] Processing view pair (3,8) with 913 matches
+[DataMatches] Processing view pair (3,9) with 796 matches
+[DataMatches] Processing view pair (3,10) with 611 matches
+[DataMatches] Processing view pair (3,11) with 545 matches
+[DataMatches] Processing view pair (3,12) with 558 matches
+[DataMatches] Processing view pair (3,13) with 565 matches
+[DataMatches] Processing view pair (3,14) with 534 matches
+[DataMatches] Processing view pair (3,15) with 400 matches
+[DataMatches] Processing view pair (3,16) with 566 matches
+[DataMatches] Processing view pair (3,17) with 607 matches
+[DataMatches] Processing view pair (3,18) with 870 matches
+[DataMatches] Processing view pair (4,5) with 3005 matches
+[DataMatches] Processing view pair (4,6) with 2093 matches
+[DataMatches] Processing view pair (4,7) with 1594 matches
+[DataMatches] Processing view pair (4,8) with 1230 matches
+[DataMatches] Processing view pair (4,9) with 1016 matches
+[DataMatches] Processing view pair (4,10) with 799 matches
+[DataMatches] Processing view pair (4,11) with 761 matches
+[DataMatches] Processing view pair (4,12) with 520 matches
+[DataMatches] Processing view pair (4,13) with 549 matches
+[DataMatches] Processing view pair (4,14) with 516 matches
+[DataMatches] Processing view pair (4,15) with 455 matches
+[DataMatches] Processing view pair (4,16) with 576 matches
+[DataMatches] Processing view pair (4,17) with 508 matches
+[DataMatches] Processing view pair (4,18) with 616 matches
+[DataMatches] Processing view pair (5,6) with 2944 matches
+[DataMatches] Processing view pair (5,7) with 2092 matches
+[DataMatches] Processing view pair (5,8) with 1397 matches
+[DataMatches] Processing view pair (5,9) with 1184 matches
+[DataMatches] Processing view pair (5,10) with 911 matches
+[DataMatches] Processing view pair (5,11) with 842 matches
+[DataMatches] Processing view pair (5,12) with 550 matches
+[DataMatches] Processing view pair (5,13) with 505 matches
+[DataMatches] Processing view pair (5,14) with 545 matches
+[DataMatches] Processing view pair (5,15) with 465 matches
+[DataMatches] Processing view pair (5,16) with 510 matches
+[DataMatches] Processing view pair (5,17) with 535 matches
+[DataMatches] Processing view pair (5,18) with 615 matches
+[DataMatches] Processing view pair (6,7) with 2614 matches
+[DataMatches] Processing view pair (6,8) with 1649 matches
+[DataMatches] Processing view pair (6,9) with 1318 matches
+[DataMatches] Processing view pair (6,10) with 946 matches
+[DataMatches] Processing view pair (6,11) with 918 matches
+[DataMatches] Processing view pair (6,12) with 548 matches
+[DataMatches] Processing view pair (6,13) with 531 matches
+[DataMatches] Processing view pair (6,14) with 473 matches
+[DataMatches] Processing view pair (6,15) with 529 matches
+[DataMatches] Processing view pair (6,16) with 498 matches
+[DataMatches] Processing view pair (6,17) with 480 matches
+[DataMatches] Processing view pair (6,18) with 542 matches
+[DataMatches] Processing view pair (7,8) with 2152 matches
+[DataMatches] Processing view pair (7,9) with 1544 matches
+[DataMatches] Processing view pair (7,10) with 1088 matches
+[DataMatches] Processing view pair (7,11) with 884 matches
+[DataMatches] Processing view pair (7,12) with 594 matches
+[DataMatches] Processing view pair (7,13) with 611 matches
+[DataMatches] Processing view pair (7,14) with 572 matches
+[DataMatches] Processing view pair (7,15) with 468 matches
+[DataMatches] Processing view pair (7,16) with 466 matches
+[DataMatches] Processing view pair (7,17) with 527 matches
+[DataMatches] Processing view pair (7,18) with 595 matches
+[DataMatches] Processing view pair (8,9) with 1877 matches
+[DataMatches] Processing view pair (8,10) with 949 matches
+[DataMatches] Processing view pair (8,11) with 655 matches
+[DataMatches] Processing view pair (8,12) with 441 matches
+[DataMatches] Processing view pair (8,13) with 490 matches
+[DataMatches] Processing view pair (8,14) with 508 matches
+[DataMatches] Processing view pair (8,15) with 332 matches
+[DataMatches] Processing view pair (8,16) with 397 matches
+[DataMatches] Processing view pair (8,17) with 405 matches
+[DataMatches] Processing view pair (8,18) with 418 matches
+[DataMatches] Processing view pair (9,10) with 1305 matches
+[DataMatches] Processing view pair (9,11) with 645 matches
+[DataMatches] Processing view pair (9,12) with 400 matches
+[DataMatches] Processing view pair (9,13) with 406 matches
+[DataMatches] Processing view pair (9,14) with 383 matches
+[DataMatches] Processing view pair (9,15) with 255 matches
+[DataMatches] Processing view pair (9,16) with 297 matches
+[DataMatches] Processing view pair (9,17) with 330 matches
+[DataMatches] Processing view pair (9,18) with 399 matches
+[DataMatches] Processing view pair (10,11) with 871 matches
+[DataMatches] Processing view pair (10,12) with 431 matches
+[DataMatches] Processing view pair (10,13) with 387 matches
+[DataMatches] Processing view pair (10,14) with 369 matches
+[DataMatches] Processing view pair (10,15) with 237 matches
+[DataMatches] Processing view pair (10,16) with 266 matches
+[DataMatches] Processing view pair (10,17) with 275 matches
+[DataMatches] Processing view pair (10,18) with 331 matches
+[DataMatches] Processing view pair (11,12) with 607 matches
+[DataMatches] Processing view pair (11,13) with 377 matches
+[DataMatches] Processing view pair (11,14) with 345 matches
+[DataMatches] Processing view pair (11,15) with 274 matches
+[DataMatches] Processing view pair (11,16) with 337 matches
+[DataMatches] Processing view pair (11,17) with 273 matches
+[DataMatches] Processing view pair (11,18) with 346 matches
+[DataMatches] Processing view pair (12,13) with 1032 matches
+[DataMatches] Processing view pair (12,14) with 722 matches
+[DataMatches] Processing view pair (12,15) with 416 matches
+[DataMatches] Processing view pair (12,16) with 640 matches
+[DataMatches] Processing view pair (12,17) with 509 matches
+[DataMatches] Processing view pair (12,18) with 467 matches
+[DataMatches] Processing view pair (13,14) with 1300 matches
+[DataMatches] Processing view pair (13,15) with 711 matches
+[DataMatches] Processing view pair (13,16) with 671 matches
+[DataMatches] Processing view pair (13,17) with 714 matches
+[DataMatches] Processing view pair (13,18) with 702 matches
+[DataMatches] Processing view pair (14,15) with 873 matches
+[DataMatches] Processing view pair (14,16) with 745 matches
+[DataMatches] Processing view pair (14,17) with 766 matches
+[DataMatches] Processing view pair (14,18) with 740 matches
+[DataMatches] Processing view pair (15,16) with 1186 matches
+[DataMatches] Processing view pair (15,17) with 913 matches
+[DataMatches] Processing view pair (15,18) with 862 matches
+[DataMatches] Processing view pair (16,17) with 1460 matches
+[DataMatches] Processing view pair (16,18) with 912 matches
+[DataMatches] Processing view pair (17,18) with 1551 matches
+[DataMatches] Proto conversion completed
+SaveProtoToFile: /Users/caiqi/Documents/PoMVG/src/build/Desktop_arm_darwin_generic_mach_o_64bit-Release/output/bin/storage/matches/matches_all.pb
+Saved to: "/Users/caiqi/Documents/PoMVG/src/build/Desktop_arm_darwin_generic_mach_o_64bit-Release/output/bin/storage/matches/matches_all.pb"
+[PoSDK | method_img2matches] >>> Fast mode completed successfully with 171 successful matches
+
+=== Performance Profile for method_img2matches ===
+Timestamp: 20250828_152816
+Description: GlobalSfM pipeline PoSDK integrated feature extraction and matching (OpenMVG aligned)
+Total Time: 34534.6 ms
+Compute Time: 34534.6 ms
+Core Time: 0 ms
+Peak Memory Usage: 2.06834e+06 MB
+Current Memory Usage: 2.06834e+06 MB
+
+Stage Timings:
+  input_check: 0.002542 ms
+=====================================
+
+
+========== Features Info Summary ==========
+Total Images: 19
+Valid Images: 19
+===========================================
+Image ID: 0 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0000.jpg | Features: 6102 | Status: Used
+Image ID: 1 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0001.jpg | Features: 6624 | Status: Used
+Image ID: 2 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0002.jpg | Features: 8483 | Status: Used
+Image ID: 3 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0003.jpg | Features: 7747 | Status: Used
+Image ID: 4 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0004.jpg | Features: 7167 | Status: Used
+Image ID: 5 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0005.jpg | Features: 7672 | Status: Used
+Image ID: 6 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0006.jpg | Features: 7848 | Status: Used
+Image ID: 7 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0007.jpg | Features: 7287 | Status: Used
+Image ID: 8 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0008.jpg | Features: 5312 | Status: Used
+Image ID: 9 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0009.jpg | Features: 4556 | Status: Used
+Image ID: 10 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0010.jpg | Features: 3829 | Status: Used
+Image ID: 11 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0011.jpg | Features: 3597 | Status: Used
+Image ID: 12 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0012.jpg | Features: 3685 | Status: Used
+Image ID: 13 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0013.jpg | Features: 3967 | Status: Used
+Image ID: 14 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0014.jpg | Features: 4202 | Status: Used
+Image ID: 15 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0015.jpg | Features: 4933 | Status: Used
+Image ID: 16 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0016.jpg | Features: 4939 | Status: Used
+Image ID: 17 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0017.jpg | Features: 4560 | Status: Used
+Image ID: 18 | Path: /Users/caiqi/Documents/PoMVG/src/tests/Strecha/castle-P19/images/0018.jpg | Features: 5396 | Status: Used

@@ -1,0 +1,13 @@
+Dataset,Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev
+castle-P30,"PoSDK","GlobalSfM Pipeline Demo",0.173955,0.104923,0.005075,1.216445,0.193923
+castle-P30,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.183218,0.100271,0.003764,2.306829,0.255536
+entry-P10,"PoSDK","GlobalSfM Pipeline Demo",0.042575,0.033201,0.008792,0.151858,0.032339
+entry-P10,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.054478,0.039838,0.005284,0.249879,0.04758
+Herz-Jesus-P8,"PoSDK","GlobalSfM Pipeline Demo",0.031688,0.027348,0.006501,0.072048,0.017664
+Herz-Jesus-P8,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.039527,0.035302,0.013028,0.133081,0.025861
+castle-P19,"PoSDK","GlobalSfM Pipeline Demo",0.156428,0.0932,0.00917,0.8094,0.174881
+castle-P19,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.136889,0.096242,0.02962,0.688802,0.12698
+fountain-P11,"PoSDK","GlobalSfM Pipeline Demo",0.044999,0.042501,0.005573,0.262483,0.040396
+fountain-P11,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.050227,0.04315,0.011414,0.124377,0.030209
+Herz-Jesus-P25,"PoSDK","GlobalSfM Pipeline Demo",0.052869,0.04414,0.005905,0.265571,0.039333
+Herz-Jesus-P25,"openmvg_pipeline","GlobalSfM Pipeline Demo",0.052378,0.046976,0.008925,0.192767,0.03048

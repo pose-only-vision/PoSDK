@@ -1,0 +1,176 @@
+PoSDK Custom License
+Version 1.0, January 2025
+
+Copyright (c) 2025 by VINF-SJTU (Inertial and Visual Fusion Research Group @ Shanghai Jiao Tong University)
+All rights reserved.
+
+==============================================================================
+PREAMBLE
+==============================================================================
+
+PoSDK (Pose-only Software Development Kit) is a licensed software framework for spatial visual computing applications. This license governs the use of the PoSDK framework (the "Software"), which includes:
+
+1. The PoSDK plugin development framework (open-source components)
+2. Integration interfaces to the PoCore computation engine (closed-source)
+3. Sample plugins, documentation, and build scripts
+
+
+REQUIREMENTS:
+1. ATTRIBUTION: You must cite the PoSDK project in any publications,
+   presentations, or derivative works using one of the following references:
+
+   @article{cai2019equivalent,
+     title={Equivalent Constraints for Two-View Geometry: Pose Solution/Pure
+            Rotation Identification and 3D Reconstruction},
+     journal={International Journal of Computer Vision},
+     volume={127}, pages={163--180}, year={2019},
+     doi={10.1007/s11263-018-1136-9}
+   }
+
+   @article{cai2023pose,
+     title={A Pose-only Solution to Visual Reconstruction and Navigation},
+     journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
+     volume={45}, number={1}, pages={73--86}, year={2023},
+     doi={10.1109/TPAMI.2021.3139681}
+   }
+
+2. NOTICE RETENTION: You must retain all copyright notices, this license,
+   and disclaimers in all copies or substantial portions of the Software.
+
+
+RESTRICTIONS:
+✗ Removal of copyright notices or attribution requirements
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ COMMERCIAL LICENSE (Subscription)                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+COMMERCIAL USE DEFINITION:
+Any use of the Software that involves or is intended for commercial advantage
+or monetary compensation, including but not limited to:
+
+  • Development of commercial products or services
+  • Integration into commercial software systems
+  • Deployment as SaaS or cloud-based services
+  • Use in commercial research and development
+  • Integration into products for sale or distribution
+  • Use in providing paid consulting or services
+
+LICENSE REQUIREMENT:
+Commercial use requires obtaining a separate Commercial License or SaaS License
+from VINF-SJTU. Commercial licenses include:
+
+  ✓ Full rights for commercial product development
+  ✓ Open-source or closed-source plugin development support
+  ✓ SaaS deployment authorization (with SaaS License)
+  ✓ Technical support and updates
+  ✓ Legal indemnification
+
+LICENSING CONTACT:
+For commercial licensing inquiries, please contact:
+
+  Prof. Yuanxin Wu
+  Email: yuanxin.wu@sjtu.edu.cn/yuanx_wu@hotmail.com
+  Institution: VINF-SJTU
+
+PRICING:
+Commercial license fees are determined on a case-by-case basis depending on:
+  • Type of use (development license vs. SaaS license)
+  • Scale of deployment
+  • Number of users/instances
+  • Support requirements
+
+==============================================================================
+GENERAL TERMS AND CONDITIONS
+==============================================================================
+
+1. OWNERSHIP AND COPYRIGHT
+   All intellectual property rights in and to the Software remain with
+   Shanghai Jiao Tong University and its licensors. This license does not
+   transfer any ownership rights.
+
+2. THIRD-PARTY COMPONENTS
+   The Software may include or depend on third-party open-source components,
+   each governed by their respective licenses. You must comply with all
+   applicable third-party licenses. See the copyright tracking documentation
+   for details.
+
+3. POCORE ENGINE
+   The PoCore computation engine is licensed separately under closed-source
+   terms. Use of PoCore requires compliance with its own license agreement.
+
+4. TRADEMARK
+   This license does not grant permission to use the trade names, trademarks,
+   service marks, or product names of Shanghai Jiao Tong University, except
+   as required for reasonable and customary use in describing the origin of
+   the Software and reproducing the content of the copyright notice.
+
+5. PATENT NOTICE
+   This license does not grant any rights in patents. Shanghai Jiao Tong
+   University reserves all patent rights.
+
+6. TERMINATION
+   This license automatically terminates if you fail to comply with any of
+   its terms and conditions. Upon termination, you must cease all use of the
+   Software and destroy all copies in your possession.
+
+7. GOVERNING LAW
+   This license shall be governed by and construed in accordance with the
+   laws of the People's Republic of China.
+
+==============================================================================
+DISCLAIMER OF WARRANTY
+==============================================================================
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR SHANGHAI JIAO TONG UNIVERSITY BE
+LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+==============================================================================
+LIMITATION OF LIABILITY
+==============================================================================
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL SHANGHAI
+JIAO TONG UNIVERSITY OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+==============================================================================
+EXPORT COMPLIANCE
+==============================================================================
+
+You acknowledge that the Software may be subject to export control laws and
+regulations. You agree to comply with all applicable international and national
+laws regarding the export, re-export, or transfer of the Software.
+
+==============================================================================
+ACKNOWLEDGMENTS
+==============================================================================
+
+If you use this Software for academic research, we kindly request that you
+acknowledge its use in your publications and cite the relevant papers listed
+in the Attribution Requirements section.
+
+==============================================================================
+CONTACT INFORMATION
+==============================================================================
+
+For questions about this license:
+  - Academic inquiries: See project documentation and GitHub discussions
+  - Commercial licensing: yuanxin.wu@sjtu.edu.cn
+  - Technical support: https://github.com/pose-only-vision/PoSDK-demo/issues
+
+==============================================================================
+END OF LICENSE
+==============================================================================
+
