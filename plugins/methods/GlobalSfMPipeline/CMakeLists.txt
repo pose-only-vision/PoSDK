@@ -27,7 +27,7 @@ add_posdk_plugin(globalsfm_pipeline
         PoSDK::po_core
         PoSDK::pomvg_converter
     COMPILE_DEFINITIONS
-        # ✅ 删除 PLUGIN_NAME（由 add_posdk_plugin 自动添加）
+        #  删除 PLUGIN_NAME（由 add_posdk_plugin 自动添加）
         PLUGIN_VERSION="1.0.0"
         $<$<CONFIG:Debug>:DEBUG_BUILD=1>
 )

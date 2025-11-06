@@ -97,7 +97,7 @@
   virtual DataPtr Run() override;
   // 用于实现核心算法：基类的`Build` 方法会负责调用 `Run` 并处理输入/输出检查和性能分析等。
   // （1）用户需要在构造函数中设置输入数据类型：required_package_["data_type"] = nullptr;
-  // （2）之后可以在Run函数中使用GetDataPtr<T>(required_package_["data_type"])来获取输入数据。
+  // （2）之后可以在Run函数中使用GetRequiredDataPtr<T>("data_type")（推荐）或GetDataPtr<T>(required_package_["data_type"])来获取输入数据。
   ```
 
 
@@ -144,6 +144,15 @@ virtual CopyrightData Copyright() const;
 
 下面的示例代码中的 `method_options_` 赋值仅用于演示配置项的存在，实际默认值应在 `GetOptionAs...()` 调用时提供。
 
+**CMakeLists.txt**:
+```cmake
+# 插件名称在这里定义（唯一定义处）
+add_posdk_plugin(my_method
+    PLUGIN_TYPE methods
+    SOURCES my_method.cpp
+    HEADERS my_method.hpp
+)
+```
 
 ```cpp
 // my_method.hpp
@@ -232,14 +241,15 @@ DataPtr MyMethod::Run() {
     // return result_poses_data;
 
     // 或者创建新的数据对象返回 | Or create and return new data object
-    auto result_data = std::make_shared<DataMap<std::string>>("Processing finished");
+    auto result_data = std::make_shared<DataMap<std::string>>("处理完成", "data_map_string");
     return result_data;
 }
 
 } // namespace MyPlugin
 
-// 注册插件
-REGISTRATION_PLUGIN(MyPlugin::MyMethod, "my_method")
+// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// 插件类型："my_method"（来自CMake）
+REGISTRATION_PLUGIN(MyPlugin::MyMethod)
 ```
 
 ```{warning}

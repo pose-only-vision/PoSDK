@@ -18,7 +18,7 @@ This document describes PoSDK installation requirements and procedures.
 PoSDK provides an automated installation script that can install all required system dependencies and plugin dependencies with one command:
 
 ```bash
-cd /path/to/PoSDK/src
+cd /path/to/PoSDK/
 chmod +x install.sh
 ./install.sh
 ```
@@ -144,8 +144,8 @@ During installation, you will encounter the following prompt points. The meaning
 | **Build Deps**     | `install_colmap.sh`        | `Skip rebuild and use existing COLMAP installation?`                   | `[Y/n]` | Asks if skip rebuild when COLMAP detected                              | Press Enter (skip rebuild)                                          |
 | **Build Deps**     | `install_graphoptim.sh`    | `Skip rebuild and use existing GraphOptim build?`                      | `[Y/n]` | Asks if skip rebuild when GraphOptim detected                          | Press Enter (skip rebuild)                                          |
 | **Build Deps**     | `install_graphoptim.sh`    | `Skip building internal COLMAP support (build core only)?`             | `[Y/n]` | Asks if skip building internal COLMAP support                          | Press Enter (skip COLMAP support, build core only)                  |
-| **Build Deps**     | `install_glomap.sh`        | `Skip this installation and use existing build? [Y/n]`                 | `[Y/n]` | Asks if skip installation when Glomap detected                         | Press Enter (skip installation)                                     |
-| **Build Deps**     | `install_glomap.sh`        | `Use local dependencies for build?`                                    | `[Y/n]` | Asks if use local dependencies to build Glomap                         | Press Enter (use local dependencies)                                |
+| **Build Deps**     | `install_glomap.sh`        | `Skip this installation and use existing build? [Y/n]`                 | `[Y/n]` | Asks if skip installation when GLOMAP detected                         | Press Enter (skip installation)                                     |
+| **Build Deps**     | `install_glomap.sh`        | `Use local dependencies for build?`                                    | `[Y/n]` | Asks if use local dependencies to build GLOMAP                         | Press Enter (use local dependencies)                                |
 | **Error Handling** | `install_dependencies.sh`  | `Continue with remaining installations?`                               | `[Y/n]` | Asks if continue with remaining when a dependency fails                | Press Enter (continue installing other dependencies)                |
 
 ```{important}

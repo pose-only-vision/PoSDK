@@ -18,7 +18,7 @@
 PoSDK 提供了自动安装脚本，可以一键安装所有必需的系统依赖和插件依赖：
 
 ```bash
-cd /path/to/PoSDK/src
+cd /path/to/PoSDK/
 chmod +x install.sh
 ./install.sh
 ```
@@ -144,8 +144,8 @@ PoSDK 安装分为三个主要阶段：
 | **依赖构建** | `install_colmap.sh`        | `Skip rebuild and use existing COLMAP installation?`                  | `[Y/n]` | 检测到COLMAP已安装时询问是否跳过重建           | 按回车（跳过重建）                         |
 | **依赖构建** | `install_graphoptim.sh`    | `Skip rebuild and use existing GraphOptim build?`                     | `[Y/n]` | 检测到GraphOptim已构建时询问是否跳过重建       | 按回车（跳过重建）                         |
 | **依赖构建** | `install_graphoptim.sh`    | `跳过构建内部 COLMAP 支持（仅构建核心功能）？`                        | `[Y/n]` | 询问是否跳过构建内部COLMAP支持                 | 按回车（跳过COLMAP支持，仅构建核心功能）   |
-| **依赖构建** | `install_glomap.sh`        | `是否跳过此次安装并使用现有构建？[Y/n]`                               | `[Y/n]` | 检测到Glomap已构建时询问是否跳过安装           | 按回车（跳过安装）                         |
-| **依赖构建** | `install_glomap.sh`        | `是否使用本地依赖构建? \| Use local dependencies for build?`          | `[Y/n]` | 询问是否使用本地依赖构建Glomap                 | 按回车（使用本地依赖）                     |
+| **依赖构建** | `install_glomap.sh`        | `是否跳过此次安装并使用现有构建？[Y/n]`                               | `[Y/n]` | 检测到GLOMAP已构建时询问是否跳过安装           | 按回车（跳过安装）                         |
+| **依赖构建** | `install_glomap.sh`        | `是否使用本地依赖构建? \| Use local dependencies for build?`          | `[Y/n]` | 询问是否使用本地依赖构建GLOMAP                 | 按回车（使用本地依赖）                     |
 | **错误处理** | `install_dependencies.sh`  | `Continue with remaining installations?`                              | `[Y/n]` | 某个依赖安装失败时询问是否继续后续安装         | 按回车（继续安装其他依赖）                 |
 
 ```{important}

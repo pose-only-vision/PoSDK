@@ -90,100 +90,100 @@ extract_package() {
 
         # Ensure we process all items, even if some fail | 确保处理所有项目，即使某些失败
         set +e  # Temporarily disable exit on error for loop processing | 临时禁用错误退出以便循环处理
-        
+
         for item in posdk_deps_staging/*; do
             # Check if glob matched anything | 检查glob是否匹配到任何内容
             if [[ ! -e "$item" ]]; then
                 continue
             fi
             
-            local basename=$(basename "$item")
-            local target_path="${SCRIPT_DIR}/${basename}"
+                local basename=$(basename "$item")
+                local target_path="${SCRIPT_DIR}/${basename}"
 
-            # Skip install scripts (they are handled separately) | 跳过安装脚本（它们单独处理）
-            if [[ "$basename" == "install_"*.sh || "$basename" == "download_"*.sh || "$basename" == "README.md" ]]; then
-                print_info "  Skipped script: ${basename} (managed separately)"
-                print_info "  跳过脚本：${basename}（单独管理）"
-                continue
-            fi
-
-            # Special handling for boost_1_85_0.tar.gz (copy, don't extract) | boost_1_85_0.tar.gz特殊处理（拷贝，不解压）
-            if [[ "$basename" == "boost_1_85_0.tar.gz" ]]; then
-                if [[ -f "$target_path" ]]; then
-                    print_info "  Found existing Boost archive, updating..."
-                    print_info "  发现现有Boost压缩包，正在更新..."
-                    rm -f "$target_path"
-                    ((updated_count++))
-                else
-                    print_success "  Installing Boost archive: ${basename}"
-                    print_success "  安装Boost压缩包：${basename}"
-                    ((installed_count++))
+                # Skip install scripts (they are handled separately) | 跳过安装脚本（它们单独处理）
+                if [[ "$basename" == "install_"*.sh || "$basename" == "download_"*.sh || "$basename" == "README.md" ]]; then
+                    print_info "  Skipped script: ${basename} (managed separately)"
+                    print_info "  跳过脚本：${basename}（单独管理）"
+                    continue
                 fi
-                cp "$item" "$target_path"
-                print_success "  ✓ Boost archive ready: ${basename}"
-                print_success "  ✓ Boost压缩包就绪：${basename}"
-                continue
-            fi
 
-            # Update existing directory/file, preserving build artifacts | 更新现有目录/文件，保留构建产物
-            if [[ -e "$target_path" ]]; then
-                # Create a temporary location for the new source | 为新源码创建临时位置
-                local temp_new_item="${target_path}_new_$$"
-                mv "$item" "$temp_new_item"
-
-                # Preserve build_local and install_local directories using rsync | 使用rsync保留build_local和install_local目录
-                if [[ -d "$target_path/build_local" || -d "$target_path/install_local" ]]; then
-                    print_info "    Syncing source files while preserving build artifacts..."
-                    print_info "    同步源文件，同时保留构建产物..."
-
-                    # Use rsync to sync source files (update modified, add new, delete old)
-                    # Preserve build_local and install_local via --exclude
-                    # 使用rsync同步源文件（更新已修改、添加新增、删除旧的）
-                    # 通过 --exclude 保留 build_local 和 install_local
-                    if command -v rsync >/dev/null 2>&1; then
-                        rsync -a --delete --exclude='build_local' --exclude='install_local' \
-                              "$temp_new_item/" "$target_path/" >/dev/null 2>&1 && \
-                        rm -rf "$temp_new_item"
+                # Special handling for boost_1_85_0.tar.gz (copy, don't extract) | boost_1_85_0.tar.gz特殊处理（拷贝，不解压）
+                if [[ "$basename" == "boost_1_85_0.tar.gz" ]]; then
+                    if [[ -f "$target_path" ]]; then
+                        print_info "  Found existing Boost archive, updating..."
+                        print_info "  发现现有Boost压缩包，正在更新..."
+                        rm -f "$target_path"
+                        ((updated_count++))
                     else
-                        # Fallback if rsync not available: use mv/rm/mv method
-                        # 如果rsync不可用，回退到 mv/rm/mv 方法
-                        print_warning "    rsync not found, using fallback method..."
-                        print_warning "    未找到rsync，使用备用方法..."
-                        
-                        # Preserve artifacts first | 先保留构建产物
-                        if [[ -d "$target_path/build_local" ]]; then
-                            mv "$target_path/build_local" "/tmp/build_local_backup_fallback_$$" 2>/dev/null || true
+                        print_success "  Installing Boost archive: ${basename}"
+                        print_success "  安装Boost压缩包：${basename}"
+                        ((installed_count++))
+                    fi
+                    cp "$item" "$target_path"
+                    print_success "  ✓ Boost archive ready: ${basename}"
+                    print_success "  ✓ Boost压缩包就绪：${basename}"
+                    continue
+                fi
+
+                # Update existing directory/file, preserving build artifacts | 更新现有目录/文件，保留构建产物
+                if [[ -e "$target_path" ]]; then
+                    # Create a temporary location for the new source | 为新源码创建临时位置
+                    local temp_new_item="${target_path}_new_$$"
+                    mv "$item" "$temp_new_item"
+
+                    # Preserve build_local and install_local directories using rsync | 使用rsync保留build_local和install_local目录
+                    if [[ -d "$target_path/build_local" || -d "$target_path/install_local" ]]; then
+                        print_info "    Syncing source files while preserving build artifacts..."
+                        print_info "    同步源文件，同时保留构建产物..."
+
+                        # Use rsync to sync source files (update modified, add new, delete old)
+                        # Preserve build_local and install_local via --exclude
+                        # 使用rsync同步源文件（更新已修改、添加新增、删除旧的）
+                        # 通过 --exclude 保留 build_local 和 install_local
+                        if command -v rsync >/dev/null 2>&1; then
+                            rsync -a --delete --exclude='build_local' --exclude='install_local' \
+                                  "$temp_new_item/" "$target_path/" >/dev/null 2>&1 && \
+                            rm -rf "$temp_new_item"
+                        else
+                            # Fallback if rsync not available: use mv/rm/mv method
+                            # 如果rsync不可用，回退到 mv/rm/mv 方法
+                            print_warning "    rsync not found, using fallback method..."
+                            print_warning "    未找到rsync，使用备用方法..."
+                            
+                            # Preserve artifacts first | 先保留构建产物
+                            if [[ -d "$target_path/build_local" ]]; then
+                                mv "$target_path/build_local" "/tmp/build_local_backup_fallback_$$" 2>/dev/null || true
+                            fi
+                            if [[ -d "$target_path/install_local" ]]; then
+                                mv "$target_path/install_local" "/tmp/install_local_backup_fallback_$$" 2>/dev/null || true
+                            fi
+                            
+                            # Replace source | 替换源码
+                            rm -rf "$target_path"
+                            mv "$temp_new_item" "$target_path"
+                            
+                            # Restore artifacts | 恢复构建产物
+                            if [[ -d "/tmp/build_local_backup_fallback_$$" ]]; then
+                                mv "/tmp/build_local_backup_fallback_$$" "$target_path/build_local"
+                            fi
+                            if [[ -d "/tmp/install_local_backup_fallback_$$" ]]; then
+                                mv "/tmp/install_local_backup_fallback_$$" "$target_path/install_local"
+                            fi
                         fi
-                        if [[ -d "$target_path/install_local" ]]; then
-                            mv "$target_path/install_local" "/tmp/install_local_backup_fallback_$$" 2>/dev/null || true
-                        fi
-                        
-                        # Replace source | 替换源码
+                    else
+                        # No build artifacts to preserve, simple replacement | 无构建产物要保留，直接替换
                         rm -rf "$target_path"
                         mv "$temp_new_item" "$target_path"
-                        
-                        # Restore artifacts | 恢复构建产物
-                        if [[ -d "/tmp/build_local_backup_fallback_$$" ]]; then
-                            mv "/tmp/build_local_backup_fallback_$$" "$target_path/build_local"
-                        fi
-                        if [[ -d "/tmp/install_local_backup_fallback_$$" ]]; then
-                            mv "/tmp/install_local_backup_fallback_$$" "$target_path/install_local"
-                        fi
                     fi
-                else
-                    # No build artifacts to preserve, simple replacement | 无构建产物要保留，直接替换
-                    rm -rf "$target_path"
-                    mv "$temp_new_item" "$target_path"
-                fi
 
-                print_success "  Updated: ${basename} (build artifacts preserved)"
-                print_success "  已更新：${basename}（构建产物已保留）"
-                ((updated_count++))
-            else
-                print_success "  Installed: ${basename}"
-                print_success "  已安装：${basename}"
-                mv "$item" "$target_path"
-                ((installed_count++))
+                    print_success "  Updated: ${basename} (build artifacts preserved)"
+                    print_success "  已更新：${basename}（构建产物已保留）"
+                    ((updated_count++))
+                else
+                    print_success "  Installed: ${basename}"
+                    print_success "  已安装：${basename}"
+                    mv "$item" "$target_path"
+                    ((installed_count++))
             fi
         done
         

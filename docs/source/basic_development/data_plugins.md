@@ -65,6 +65,16 @@ Parameter type macros are provided in interfaces.hpp - simplifying parameter acc
 
 ## Example
 
+**CMakeLists.txt**:
+```cmake
+# Plugin name defined here (single definition point)
+add_posdk_plugin(my_custom_data
+    PLUGIN_TYPE data
+    SOURCES my_data_plugin.cpp
+    HEADERS my_data_plugin.hpp
+)
+```
+
 ```cpp
 // my_data_plugin.hpp
 #include <po_core.hpp>
@@ -95,8 +105,37 @@ public:
 // my_data_plugin.cpp
 #include "my_data_plugin.hpp"
 
-// Plugin registration - GetType() automatically implemented by macro
-REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin, "my_custom_data")
+namespace MyPlugin {
+
+// Implementation can go here if needed
+// 如果需要，实现可以放在这里
+
+} // namespace MyPlugin
+
+// ✅ Plugin registration - automatically reads plugin name from CMake PLUGIN_NAME
+// Plugin type: "my_custom_data" (from CMake)
+// File name: posdk_plugin_my_custom_data.{so|dylib|dll}
+REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin)
+```
+
+**Usage Example**:
+```cpp
+// Create data object
+auto data = FactoryData::Create("my_custom_data");
+
+// Get internal data pointer
+auto custom_data = GetDataPtr<CustomData>(data);
+if (custom_data) {
+    custom_data->id = 1;
+    custom_data->values = {1.0, 2.0, 3.0};
+}
+
+// Save data
+data->Save("/path/to/folder", "my_data");
+
+// Load data
+auto loaded_data = FactoryData::Create("my_custom_data");
+loaded_data->Load("/path/to/folder/my_data.dat");
 ```
 
 ## Data Configuration

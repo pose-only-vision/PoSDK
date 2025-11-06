@@ -773,41 +773,6 @@ namespace PluginMethods
             // Evaluate relative pose accuracy | 评估相对位姿精度
             EvaluatePoseAccuracy(relative_poses_result, "relative");
 
-            // Step 2.5 (Optional): Rotation refinement using color-based block matching | 步骤2.5（可选）: 基于颜色块匹配的旋转优化
-            bool enable_rotation_refine = GetOptionAsBool("enable_rotation_refine", false);
-            if (enable_rotation_refine)
-            {
-                LOG_INFO_ZH << "=== 步骤2.5: 旋转优化（基于颜色块匹配）===";
-                LOG_INFO_EN << "=== Step 2.5: Rotation refinement (color-based block matching) ===";
-
-                auto refined_poses_result = Step2_5_RotationRefinement(relative_poses_result, preprocess_result);
-                if (refined_poses_result)
-                {
-                    relative_poses_result = refined_poses_result;
-                    LOG_INFO_ZH << "旋转优化完成";
-                    LOG_INFO_EN << "Rotation refinement completed";
-
-                    // Add Step 2.5 data statistics | 添加步骤2.5数据统计
-                    if (params_.base.enable_data_statistics)
-                    {
-                        AddStepDataStatistics("Step2_5_RotationRefinement", relative_poses_result,
-                                              Interface::LanguageEnvironment::GetText(
-                                                  "旋转优化：使用颜色块匹配优化相对旋转",
-                                                  "Rotation refinement: refining relative rotations using color-based block matching"));
-                    }
-                }
-                else
-                {
-                    LOG_WARNING_ZH << "旋转优化失败，继续使用原始相对位姿";
-                    LOG_WARNING_EN << "Rotation refinement failed, continuing with original relative poses";
-                }
-            }
-            else
-            {
-                LOG_INFO_ZH << "跳过旋转优化步骤（enable_rotation_refine=false）";
-                LOG_INFO_EN << "Skipping rotation refinement step (enable_rotation_refine=false)";
-            }
-
             // Extract data from preprocessing result | 从预处理结果中提取数据
             auto data_package = std::dynamic_pointer_cast<DataPackage>(preprocess_result);
             auto camera_models = data_package->GetData("data_camera_models");

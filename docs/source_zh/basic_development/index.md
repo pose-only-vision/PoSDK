@@ -19,7 +19,7 @@
 3. 最后参考 [内置类型列表](#内置类型参考)，了解可用的数据类型和方法
 ```
 
-## 插件注册宏
+## 插件注册
 
 所有插件都需要使用 `REGISTRATION_PLUGIN` 宏在对应的 `.cpp` 源文件末尾进行注册。
 
@@ -32,16 +32,14 @@
 - 宏会自动生成实现
 ```
 
-### **三种注册方式**
+### **插件注册方式**
 
-| 用法             | 语法                                   | 插件名来源    | 适用场景                  | 推荐度       |
-| ---------------- | -------------------------------------- | ------------- | ------------------------- | ------------ |
-| **单参数+CMake** | `REGISTRATION_PLUGIN(MyClass)`         | CMake自动定义 | 任意命名空间              | **强烈推荐** |
-| 单参数（旧版）   | `REGISTRATION_PLUGIN(MyClass)`         | 使用类名      | ⚠️ 仅`PoSDKPlugin`命名空间 | ⚠️ 不推荐     |
-| 双参数           | `REGISTRATION_PLUGIN(MyClass, "type")` | 手动指定      | 需覆盖CMake定义时         | ⚠️ 向后兼容   |
+| 用法             | 语法                           | 插件名来源    | 适用场景     | 推荐度       |
+| ---------------- | ------------------------------ | ------------- | ------------ | ------------ |
+| **单参数+CMake** | `REGISTRATION_PLUGIN(MyClass)` | CMake自动定义 | 任意命名空间 | **强烈推荐** |
 
 ```{tip}
-**推荐方式1（单一信息源）：**
+**推荐方式（单一信息源）：**
 
 **CMakeLists.txt** 中定义插件名称：
 ```cmake
@@ -69,63 +67,57 @@ REGISTRATION_PLUGIN(MyNamespace::MyMethod)  // ← 自动使用CMake定义的名
 - 推荐使用**单参数+CMake自动定义**模式，实现单一信息源管理
 ```
 
-### **示例1 - 单参数+CMake自动定义（推荐）**
+### **示例 - 插件注册**
 
 **CMakeLists.txt**:
 ```cmake
 # 插件名称在这里定义（唯一定义处）
-add_posdk_plugin(method_img2matches
+add_posdk_plugin(opencv_two_view_estimator
     PLUGIN_TYPE methods
-    SOURCES img2matches_pipeline.cpp
+    SOURCES opencv_two_view_estimator.cpp
+    HEADERS opencv_two_view_estimator.hpp
+    LINK_LIBRARIES
+        # 注意：PoSDK::po_core、PoSDK::pomvg_converter、PoSDK::pomvg_common 和 Eigen3::Eigen
+        # 已由 add_posdk_plugin 函数自动链接，无需在此指定。
+        # Note: PoSDK::po_core, PoSDK::pomvg_converter, PoSDK::pomvg_common, and Eigen3::Eigen
+        # are automatically linked by add_posdk_plugin function, no need to specify them here.
+        ${OpenCV_LIBS}  # 只需指定未自动链接的额外库
+    INCLUDE_DIRS
+        ${OpenCV_INCLUDE_DIRS}
 )
 ```
 
-**C++ 头文件 (img2matches_pipeline.hpp)**:
+**C++ 头文件 (opencv_two_view_estimator.hpp)**:
 ```cpp
 namespace PluginMethods {
-    class Img2MatchesPipeline : public Method {
+    class OpenCVTwoViewEstimator : public MethodPresetProfiler {
     public:
-        //  只需声明GetType，不需要实现
+        // ✨ GetType() 由 REGISTRATION_PLUGIN 宏自动实现
         const std::string& GetType() const override;
-        DataPtr Build(const DataPtr& material_ptr = nullptr) override;
+        DataPtr Run() override;
+        // ... (其他方法) ...
     };
 }
 ```
 
-**C++ 源文件 (img2matches_pipeline.cpp)**:
+**C++ 源文件 (opencv_two_view_estimator.cpp)**:
 ```cpp
-#include "img2matches_pipeline.hpp"
+#include "opencv_two_view_estimator.hpp"
 
-// ... (Img2MatchesPipeline 类的其他函数实现) ...
+// ... (OpenCVTwoViewEstimator 类的其他函数实现) ...
 
-// 单参数模式 - 自动从CMake读取PLUGIN_NAME
-// 插件类型："method_img2matches"（来自CMake）
-// 文件名：posdk_plugin_method_img2matches.{so|dylib|dll}
-REGISTRATION_PLUGIN(PluginMethods::Img2MatchesPipeline)
+} // namespace PluginMethods
+
+// ✅ 单参数模式 - 自动从CMake读取PLUGIN_NAME
+// 插件类型："opencv_two_view_estimator"（来自CMake）
+// 文件名：posdk_plugin_opencv_two_view_estimator.{so|dylib|dll}
+REGISTRATION_PLUGIN(PluginMethods::OpenCVTwoViewEstimator)
 ```
 
 **自动一致性**：
-- CMake Target: `method_img2matches`
-- 插件文件名: `posdk_plugin_method_img2matches.dylib`
-- 注册类型: `"method_img2matches"`（自动读取）
-
----
-
-### **示例2 - 双参数模式（向后兼容）**
-
-```cpp
-// 手动指定插件类型（会覆盖CMake定义）
-REGISTRATION_PLUGIN(MyNamespace::MyMethod, "custom_method_name")
-```
-
-```{warning}
-双参数模式会**覆盖**CMake自动定义的`PLUGIN_NAME`，可能导致：
-- 文件名与注册名不一致（降级注册）
-- 需要在两处维护插件名称
-- 增加维护成本和出错风险
-
-**仅在必须覆盖CMake定义时使用！**
-```
+- CMake Target: `opencv_two_view_estimator`
+- 插件文件名: `posdk_plugin_opencv_two_view_estimator.dylib`
+- 注册类型: `"opencv_two_view_estimator"`（从CMake自动读取）
 
 ## 插件目录管理
 
@@ -158,9 +150,9 @@ PoSDK 使用懒加载机制，只有在第一次调用 `Create` 方法时才会�
 您可以通过工厂类的静态方法 `ManagePlugins` 来手动指定插件目录：
 
 ```cpp
-PoMVG::FactoryData::ManagePlugins("/path/to/your/data/plugins");
-PoMVG::FactoryMethod::ManagePlugins("/path/to/your/method/plugins");
-PoMVG::FactoryBehavior::ManagePlugins("/path/to/your/behavior/plugins");
+PoSDK::FactoryData::ManagePlugins("/path/to/your/data/plugins");
+PoSDK::FactoryMethod::ManagePlugins("/path/to/your/method/plugins");
+PoSDK::FactoryBehavior::ManagePlugins("/path/to/your/behavior/plugins");
 ```
 
 ### 获取可用插件类型
@@ -169,9 +161,9 @@ PoMVG::FactoryBehavior::ManagePlugins("/path/to/your/behavior/plugins");
 
 ```cpp
 // 仅显示插件提供的类型
-PoMVG::FactoryData::DispPluginTypes();
-PoMVG::FactoryMethod::DispPluginTypes();
-PoMVG::FactoryBehavior::DispPluginTypes();
+PoSDK::FactoryData::DispPluginTypes();
+PoSDK::FactoryMethod::DispPluginTypes();
+PoSDK::FactoryBehavior::DispPluginTypes();
 ```
 
 ## 插件开发指南

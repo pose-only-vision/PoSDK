@@ -25,34 +25,31 @@ PoSDK的核心SfM管道插件，提供全局式三维重建解决方案。
 
 #### 基础配置参数
 
-| 参数名              | 类型   | 默认值                              | 说明                                               |
-| ------------------- | ------ | ----------------------------------- | -------------------------------------------------- |
-| `dataset_dir`       | string | 必须设置                            | 数据集根目录路径，支持`{exe_dir}`占位符            |
-| `image_folder`      | string | `{dataset_dir}/images`              | 图像文件夹路径，支持嵌套占位符                     |
-| `work_dir`          | string | `{exe_dir}/globalsfm_pipeline_work` | 工作目录路径                                       |
-| `preprocess_type`   | string | `"posdk"`                           | 预处理类型：`openmvg`, `posdk`, `colmap`, `glomap` |
-| `enable_evaluation` | bool   | `true`                              | 是否启用精度评估                                   |
-| `max_iterations`    | int    | `3`                                 | 迭代优化最大次数                                   |
+| 参数名              | 类型   | 默认值                              | 说明                                     |
+| ------------------- | ------ | ----------------------------------- | ---------------------------------------- |
+| `dataset_dir`       | string | 必须设置                            | 数据集根目录路径，支持`{exe_dir}`占位符  |
+| `image_folder`      | string | `{dataset_dir}/images`              | 图像文件夹路径，支持嵌套占位符           |
+| `work_dir`          | string | `{exe_dir}/globalsfm_pipeline_work` | 工作目录路径                             |
+| `preprocess_type`   | string | `"posdk"`                           | 预处理类型：`openmvg`, `opencv`, `posdk` |
+| `enable_evaluation` | bool   | `true`                              | 是否启用精度评估                         |
 
 #### 管道控制选项
 
-| 参数名                    | 类型   | 默认值      | 说明                                                          |
-| ------------------------- | ------ | ----------- | ------------------------------------------------------------- |
-| `enable_3d_points_output` | bool   | `true`      | 是否输出3D点云数据                                            |
-| `enable_iter_evaluation`  | bool   | `true`      | 是否启用迭代过程中的精度评估                                  |
-| `enable_meshlab_export`   | bool   | `true`      | 是否导出Meshlab可视化工程文件                                 |
-| `enable_csv_export`       | bool   | `true`      | 是否启用评估结果CSV导出                                       |
-| `evaluation_print_mode`   | string | `"summary"` | 评估结果打印模式：`none`, `summary`, `detailed`, `comparison` |
-| `compared_pipelines`      | string | `""`        | 对比算法列表，如`"openmvg,COLMAP"`                            |
+| 参数名                       | 类型   | 默认值      | 说明                                                          |
+| ---------------------------- | ------ | ----------- | ------------------------------------------------------------- |
+| `enable_3d_points_output`    | bool   | `true`      | 是否输出3D点云数据                                            |
+| `enable_meshlab_export`      | bool   | `true`      | 是否导出Meshlab可视化工程文件                                 |
+| `enable_posdk2colmap_export` | bool   | `true`      | 是否导出PoSDK重建结果到Colmap格式（相机、图像、3D点）         |
+| `enable_csv_export`          | bool   | `true`      | 是否启用评估结果CSV导出                                       |
+| `evaluation_print_mode`      | string | `"summary"` | 评估结果打印模式：`none`, `summary`, `detailed`, `comparison` |
+| `compared_pipelines`         | string | `""`        | 对比算法列表，如`"openmvg,COLMAP"`                            |
 
 #### 性能优化选项
 
-| 参数名                   | 类型 | 默认值  | 说明                         |
-| ------------------------ | ---- | ------- | ---------------------------- |
-| `use_img2matchesv2`      | bool | `false` | 使用高性能多线程匹配器       |
-| `enable_rotation_refine` | bool | `false` | 启用基于颜色块匹配的旋转优化 |
-| `enable_profiling`       | bool | `true`  | 启用性能分析                 |
-| `enable_data_statistics` | bool | `true`  | 启用数据统计功能             |
+| 参数名                   | 类型 | 默认值 | 说明             |
+| ------------------------ | ---- | ------ | ---------------- |
+| `enable_profiling`       | bool | `true` | 启用性能分析     |
+| `enable_data_statistics` | bool | `true` | 启用数据统计功能 |
 
 #### 配置文件示例
 
@@ -68,16 +65,16 @@ work_dir={exe_dir}/globalsfm_pipeline_work
 # 预处理和评估
 preprocess_type=posdk
 enable_evaluation=true
-max_iterations=3
 
 # 输出控制
 enable_3d_points_output=true
+enable_meshlab_export=true
+enable_posdk2colmap_export=true
 enable_csv_export=true
 evaluation_print_mode=summary
 
 # 性能选项
 enable_profiling=true
-use_img2matchesv2=false  # 高性能版本，需要OpenMP支持
 ```
 
 #### 占位符系统

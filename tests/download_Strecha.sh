@@ -205,10 +205,10 @@ download_test_data() {
                 continue
             fi
             
-            local basename=$(basename "$item")
+                local basename=$(basename "$item")
             local target_path="${SCRIPT_DIR}/${basename}"
             
-            print_info "Installing ${basename}..."
+                print_info "Installing ${basename}..."
             
             # Remove existing directory/file if it exists to ensure clean installation | 如果存在则删除现有目录/文件以确保干净安装
             if [[ -e "$target_path" ]]; then

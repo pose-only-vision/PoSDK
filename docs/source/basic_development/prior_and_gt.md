@@ -92,7 +92,7 @@ Output package functionality is a reserved interface and is not yet implemented 
 - Typically used during development and testing phases
 - Does not affect actual algorithm execution
 - Accessed via `SetGTData()`/`GetGTData()`
-- Works with evaluators for automatic accuracy analysis
+- Works with evaluators for automatic accuracy analysis (when `enable_evaluator=true`)
 
 ### Key Differences Comparison
 
@@ -331,7 +331,7 @@ void SetGTData(DataPtr &gt_data);
 auto gt_poses = LoadGroundTruthPoses("ground_truth.txt");
 method_ptr->SetGTData(gt_poses);
 
-// Algorithm will automatically compare with ground truth during execution
+// Algorithm will automatically compare with ground truth if enable_evaluator=true
 auto result = method_ptr->Build(input_data);
 ```
 
@@ -410,10 +410,21 @@ bool CallEvaluator(const DataPtr &result_data);
 
 **Usage Example**:
 ```cpp
-// Usually no need to call manually, Build() calls automatically
-// Usually no need to call manually, Build() calls automatically
+// Usually no need to call manually, Build() calls automatically when enable_evaluator=true
+// Usually no need to call manually, Build() calls automatically when enable_evaluator=true
 auto result = method_ptr->Run();
 bool eval_success = method_ptr->CallEvaluator(result);
+```
+
+```{note}
+**Automatic Evaluation**
+
+`CallEvaluator()` is automatically called by `MethodPresetProfiler::Build()` when:
+- `enable_evaluator` option is set to `true` (default: `false`)
+- Result data is not null
+- Ground truth data is set via `SetGTData()`
+
+If `enable_evaluator` is `false`, you need to manually call `CallEvaluator()` after `Build()` or `Run()`.
 ```
 
 ---
@@ -521,14 +532,17 @@ int main() {
 
     ba_method->SetGTData(gt_poses);  // Set pose ground truth
 
-    // 5. Execute algorithm (will automatically call evaluator)
+    // 5. Enable automatic evaluation (optional, default is false)
+    ba_method->SetMethodOption("enable_evaluator", "true");
+
+    // 6. Execute algorithm (will automatically call evaluator if enable_evaluator=true)
     auto result = ba_method->Build();
 
-    // 6. View evaluation results (evaluator automatically outputs to console and files)
+    // 7. View evaluation results (evaluator automatically outputs to console and files)
     LOG_INFO_ZH << "算法执行完成，评估结果已保存";
     LOG_INFO_EN << "Algorithm completed, evaluation results saved";
 
-    // 7. Use returned result data
+    // 8. Use returned result data
     if (result) {
         auto optimized_poses = GetDataPtr<GlobalPoses>(result);
         
@@ -637,6 +651,9 @@ algorithm->SetRequiredData(camera_models);
 // Set ground truth data
 auto gt_poses = LoadGroundTruth("gt_poses.txt");
 algorithm->SetGTData(gt_poses);
+
+// Enable automatic evaluation (optional)
+algorithm->SetMethodOption("enable_evaluator", "true");
 
 // Execute and automatically evaluate
 auto result = algorithm->Build();

@@ -15,7 +15,7 @@ This guide introduces the PoSDK architecture, core library usage, and custom plu
 - **Performance Profiling Tools**: Built-in profiler for real-time monitoring of memory, CPU, time, and other metrics  
 - **Automatic Evaluation**: Built-in accuracy evaluator that automatically collects, statistics, and exports various accuracy metrics of algorithms
 - **Copyright Tracking**: Automatically collects and displays copyright information of algorithms to protect intellectual property
-- **Cross-platform Support**: Supports macOS (x86_64/arm64), Linux (x86_64/aarch64)
+- **Cross-platform Support**: Supports macOS (arm64), Linux (x86_64/aarch64)
 - **Bilingual Logging**: Chinese-English bilingual log output
 - **Platform Integration and Comparison**: Supports integration and comparison with mainstream 3D reconstruction platforms (OpenMVG, COLMAP, GLOMAP, etc.) → [View Comparison Results](benchmark_comparison/index.md)
 

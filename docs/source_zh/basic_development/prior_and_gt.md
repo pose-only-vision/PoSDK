@@ -92,7 +92,7 @@ Output package functionality is a reserved interface and is not yet implemented 
 - 通常在开发和测试阶段使用
 - 不影响算法的实际执行
 - 通过`SetGTData()`/`GetGTData()`访问
-- 配合评估器进行自动精度分析
+- 配合评估器进行自动精度分析（当`enable_evaluator=true`时）
 
 ### 关键区别对比 | Key Differences
 
@@ -331,7 +331,7 @@ void SetGTData(DataPtr &gt_data);
 auto gt_poses = LoadGroundTruthPoses("ground_truth.txt");
 method_ptr->SetGTData(gt_poses);
 
-// 执行算法时会自动与真值比较
+// 如果enable_evaluator=true，算法会自动与真值比较
 auto result = method_ptr->Build(input_data);
 ```
 
@@ -410,10 +410,26 @@ bool CallEvaluator(const DataPtr &result_data);
 
 **使用示例 | Usage Example**:
 ```cpp
-// 通常不需要手动调用，Build()会自动调用
-// Usually no need to call manually, Build() calls automatically
+// 通常不需要手动调用，当enable_evaluator=true时，Build()会自动调用
+// Usually no need to call manually, Build() calls automatically when enable_evaluator=true
 auto result = method_ptr->Run();
 bool eval_success = method_ptr->CallEvaluator(result);
+```
+
+```{note}
+**自动评估 | Automatic Evaluation**
+
+`CallEvaluator()` 会在以下条件下由 `MethodPresetProfiler::Build()` 自动调用：
+`CallEvaluator()` is automatically called by `MethodPresetProfiler::Build()` when:
+- `enable_evaluator` 选项设置为 `true`（默认：`false`）
+- `enable_evaluator` option is set to `true` (default: `false`)
+- 结果数据不为空
+- Result data is not null
+- 已通过 `SetGTData()` 设置真值数据
+- Ground truth data is set via `SetGTData()`
+
+如果 `enable_evaluator` 为 `false`，需要在 `Build()` 或 `Run()` 后手动调用 `CallEvaluator()`。
+If `enable_evaluator` is `false`, you need to manually call `CallEvaluator()` after `Build()` or `Run()`.
 ```
 
 ---
@@ -521,14 +537,17 @@ int main() {
 
     ba_method->SetGTData(gt_poses);  // 设置位姿真值
 
-    // 5. 执行算法（会自动调用评估器）
+    // 5. 启用自动评估（可选，默认为false）
+    ba_method->SetMethodOption("enable_evaluator", "true");
+
+    // 6. 执行算法（如果enable_evaluator=true，会自动调用评估器）
     auto result = ba_method->Build();
 
-    // 6. 查看评估结果（评估器会自动输出到控制台和文件）
+    // 7. 查看评估结果（评估器会自动输出到控制台和文件）
     LOG_INFO_ZH << "算法执行完成，评估结果已保存";
     LOG_INFO_EN << "Algorithm completed, evaluation results saved";
 
-    // 7. 使用返回的结果数据
+    // 8. 使用返回的结果数据
     if (result) {
         auto optimized_poses = GetDataPtr<GlobalPoses>(result);
         
@@ -637,6 +656,9 @@ algorithm->SetRequiredData(camera_models);
 // 设置真值数据
 auto gt_poses = LoadGroundTruth("gt_poses.txt");
 algorithm->SetGTData(gt_poses);
+
+// 启用自动评估（可选）
+algorithm->SetMethodOption("enable_evaluator", "true");
 
 // 执行并自动评估
 auto result = algorithm->Build();

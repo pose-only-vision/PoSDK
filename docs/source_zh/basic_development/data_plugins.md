@@ -65,6 +65,16 @@ FUNC_INTERFACE_END()
 
 ## 示例
 
+**CMakeLists.txt**:
+```cmake
+# 插件名称在这里定义（唯一定义处）
+add_posdk_plugin(my_custom_data
+    PLUGIN_TYPE data
+    SOURCES my_data_plugin.cpp
+    HEADERS my_data_plugin.hpp
+)
+```
+
 ```cpp
 // my_data_plugin.hpp
 #include <po_core.hpp>
@@ -95,8 +105,37 @@ public:
 // my_data_plugin.cpp
 #include "my_data_plugin.hpp"
 
-// 插件注册 - GetType() 由宏自动实现
-REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin, "my_custom_data")
+namespace MyPlugin {
+
+// 如果需要，实现可以放在这里
+// Implementation can go here if needed
+
+} // namespace MyPlugin
+
+// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// 插件类型："my_custom_data"（来自CMake）
+// 文件名：posdk_plugin_my_custom_data.{so|dylib|dll}
+REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin)
+```
+
+**使用示例 | Usage Example**:
+```cpp
+// 创建数据对象
+auto data = FactoryData::Create("my_custom_data");
+
+// 获取内部数据指针
+auto custom_data = GetDataPtr<CustomData>(data);
+if (custom_data) {
+    custom_data->id = 1;
+    custom_data->values = {1.0, 2.0, 3.0};
+}
+
+// 保存数据
+data->Save("/path/to/folder", "my_data");
+
+// 加载数据
+auto loaded_data = FactoryData::Create("my_custom_data");
+loaded_data->Load("/path/to/folder/my_data.dat");
 ```
 
 ## 数据配置

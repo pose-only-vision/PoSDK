@@ -11,12 +11,12 @@
 ### 注册宏语法
 
 ```cpp
-REGISTRATION_PLUGIN(PluginClassName, "plugin_type_string")
+REGISTRATION_PLUGIN(PluginClassName)
 ```
 
 **参数说明**：
-- **第一个参数**：插件的类名（如 `MyMethod`, `MyDataPlugin`）
-- **第二个参数**：插件的类型字符串（如 `"my_method"`）
+- **参数**：插件类名（如 `MyPlugin::MyMethod`, `MyPlugin::MyDataPlugin`）
+- 插件类型字符串自动从CMake `PLUGIN_NAME` 宏读取
 
 ```{important}
 ** 自动实现 `GetType()` 函数**
@@ -24,20 +24,13 @@ REGISTRATION_PLUGIN(PluginClassName, "plugin_type_string")
 - 宏会**自动实现** `GetType()` 函数
 - 头文件中只需**声明** `const std::string& GetType() const override;`
 - 源文件中**不需要**手动实现 `GetType()`
-
-**宏的两种用法：**
-
-| 用法   | 语法                                                  | 适用场景                    | 类型名      |
-| ------ | ----------------------------------------------------- | --------------------------- | ----------- |
-| 单参数 | `REGISTRATION_PLUGIN(MyClass)`                        | ⚠️ 仅 `PoSDKPlugin` 命名空间 | `"MyClass"` |
-| 双参数 | `REGISTRATION_PLUGIN(Namespace::MyClass, "my_class")` | 任意命名空间                | 可自定义    |
+- 插件名称在CMakeLists.txt中定义一次，宏自动使用
 ```
 
 **注意事项**：
 - 必须放在 `.cpp` 源文件末尾（不能放在 `.hpp` 头文件中）
-- 类型字符串在同类插件中必须唯一
-- **单参数模式**：类必须定义在 `PoSDKPlugin` 命名空间中，宏会自动添加命名空间前缀
-- **双参数模式**：支持任意命名空间，推荐使用
+- 插件名称必须在CMakeLists.txt中使用 `add_posdk_plugin(plugin_name ...)` 定义
+- 插件类型字符串自动从CMake读取，确保CMake target、文件名和注册类型的一致性
 
 ---
 
@@ -62,6 +55,16 @@ Method插件用于实现具体的算法逻辑。PoSDK提供了三种Method基类
 最基础的Method插件，适合快速原型验证。
 
 ### 代码示例
+
+**CMakeLists.txt**:
+```cmake
+# 插件名称在这里定义（唯一定义处）
+add_posdk_plugin(my_simple_method
+    PLUGIN_TYPE methods
+    SOURCES my_simple_method.cpp
+    HEADERS my_simple_method.hpp
+)
+```
 
 **my_simple_method.hpp**:
 ```cpp
@@ -98,12 +101,13 @@ DataPtr MySimpleMethod::Build(const DataPtr& material_ptr) {
     // 实现算法逻辑...
 
     // 返回结果
-    return FactoryData::Create("data_map_string");
+    return std::make_shared<DataMap<std::string>>("算法执行完成", "data_map_string");
 }
 
 } // namespace MyPlugin
 
-//  插件注册 - GetType() 由宏自动实现（必须在.cpp文件末尾）
+// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// 插件类型："my_simple_method"（来自CMake）
 REGISTRATION_PLUGIN(MyPlugin::MySimpleMethod)
 ```
 
@@ -121,6 +125,16 @@ auto result = method->Build();
 使用 `MethodPreset` 基类，支持配置文件管理和输入数据检查。
 
 ### 代码示例
+
+**CMakeLists.txt**:
+```cmake
+# 插件名称在这里定义（唯一定义处）
+add_posdk_plugin(my_preset_method
+    PLUGIN_TYPE methods
+    SOURCES my_preset_method.cpp
+    HEADERS my_preset_method.hpp
+)
+```
 
 **my_preset_method.hpp**:
 ```cpp
@@ -185,12 +199,14 @@ DataPtr MyPresetMethod::Run() {
     // ... 算法实现 ...
 
     // 4. 返回结果
-    return FactoryData::Create("data_map_string", "处理完成");
+    return std::make_shared<DataMap<std::string>>("处理完成", "data_map_string");
 }
 
 } // namespace MyPlugin
 
-REGISTRATION_PLUGIN(MyPlugin::MyPresetMethod, "my_preset_method")
+// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// 插件类型："my_preset_method"（来自CMake）
+REGISTRATION_PLUGIN(MyPlugin::MyPresetMethod)
 ```
 
 ### 配置文件示例
@@ -229,6 +245,16 @@ auto result = method->Build(data_package);
 使用 `MethodPresetProfiler` 基类，自动进行性能统计和评估。
 
 ### 代码示例
+
+**CMakeLists.txt**:
+```cmake
+# 插件名称在这里定义（唯一定义处）
+add_posdk_plugin(my_profiler_method
+    PLUGIN_TYPE methods
+    SOURCES my_profiler_method.cpp
+    HEADERS my_profiler_method.hpp
+)
+```
 
 **my_profiler_method.hpp**:
 ```cpp
@@ -269,31 +295,39 @@ MyProfilerMethod::MyProfilerMethod() {
 //  不需要手动实现 GetType()，宏会自动生成
 
 DataPtr MyProfilerMethod::Run() {
-    // 性能分析：步骤1
-    {
-        PROFILER_SCOPED("预处理", GetType());
+    // ✅ 性能分析：开始会话（自动使用方法标签）
+    POSDK_START(true);  // 默认只统计时间，节省开销
+    
+    // 性能分析：步骤1 - 添加阶段检查点
+    PROFILER_STAGE("预处理");
         // 预处理代码...
-    }
 
-    // 性能分析：步骤2
-    {
-        PROFILER_SCOPED("核心算法", GetType());
+    // 性能分析：步骤2 - 添加阶段检查点
+    PROFILER_STAGE("核心算法");
         // 核心算法代码...
-    }
 
-    // 性能分析：步骤3
-    {
-        PROFILER_SCOPED("后处理", GetType());
+    // 性能分析：步骤3 - 添加阶段检查点
+    PROFILER_STAGE("后处理");
         // 后处理代码...
-    }
+    
+    // ✅ 性能分析：结束会话（自动提交数据）
+    PROFILER_END();
 
-    return FactoryData::Create("data_map_string");
+    return std::make_shared<DataMap<std::string>>("处理完成", "data_map_string");
 }
 
 } // namespace MyPlugin
 
+// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// 插件类型："my_profiler_method"（来自CMake）
 REGISTRATION_PLUGIN(MyPlugin::MyProfilerMethod)
 ```
+
+**性能分析宏说明**：
+- `POSDK_START(true)`: 开始性能分析会话，自动使用方法配置的标签，默认只统计时间（节省开销）
+- `PROFILER_STAGE("阶段名")`: 添加阶段检查点，自动计算区间性能指标
+- `PROFILER_END()`: 结束会话并自动提交数据到ProfilerManager
+- 如需统计更多指标，可使用 `POSDK_START(true, "time|memory|cpu")`
 
 ### 配置文件示例
 
@@ -324,6 +358,16 @@ auto result = method->Build(data_package);
 DataIO插件用于封装各种数据类型。最简单的方式是继承 `DataIO` 基类。
 
 ### 代码示例
+
+**CMakeLists.txt**:
+```cmake
+# 插件名称在这里定义（唯一定义处）
+add_posdk_plugin(my_custom_data
+    PLUGIN_TYPE data
+    SOURCES my_data_plugin.cpp
+    HEADERS my_data_plugin.hpp
+)
+```
 
 **my_data_plugin.hpp**:
 ```cpp
@@ -386,8 +430,9 @@ bool MyDataPlugin::Load(const std::string& filepath,
 
 } // namespace MyPlugin
 
-//  插件注册 - GetType() 由宏自动实现
-REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin, "my_custom_data")
+// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// 插件类型："my_custom_data"（来自CMake）
+REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin)
 ```
 
 ### 使用方式
@@ -423,6 +468,16 @@ loaded_data->Load("/path/to/folder/my_data.dat");
 ```
 
 ### 代码示例
+
+**CMakeLists.txt**:
+```cmake
+# 插件名称在这里定义（唯一定义处）
+add_posdk_plugin(data_example
+    PLUGIN_TYPE data
+    SOURCES data_example.cpp
+    HEADERS data_example.hpp
+)
+```
 
 **data_example.hpp**:
 ```cpp
@@ -529,8 +584,9 @@ bool DataExample::FromProto(const google::protobuf::Message& message) {
 
 } // namespace MyPlugin
 
-//  插件注册 - GetType() 由宏自动实现
-REGISTRATION_PLUGIN(MyPlugin::DataExample, "data_example")
+// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// 插件类型："data_example"（来自CMake）
+REGISTRATION_PLUGIN(MyPlugin::DataExample)
 ```
 
 ### 使用方式
@@ -615,9 +671,20 @@ loaded_data->Load("/path/to/folder/my_example.pb");
 
 ### 插件注册
 
+**CMakeLists.txt**:
+```cmake
+add_posdk_plugin(plugin_name  # ← 插件名称在这里定义
+    PLUGIN_TYPE methods  # 或 "data"
+    SOURCES plugin.cpp
+    HEADERS plugin.hpp
+)
+```
+
+**C++ 代码**:
 ```cpp
-//  必须在.cpp文件末尾 - 自动实现GetType()
-REGISTRATION_PLUGIN(PluginClassName, "type_string")
+// 必须在.cpp文件末尾 - 自动实现GetType()
+// 插件名称自动从CMake PLUGIN_NAME宏读取
+REGISTRATION_PLUGIN(MyPlugin::PluginClassName)
 ```
 
 

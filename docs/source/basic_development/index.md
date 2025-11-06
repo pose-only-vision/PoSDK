@@ -19,7 +19,7 @@ This section introduces the fundamentals of PoSDK plugin development, including 
 3. Finally refer to [Built-in Type Reference](#built-in-type-reference) to learn about available data types and methods
 ```
 
-## Plugin Registration Macro
+## Plugin Registration
 
 All plugins need to use the `REGISTRATION_PLUGIN` macro for registration at the end of the corresponding `.cpp` source file.
 
@@ -32,16 +32,14 @@ The `REGISTRATION_PLUGIN` macro **automatically implements** the `GetType()` fun
 - The macro automatically generates the implementation
 ```
 
-### **Three Registration Methods**
+### **Plugin Registration Method**
 
-| Usage                    | Syntax                                 | Plugin Name Source | Applicable Scenarios                   | Recommendation         |
-| ------------------------ | -------------------------------------- | ------------------ | -------------------------------------- | ---------------------- |
-| **Single-param + CMake** | `REGISTRATION_PLUGIN(MyClass)`         | CMake auto-defined | Any namespace                          | **Highly Recommended** |
-| Single-param (legacy)    | `REGISTRATION_PLUGIN(MyClass)`         | Uses class name    | ⚠️ Only `PoSDKPlugin` namespace         | ⚠️ Not Recommended      |
-| Dual-param               | `REGISTRATION_PLUGIN(MyClass, "type")` | Manually specified | When need to override CMake definition | ⚠️ Backward Compatible  |
+| Usage                    | Syntax                         | Plugin Name Source | Applicable Scenarios | Recommendation         |
+| ------------------------ | ------------------------------ | ------------------ | -------------------- | ---------------------- |
+| **Single-param + CMake** | `REGISTRATION_PLUGIN(MyClass)` | CMake auto-defined | Any namespace        | **Highly Recommended** |
 
 ```{tip}
-**Recommended Method 1 (Single Source of Truth):**
+**Recommended Method (Single Source of Truth):**
 
 Define plugin name in **CMakeLists.txt**:
 ```cmake
@@ -69,63 +67,57 @@ REGISTRATION_PLUGIN(MyNamespace::MyMethod)  // ← Automatically uses CMake-defi
 - Recommended to use **single-parameter + CMake auto-definition** mode for single source of truth management
 ```
 
-### **Example 1 - Single-parameter + CMake Auto-definition (Recommended)**
+### **Example - Plugin Registration**
 
 **CMakeLists.txt**:
 ```cmake
 # Plugin name defined here (single definition point)
-add_posdk_plugin(method_img2matches
+add_posdk_plugin(opencv_two_view_estimator
     PLUGIN_TYPE methods
-    SOURCES img2matches_pipeline.cpp
+    SOURCES opencv_two_view_estimator.cpp
+    HEADERS opencv_two_view_estimator.hpp
+    LINK_LIBRARIES
+        # Note: PoSDK::po_core, PoSDK::pomvg_converter, PoSDK::pomvg_common, and Eigen3::Eigen
+        # are automatically linked by add_posdk_plugin function, no need to specify them here.
+        # 注意：PoSDK::po_core、PoSDK::pomvg_converter、PoSDK::pomvg_common 和 Eigen3::Eigen
+        # 已由 add_posdk_plugin 函数自动链接，无需在此指定。
+        ${OpenCV_LIBS}  # Only specify additional libraries not auto-linked
+    INCLUDE_DIRS
+        ${OpenCV_INCLUDE_DIRS}
 )
 ```
 
-**C++ Header File (img2matches_pipeline.hpp)**:
+**C++ Header File (opencv_two_view_estimator.hpp)**:
 ```cpp
 namespace PluginMethods {
-    class Img2MatchesPipeline : public Method {
+    class OpenCVTwoViewEstimator : public MethodPresetProfiler {
     public:
-        // Only declare GetType, no implementation needed
+        // ✨ GetType() is automatically implemented by REGISTRATION_PLUGIN macro
         const std::string& GetType() const override;
-        DataPtr Build(const DataPtr& material_ptr = nullptr) override;
+        DataPtr Run() override;
+        // ... (other methods) ...
     };
 }
 ```
 
-**C++ Source File (img2matches_pipeline.cpp)**:
+**C++ Source File (opencv_two_view_estimator.cpp)**:
 ```cpp
-#include "img2matches_pipeline.hpp"
+#include "opencv_two_view_estimator.hpp"
 
-// ... (Other function implementations for Img2MatchesPipeline class) ...
+// ... (Other function implementations for OpenCVTwoViewEstimator class) ...
 
-// Single-parameter mode - automatically reads from CMake PLUGIN_NAME
-// Plugin type: "method_img2matches" (from CMake)
-// File name: posdk_plugin_method_img2matches.{so|dylib|dll}
-REGISTRATION_PLUGIN(PluginMethods::Img2MatchesPipeline)
+} // namespace PluginMethods
+
+// ✅ Single-parameter mode - automatically reads from CMake PLUGIN_NAME
+// Plugin type: "opencv_two_view_estimator" (from CMake)
+// File name: posdk_plugin_opencv_two_view_estimator.{so|dylib|dll}
+REGISTRATION_PLUGIN(PluginMethods::OpenCVTwoViewEstimator)
 ```
 
 **Automatic Consistency**:
-- CMake Target: `method_img2matches`
-- Plugin file name: `posdk_plugin_method_img2matches.dylib`
-- Registration type: `"method_img2matches"` (auto-read)
-
----
-
-### **Example 2 - Dual-parameter Mode (Backward Compatible)**
-
-```cpp
-// Manually specify plugin type (will override CMake definition)
-REGISTRATION_PLUGIN(MyNamespace::MyMethod, "custom_method_name")
-```
-
-```{warning}
-Dual-parameter mode will **override** CMake auto-defined `PLUGIN_NAME`, which may cause:
-- File name and registration name inconsistency (downgrade registration)
-- Need to maintain plugin name in two places
-- Increases maintenance cost and error risk
-
-**Use only when must override CMake definition!**
-```
+- CMake Target: `opencv_two_view_estimator`
+- Plugin file name: `posdk_plugin_opencv_two_view_estimator.dylib`
+- Registration type: `"opencv_two_view_estimator"` (auto-read from CMake)
 
 ## Plugin Directory Management
 
@@ -158,9 +150,9 @@ If you encounter plugin loading issues, please check:
 You can manually specify plugin directory through factory class static method `ManagePlugins`:
 
 ```cpp
-PoMVG::FactoryData::ManagePlugins("/path/to/your/data/plugins");
-PoMVG::FactoryMethod::ManagePlugins("/path/to/your/method/plugins");
-PoMVG::FactoryBehavior::ManagePlugins("/path/to/your/behavior/plugins");
+PoSDK::FactoryData::ManagePlugins("/path/to/your/data/plugins");
+PoSDK::FactoryMethod::ManagePlugins("/path/to/your/method/plugins");
+PoSDK::FactoryBehavior::ManagePlugins("/path/to/your/behavior/plugins");
 ```
 
 ### Get Available Plugin Types
@@ -169,9 +161,9 @@ Use the following functions to display available plugin types in command line:
 
 ```cpp
 // Only display types provided by plugins
-PoMVG::FactoryData::DispPluginTypes();
-PoMVG::FactoryMethod::DispPluginTypes();
-PoMVG::FactoryBehavior::DispPluginTypes();
+PoSDK::FactoryData::DispPluginTypes();
+PoSDK::FactoryMethod::DispPluginTypes();
+PoSDK::FactoryBehavior::DispPluginTypes();
 ```
 
 ## Plugin Development Guide

@@ -11,12 +11,12 @@ All PoSDK plugins need to be registered through the `REGISTRATION_PLUGIN` macro,
 ### Registration Macro Syntax
 
 ```cpp
-REGISTRATION_PLUGIN(PluginClassName, "plugin_type_string")
+REGISTRATION_PLUGIN(PluginClassName)
 ```
 
 **Parameter Description**:
-- **First parameter**: Plugin class name (e.g., `MyMethod`, `MyDataPlugin`)
-- **Second parameter**: Plugin type string (e.g., `"my_method"`)
+- **Parameter**: Plugin class name (e.g., `MyPlugin::MyMethod`, `MyPlugin::MyDataPlugin`)
+- Plugin type string is automatically read from CMake `PLUGIN_NAME` macro
 
 ```{important}
 ** Automatic Implementation of `GetType()` Function**
@@ -24,20 +24,13 @@ REGISTRATION_PLUGIN(PluginClassName, "plugin_type_string")
 - Macro **automatically implements** `GetType()` function
 - Only **declare** `const std::string& GetType() const override;` in header file
 - **Do not** manually implement `GetType()` in source file
-
-**Two Usage Methods of the Macro:**
-
-| Usage        | Syntax                                                | Applicable Scenarios           | Type Name    |
-| ------------ | ----------------------------------------------------- | ------------------------------ | ------------ |
-| Single-param | `REGISTRATION_PLUGIN(MyClass)`                        | ⚠️ Only `PoSDKPlugin` namespace | `"MyClass"`  |
-| Dual-param   | `REGISTRATION_PLUGIN(Namespace::MyClass, "my_class")` | Any namespace                  | Customizable |
+- Plugin name is defined once in CMakeLists.txt, automatically used by the macro
 ```
 
 **Notes**:
 - Must be placed at the end of `.cpp` source file (cannot be placed in `.hpp` header file)
-- Type string must be unique among same type plugins
-- **Single-parameter mode**: Class must be defined in `PoSDKPlugin` namespace, macro automatically adds namespace prefix
-- **Dual-parameter mode**: Supports any namespace, recommended to use
+- Plugin name must be defined in CMakeLists.txt using `add_posdk_plugin(plugin_name ...)`
+- Plugin type string is automatically read from CMake, ensuring consistency between CMake target, file name, and registration type
 
 ---
 
@@ -62,6 +55,16 @@ Method plugins are used to implement specific algorithm logic. PoSDK provides th
 Most basic Method plugin, suitable for quick prototype validation.
 
 ### Code Example
+
+**CMakeLists.txt**:
+```cmake
+# Plugin name defined here (single definition point)
+add_posdk_plugin(my_simple_method
+    PLUGIN_TYPE methods
+    SOURCES my_simple_method.cpp
+    HEADERS my_simple_method.hpp
+)
+```
 
 **my_simple_method.hpp**:
 ```cpp
@@ -98,12 +101,13 @@ DataPtr MySimpleMethod::Build(const DataPtr& material_ptr) {
     // Implement algorithm logic...
 
     // Return result
-    return FactoryData::Create("data_map_string");
+    return std::make_shared<DataMap<std::string>>("算法执行完成", "data_map_string");
 }
 
 } // namespace MyPlugin
 
-// Plugin registration - GetType() automatically implemented by macro (must be at end of .cpp file)
+// ✅ Plugin registration - automatically reads plugin name from CMake PLUGIN_NAME
+// Plugin type: "my_simple_method" (from CMake)
 REGISTRATION_PLUGIN(MyPlugin::MySimpleMethod)
 ```
 
@@ -121,6 +125,16 @@ auto result = method->Build();
 Using `MethodPreset` base class, supports configuration file management and input data checking.
 
 ### Code Example
+
+**CMakeLists.txt**:
+```cmake
+# Plugin name defined here (single definition point)
+add_posdk_plugin(my_preset_method
+    PLUGIN_TYPE methods
+    SOURCES my_preset_method.cpp
+    HEADERS my_preset_method.hpp
+)
+```
 
 **my_preset_method.hpp**:
 ```cpp
@@ -185,12 +199,14 @@ DataPtr MyPresetMethod::Run() {
     // ... Algorithm implementation ...
 
     // 4. Return result
-    return FactoryData::Create("data_map_string", "处理完成");
+    return std::make_shared<DataMap<std::string>>("处理完成", "data_map_string");
 }
 
 } // namespace MyPlugin
 
-REGISTRATION_PLUGIN(MyPlugin::MyPresetMethod, "my_preset_method")
+// ✅ Plugin registration - automatically reads plugin name from CMake PLUGIN_NAME
+// Plugin type: "my_preset_method" (from CMake)
+REGISTRATION_PLUGIN(MyPlugin::MyPresetMethod)
 ```
 
 ### Configuration File Example
@@ -229,6 +245,16 @@ auto result = method->Build(data_package);
 Using `MethodPresetProfiler` base class, automatically performs performance statistics and evaluation.
 
 ### Code Example
+
+**CMakeLists.txt**:
+```cmake
+# Plugin name defined here (single definition point)
+add_posdk_plugin(my_profiler_method
+    PLUGIN_TYPE methods
+    SOURCES my_profiler_method.cpp
+    HEADERS my_profiler_method.hpp
+)
+```
 
 **my_profiler_method.hpp**:
 ```cpp
@@ -269,31 +295,39 @@ MyProfilerMethod::MyProfilerMethod() {
 // Don't need to manually implement GetType(), macro automatically generates
 
 DataPtr MyProfilerMethod::Run() {
-    // Performance analysis: Step 1
-    {
-        PROFILER_SCOPED("预处理", GetType());
+    // ✅ Performance analysis: Start session (automatically uses method labels)
+    POSDK_START(true);  // Default: TIME only to save overhead
+    
+    // Performance analysis: Step 1 - Add stage checkpoint
+    PROFILER_STAGE("preprocessing");
         // Preprocessing code...
-    }
 
-    // Performance analysis: Step 2
-    {
-        PROFILER_SCOPED("核心算法", GetType());
+    // Performance analysis: Step 2 - Add stage checkpoint
+    PROFILER_STAGE("core_algorithm");
         // Core algorithm code...
-    }
 
-    // Performance analysis: Step 3
-    {
-        PROFILER_SCOPED("后处理", GetType());
+    // Performance analysis: Step 3 - Add stage checkpoint
+    PROFILER_STAGE("postprocessing");
         // Post-processing code...
-    }
+    
+    // ✅ Performance analysis: End session (automatically submits data)
+    PROFILER_END();
 
-    return FactoryData::Create("data_map_string");
+    return std::make_shared<DataMap<std::string>>("Processing finished", "data_map_string");
 }
 
 } // namespace MyPlugin
 
+// ✅ Plugin registration - automatically reads plugin name from CMake PLUGIN_NAME
+// Plugin type: "my_profiler_method" (from CMake)
 REGISTRATION_PLUGIN(MyPlugin::MyProfilerMethod)
 ```
+
+**Performance Profiling Macro Notes**:
+- `POSDK_START(true)`: Start profiling session, automatically uses method's configured labels, defaults to TIME only (saves overhead)
+- `PROFILER_STAGE("stage_name")`: Add stage checkpoint, automatically calculates interval performance metrics
+- `PROFILER_END()`: End session and automatically submit data to ProfilerManager
+- To collect more metrics, use `POSDK_START(true, "time|memory|cpu")`
 
 ### Configuration File Example
 
@@ -324,6 +358,16 @@ auto result = method->Build(data_package);
 DataIO plugins are used to encapsulate various data types. The simplest way is to inherit from `DataIO` base class.
 
 ### Code Example
+
+**CMakeLists.txt**:
+```cmake
+# Plugin name defined here (single definition point)
+add_posdk_plugin(my_custom_data
+    PLUGIN_TYPE data
+    SOURCES my_data_plugin.cpp
+    HEADERS my_data_plugin.hpp
+)
+```
 
 **my_data_plugin.hpp**:
 ```cpp
@@ -386,8 +430,9 @@ bool MyDataPlugin::Load(const std::string& filepath,
 
 } // namespace MyPlugin
 
-// Plugin registration - GetType() automatically implemented by macro
-REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin, "my_custom_data")
+// ✅ Plugin registration - automatically reads plugin name from CMake PLUGIN_NAME
+// Plugin type: "my_custom_data" (from CMake)
+REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin)
 ```
 
 ### Usage
@@ -423,6 +468,16 @@ For complete PbDataIO development guide, serialization macro usage instructions,
 ```
 
 ### Code Example
+
+**CMakeLists.txt**:
+```cmake
+# Plugin name defined here (single definition point)
+add_posdk_plugin(data_example
+    PLUGIN_TYPE data
+    SOURCES data_example.cpp
+    HEADERS data_example.hpp
+)
+```
 
 **data_example.hpp**:
 ```cpp
@@ -529,8 +584,9 @@ bool DataExample::FromProto(const google::protobuf::Message& message) {
 
 } // namespace MyPlugin
 
-// Plugin registration - GetType() automatically implemented by macro
-REGISTRATION_PLUGIN(MyPlugin::DataExample, "data_example")
+// ✅ Plugin registration - automatically reads plugin name from CMake PLUGIN_NAME
+// Plugin type: "data_example" (from CMake)
+REGISTRATION_PLUGIN(MyPlugin::DataExample)
 ```
 
 ### Usage
@@ -615,9 +671,20 @@ For detailed protobuf serialization macro list, `.proto` file definitions, advan
 
 ### Plugin Registration
 
+**CMakeLists.txt**:
+```cmake
+add_posdk_plugin(plugin_name  # ← Plugin name defined here
+    PLUGIN_TYPE methods  # or "data"
+    SOURCES plugin.cpp
+    HEADERS plugin.hpp
+)
+```
+
+**C++ code**:
 ```cpp
 // Must be at end of .cpp file - automatically implements GetType()
-REGISTRATION_PLUGIN(PluginClassName, "type_string")
+// Plugin name automatically read from CMake PLUGIN_NAME macro
+REGISTRATION_PLUGIN(MyPlugin::PluginClassName)
 ```
 
 

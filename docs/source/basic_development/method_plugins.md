@@ -97,7 +97,7 @@ Each method plugin must implement one of the following core interfaces:
   virtual DataPtr Run() override;
   // Used to implement core algorithm: Base class's `Build` method will call `Run` and handle input/output checking and performance analysis, etc.
   // (1) User needs to set input data types in constructor: required_package_["data_type"] = nullptr;
-  // (2) Then can use GetDataPtr<T>(required_package_["data_type"]) in Run function to get input data.
+  // (2) Then can use GetRequiredDataPtr<T>("data_type") (recommended) or GetDataPtr<T>(required_package_["data_type"]) in Run function to get input data.
   ```
 
 
@@ -144,6 +144,15 @@ virtual CopyrightData Copyright() const;
 
 The `method_options_` assignments in the example code below are only for demonstrating the existence of configuration items. Actual default values should be provided when calling `GetOptionAs...()`.
 
+**CMakeLists.txt**:
+```cmake
+# Plugin name defined here (single definition point)
+add_posdk_plugin(my_method
+    PLUGIN_TYPE methods
+    SOURCES my_method.cpp
+    HEADERS my_method.hpp
+)
+```
 
 ```cpp
 // my_method.hpp
@@ -224,14 +233,15 @@ DataPtr MyMethod::Run() {
     // return result_poses_data;
 
     // Or create and return new data object
-    auto result_data = std::make_shared<DataMap<std::string>>("Processing finished");
+    auto result_data = std::make_shared<DataMap<std::string>>("Processing finished", "data_map_string");
     return result_data;
 }
 
 } // namespace MyPlugin
 
-// Register plugin
-REGISTRATION_PLUGIN(MyPlugin::MyMethod, "my_method")
+// ✅ Plugin registration - automatically reads plugin name from CMake PLUGIN_NAME
+// Plugin type: "my_method" (from CMake)
+REGISTRATION_PLUGIN(MyPlugin::MyMethod)
 ```
 
 ```{warning}

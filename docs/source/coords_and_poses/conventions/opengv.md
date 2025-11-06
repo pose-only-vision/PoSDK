@@ -30,7 +30,7 @@ $$x_{i} \sim R_{ji} \cdot x_{j} + \mathbf{t}_{ji} \triangleq R\cdot x_{j} + \mat
     -   Camera $j$'s absolute pose is $(R_{j}^w,\mathbf{t}_w^j)$
   
 
-## 3. Convert `GlobalPoses` to `RelativePose`
+## 2. Convert `GlobalPoses` to `RelativePose`
 
 The relative pose $(R_{ij}, \mathbf{t}_{ij})$ calculated from absolute poses in OpenGV is computed as follows:
 
@@ -49,9 +49,9 @@ $$R = ({R_i^w})^T \cdot R_j^w$$
 >
 ``` 
 
-## 2. Conversion from OpenGV Simulation Data to PoSDK
+## 3. Conversion from OpenGV Simulation Data to PoSDK
 
-### 2.1 Global Pose Conversion
+### 3.1 Global Pose Conversion
 
 Assume we obtain a single camera's global pose `position_opengv` $(\mathbf{t}_w)$ and `rotation_opengv` $(R_b^w)$ from OpenGV simulation:
 
@@ -62,7 +62,7 @@ Assume we obtain a single camera's global pose `position_opengv` $(\mathbf{t}_w)
     -   $R_{po} = (R_{opengv})^T$
     -   $\mathbf{t}_{po} = \mathbf{t}_{opengv}$
 
-### 2.2 Relative Pose Conversion
+### 3.2 Relative Pose Conversion
 
 Assume we obtain relative pose $(R_{opengv}, \mathbf{t}_{opengv})$ from OpenGV `extractRelativePose`:
 

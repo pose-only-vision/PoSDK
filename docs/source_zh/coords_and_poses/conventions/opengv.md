@@ -30,7 +30,7 @@ $$x_{i} \sim R_{ji} \cdot x_{j} + \mathbf{t}_{ji} \triangleq R\cdot x_{j} + \mat
     -   相机$j$的绝对位姿为 $(R_{j}^w,\mathbf{t}_w^j)$
   
 
-## 3. Convert `GlobalPoses` to `RelativePose`
+## 2. Convert `GlobalPoses` to `RelativePose`
 
 OpenGV中利用绝对位姿计算的相对位姿 $(R_{ij}, \mathbf{t}_{ij})$ 计算如下：
 
@@ -49,9 +49,9 @@ $$R = ({R_i^w})^T \cdot R_j^w$$
 >
 ``` 
 
-## 2. 从OpenGV仿真数据到PoSDK的转换
+## 3. 从OpenGV仿真数据到PoSDK的转换
 
-### 2.1 全局位姿转换
+### 3.1 全局位姿转换
 
 假设从OpenGV仿真中获得了单个相机的全局位姿 `position_opengv` $(\mathbf{t}_w)$ 和 `rotation_opengv` $(R_b^w)$:
 
@@ -62,7 +62,7 @@ $$R = ({R_i^w})^T \cdot R_j^w$$
     -   $R_{po} = (R_{opengv})^T$
     -   $\mathbf{t}_{po} = \mathbf{t}_{opengv}$
 
-### 2.2 相对位姿转换
+### 3.2 相对位姿转换
 
 假设从OpenGV `extractRelativePose` 获得了相对位姿$(R_{opengv}, \mathbf{t}_{opengv})$:
 
