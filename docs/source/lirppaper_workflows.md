@@ -140,7 +140,12 @@ application bundle or inside the read-only DMG.
 
 After a successful run, use the toolbar viewers:
 
-- **Evaluator**: inspect the generated evaluation summary.
+- **Evaluator**: inspect the accuracy results. Open **Evaluator** in the top
+  toolbar, expand **GlobalPoses** or **RelativePoses**, expand the algorithm
+  entry, and select a metric leaf. For two-view results, the **RelativePoses**
+  metrics include **Pose AUC @ 5° (%)**, **Pose AUC @ 10° (%)**, and
+  **Pose AUC @ 20° (%)**, together with the available error and inlier
+  statistics. Use **Normal** for one result or **Compare** to compare entries.
 - **Profiler**: inspect the generated timing summary.
 - **Output Control** or Finder: inspect the files written by the workflow.
 
@@ -185,3 +190,15 @@ existing child directory. For ETH3D, do not select
 Open the **Console** and retain the warning/error lines. If the workflow does
 not finish, verify the dataset association and repeat the test with the
 released workflow values unchanged.
+
+### The Console repeats a default-options message
+
+An informational line such as `No configuration file specified or file not
+found. Using default options.` is emitted when an internal method receives
+runtime options but has no separate method-specific INI file in its search
+paths. The method then uses its built-in defaults. Repeated lines can occur
+because a two-view run creates several internal estimators. This message is
+not an accuracy result or a dataset error; if the workflow completes and the
+Evaluator contains metrics, it can be ignored. If the workflow also fails,
+verify that the application and workflow came from the same PoSDK release and
+that the dataset loader reports an associated dataset.

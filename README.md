@@ -82,8 +82,9 @@ is needed. Open the dataset loader module in Behavior Workspace to download a
 dataset or open its official download page, then associate the downloaded root
 directory with that node.
 
-See the complete English procedure, expected dataset layout, output locations,
-and troubleshooting notes in the [LiRPpaper workflow guide](docs/source/lirppaper_workflows.md).
+See the complete English procedure, expected dataset layout, Evaluator accuracy
+steps, output locations, and troubleshooting notes in the [LiRPpaper workflow
+guide](docs/source/lirppaper_workflows.md).
 
 ## Quick Start
 
