@@ -308,27 +308,32 @@ h6:target {
         background-color: #5B9BD5 !important;
     }
 
+    /* The RTD page remains light even when the OS prefers dark mode. Keep
+       subsection headings dark enough to remain readable on that background. */
     h3 {
-        color: #E6E6E6 !important;
+        color: #2F5597 !important;
     }
 
     h4 {
-        color: #CCCCCC !important;
+        color: #444444 !important;
     }
 
     h5 {
-        color: #B3B3B3 !important;
+        color: #555555 !important;
     }
 
     h6 {
-        color: #999999 !important;
+        color: #666666 !important;
     }
 
-    h3:hover,
+    h3:hover {
+        color: #1E3C72 !important;
+    }
+
     h4:hover,
     h5:hover,
     h6:hover {
-        color: #5B9BD5 !important;
+        color: #2F5597 !important;
     }
 }
 

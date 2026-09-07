@@ -4,16 +4,15 @@ This guide explains how to test the two LiRPpaper workflows distributed with
 the PoSDK 2.0.0 macOS arm64 DMG. The workflows are built into the application;
 a source checkout, CMake, Qt, or a local plugin build is not required.
 
-The two workflow definitions are version `1.1.0`:
+The release contains two ready-to-run workflow definitions:
 
-| Workflow | Dataset loader | Default scene | Protocol |
-| --- | --- | --- | --- |
-| **LiRPpaper-Strecha** | `strecha_dataset_loader` | `castle-P30` | GNC-RANSAC LiRP, PPOopt, Chatterjee rotation averaging, PoRobustSfMEngine |
-| **LiRPpaper-ETH3D** | `eth3d_dataset_loader` | `facade` | Direct LiRP, six-step PPOopt, Chatterjee rotation averaging, PoRobustSfMEngine |
+| Workflow | Dataset loader | Default scene |
+| --- | --- | --- |
+| **LiRPpaper-Strecha** | `strecha_dataset_loader` | `castle-P30` |
+| **LiRPpaper-ETH3D** | `eth3d_dataset_loader` | `facade` |
 
-The distributed workflows are fixed single-run test protocols. They do not
-enable a parameter sweep by default. The instantiated project remains editable
-if you want to inspect or change a parameter.
+The workflow project is editable after it is created, but no parameter changes
+are needed for the standard test.
 
 ## 1. Download and install the DMG
 
@@ -93,11 +92,6 @@ image_folder  = images/dslr_images_undistorted
 gt_folder     = dslr_calibration_undistorted
 ```
 
-To run another supported scene, keep the same parent directory and change only
-`specific_data` and any scene-specific loader values required by that dataset.
-Do not claim that a different scene is the exact default paper replay unless it
-has been recorded separately.
-
 ## 3. Create an editable workflow project
 
 1. Open **PoSDK GUI**.
@@ -123,21 +117,15 @@ that panel before running.
 - For **LiRPpaper-ETH3D**, set `dataset_dir` to the directory containing
   `facade` (or the parent of the scene selected in `specific_data`).
 
-Keep the remaining protocol parameters at their released values for a stable
-test. The loader validates the selected directory before the run starts.
+The loader validates the selected directory before the run starts. Leave the
+other values unchanged for the standard test.
 
 ## 5. Run the workflow
 
 1. Save the project when prompted.
 2. Click the green **Run** button in the top toolbar (`▶ Run`).
-3. Keep the application open while feature extraction, matching, relative-pose
-   estimation, rotation averaging, track construction, global reconstruction,
-   and export are running. The Strecha and ETH3D workflows are intentionally
-   serial single-run protocols.
-4. Read progress and warnings in the **Console** panel. Warnings and errors
-   for individual degenerate image pairs are retained; a completed workflow
-   status means that the runner reached its terminal completion event and wrote
-   the declared outputs, not that every individual pair was numerically valid.
+3. Keep the application open until the run finishes.
+4. Read progress and any warnings in the **Console** panel.
 
 The default output root created by the workflow catalog is:
 
@@ -152,11 +140,9 @@ application bundle or inside the read-only DMG.
 
 After a successful run, use the toolbar viewers:
 
-- **Evaluator**: inspect global and relative rotation/translation accuracy
-  tables and the JSON result snapshot.
-- **Profiler**: inspect method/core timing summaries and CSV exports.
-- **Output Control** or Finder: inspect exported PLY/MLP files, pose graphs,
-  tracks, logs, and per-run artifacts.
+- **Evaluator**: inspect the generated evaluation summary.
+- **Profiler**: inspect the generated timing summary.
+- **Output Control** or Finder: inspect the files written by the workflow.
 
 Typical result locations include:
 
@@ -167,25 +153,10 @@ Typical result locations include:
 ```
 
 The exact filenames can vary with the PoSDK release and the selected output
-options. Preserve the complete run directory when submitting reproducibility
-materials; do not report only the final point cloud without the configuration,
-Evaluator JSON, and Profiler CSV.
+options. Preserve the complete run directory if you need to share the test
+result.
 
-## 7. Reproducibility notes
-
-- The built-in LiRPpaper workflows currently have no ordinary Loop rules and
-  `repeatCount=1`; they are not an automatic multi-scene sweep.
-- To compare algorithms or sample sizes, first create an editable `.posdk`
-  project. Use **Var Workspace** only for an explicitly designed experiment
-  matrix; bind parameters that must change together as one experiment variant.
-- Keep the original project copy unchanged when reporting the released
-  protocol. Save modified experiments under a separate project name and record
-  every changed parameter.
-- A run with a completed runner status can still contain genuine per-pair
-  degeneracy warnings. These should remain visible in the submitted console
-  log and should be discussed as part of the result quality.
-
-## 8. Troubleshooting
+## 7. Troubleshooting
 
 ### The workflow is not listed
 
@@ -209,9 +180,8 @@ existing child directory. For ETH3D, do not select
 `dslr_images_undistorted` itself as `dataset_dir`; select the parent containing
 `facade`, `courtyard`, and other scenes.
 
-### The run ends with warnings or rejected pairs
+### The run ends with warnings
 
-Open the Console and retain the warning/error lines. Some image pairs can be
-rejected by LiRP quality checks or geometric degeneracy checks while the
-workflow still completes and writes aggregate outputs. Treat those lines as
-test diagnostics and record any configuration changes.
+Open the **Console** and retain the warning/error lines. If the workflow does
+not finish, verify the dataset association and repeat the test with the
+released workflow values unchanged.

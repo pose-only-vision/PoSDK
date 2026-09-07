@@ -73,10 +73,9 @@ cd docs && ./install_docs.sh
 The PoSDK macOS arm64 release includes two built-in workflows for LiRPpaper
 testing:
 
-- **LiRPpaper-Strecha** — GNC-RANSAC LiRP, PPOopt, and robust PoSDK
-  reconstruction on the Strecha dataset (`castle-P30` by default).
-- **LiRPpaper-ETH3D** — Direct LiRP, six-step PPOopt, and robust PoSDK
-  reconstruction on ETH3D (`facade` by default).
+- **LiRPpaper-Strecha** — test workflow for the Strecha dataset
+  (`castle-P30` by default).
+- **LiRPpaper-ETH3D** — test workflow for ETH3D (`facade` by default).
 
 You can run them directly from the signed PoSDK 2.0.0 GUI DMG; no source build
 is needed. Open the dataset loader module in Behavior Workspace to download a
