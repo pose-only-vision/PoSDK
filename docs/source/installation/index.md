@@ -20,21 +20,20 @@ cd PoSDK
 For all prompts during installation, press Enter to use default values.
 ```
 
-### Reviewer installation: use the PoSDK GUI DMG
+### Testing installation: use the PoSDK 2.0.0 GUI DMG
 
-Reviewers who only need to run a released workflow do not need to build PoSDK
-from source. Download the macOS arm64 PoSDK GUI DMG and its adjacent checksum
-from the [GitHub Releases page](https://github.com/pose-only-vision/PoSDK/releases),
+Users who only need to test a released workflow do not need to build PoSDK from
+source. Download `PoSDK-GUI-2.0.0-macos150-arm64.dmg` and its adjacent checksum
+from the [PoSDK 2.0.0 release](https://github.com/pose-only-vision/PoSDK/releases),
 verify the checksum, and drag `PoSDK GUI.app` to `/Applications`.
 
-The DMG contains the built-in LiRPpaper workflows. The datasets are not bundled
-with the application; download them separately and configure the dataset-loader
-node after creating the workflow project. Follow the step-by-step procedure in
-[Running the LiRPpaper Workflows](../lirppaper_workflows.md).
+The DMG contains the built-in LiRPpaper workflows. To obtain the data, double-
+click the dataset-loader module in Behavior Workspace, click its download
+control, and then associate the downloaded or extracted root with the current
+node. Follow the step-by-step procedure in [Running the LiRPpaper Workflows](../lirppaper_workflows.md).
 
 The source installation below is intended for developers who want to build
-PoSDK or its plugins, not for a reviewer who only needs to reproduce the
-published workflow.
+PoSDK or its plugins, rather than for testing the published workflows.
 
 ---
 
@@ -65,11 +64,11 @@ po_core core library build environment configuration and dependency version requ
 - Build tool version requirements (GCC, Clang, CMake)
 - Dependency library version information (Boost, Ceres, OpenCV, etc.)
 
-### 4. [LiRPpaper Workflow Guide](../lirppaper_workflows.md)
+### 4. [LiRPpaper Workflow Testing Guide](../lirppaper_workflows.md)
 
-How to install the GUI release, prepare the Strecha and ETH3D datasets, create
-an editable workflow project, run the two LiRPpaper workflows, and inspect
-Evaluator/Profiler outputs.
+How to install the PoSDK 2.0.0 GUI release, download or associate the Strecha
+and ETH3D datasets from their loader modules, run the two LiRPpaper workflows,
+and inspect Evaluator/Profiler outputs.
 
 ---
 
@@ -100,7 +99,7 @@ For detailed instructions, please refer to [Complete Installation Guide](install
 ## Recommended Reading Order
 
 **First-time Installation Users**:
-1. If you are a reviewer → [LiRPpaper Workflow Guide](../lirppaper_workflows.md)
+1. If you are testing LiRPpaper → [LiRPpaper Workflow Testing Guide](../lirppaper_workflows.md)
 2. [Complete Installation Guide](installation.md) - Understand system requirements and installation process
 3. If encountering network issues → [Using Precompiled Libraries](using_precompiled.md)
 4. If needing dependency version information → [Build Environment and Version Information](po_core_build_environment.md)
@@ -132,4 +131,3 @@ po_core_build_environment
 ---
 
 Documentation is continuously updated. For questions or issues, please submit feedback at [GitHub Issues](https://github.com/pose-only-vision/PoSDK/issues).
-

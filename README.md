@@ -68,24 +68,23 @@ cd docs && ./install_docs.sh
 # Chinese: build_zh/html/index.html
 ```
 
-## LiRPpaper Workflows for Reviewers
+## LiRPpaper Workflows for Testing
 
-The PoSDK macOS arm64 release includes two built-in workflows used for the
-LiRPpaper reproduction protocol:
+The PoSDK macOS arm64 release includes two built-in workflows for LiRPpaper
+testing:
 
-- **LiRPpaper-Strecha** — GNC-RANSAC LiRP, PPOopt, graph gating, and robust
-  PoSDK reconstruction on the Strecha dataset (`castle-P30` by default).
-- **LiRPpaper-ETH3D** — Direct LiRP, six-step PPOopt, 0.5-degree graph gating,
-  and robust PoSDK reconstruction on ETH3D (`facade` by default).
+- **LiRPpaper-Strecha** — GNC-RANSAC LiRP, PPOopt, and robust PoSDK
+  reconstruction on the Strecha dataset (`castle-P30` by default).
+- **LiRPpaper-ETH3D** — Direct LiRP, six-step PPOopt, and robust PoSDK
+  reconstruction on ETH3D (`facade` by default).
 
-Reviewers can run them directly from the signed GUI DMG; no source build is
-needed. The datasets remain separate downloads because their redistribution
-terms are controlled by their respective dataset providers.
+You can run them directly from the signed PoSDK 2.0.0 GUI DMG; no source build
+is needed. Open the dataset loader module in Behavior Workspace to download a
+dataset or open its official download page, then associate the downloaded root
+directory with that node.
 
 See the complete English procedure, expected dataset layout, output locations,
 and troubleshooting notes in the [LiRPpaper workflow guide](docs/source/lirppaper_workflows.md).
-The same guide is available in the generated documentation under **Running the
-LiRPpaper Workflows**.
 
 ## Quick Start
 
@@ -220,4 +219,4 @@ If you identify any open-source license compliance issues with PoSDK, please not
 
 ---
 
-**Version**: v1.0.0 | **Architecture**: Single Repository | **Last Updated**: 2025-01-16
+**Version**: v2.0.0 | **Architecture**: Single Repository | **Last Updated**: 2026-09-07

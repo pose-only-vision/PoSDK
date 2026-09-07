@@ -13,33 +13,34 @@ This document describes PoSDK installation requirements and procedures.
   - Clang 13+ (Recommended for macOS)
 - **Build Tools**: CMake 3.28+ (3.28+ required for some dependency libraries)
 
-## Reviewer Installation (macOS arm64 DMG)
+## Testing Installation (PoSDK 2.0.0 macOS arm64 DMG)
 
-If your goal is to reproduce a published PoSDK workflow rather than develop
-PoSDK, use the signed macOS arm64 GUI DMG from the
-[GitHub Releases page](https://github.com/pose-only-vision/PoSDK/releases).
+If your goal is to test a published PoSDK workflow rather than develop PoSDK,
+use the signed `PoSDK-GUI-2.0.0-macos150-arm64.dmg` from the
+[PoSDK 2.0.0 release](https://github.com/pose-only-vision/PoSDK/releases).
 This path does not require a source checkout, CMake, Qt, or a local compiler.
 
 1. Download the PoSDK GUI DMG and its adjacent `.sha256` file.
 2. Verify the checksum before opening the image:
 
    ```bash
-   shasum -a 256 -c PoSDK-GUI-<version>-macos150-arm64.dmg.sha256
+   shasum -a 256 -c PoSDK-GUI-2.0.0-macos150-arm64.dmg.sha256
    ```
 
 3. Open the DMG and drag `PoSDK GUI.app` to `/Applications`.
 4. Start the application and, if required, approve the first-launch prompt
    after confirming the release identity and checksum.
 5. Follow [Running the LiRPpaper Workflows](../lirppaper_workflows.md) to
-   prepare the dataset, create the built-in workflow project, run it, and
-   inspect the Evaluator/Profiler artifacts.
+   open a built-in workflow, download or associate its dataset from the
+   dataset-loader module, run it, and inspect the Evaluator/Profiler artifacts.
 
-The DMG contains the application and its built-in workflow definitions. It does
-not contain the Strecha or ETH3D datasets. Dataset downloads and redistribution
-must follow the terms of the original dataset providers. Do not copy workflow
-outputs into the application bundle or the read-only DMG.
+The DMG contains the application and its built-in workflow definitions. The
+dataset-loader modules provide the supported download and association flow.
+Dataset licenses and any restrictions imposed by the original providers still
+apply. Do not copy workflow outputs into the application bundle or the
+read-only DMG.
 
-For the exact reviewer procedure, including the required `dataset_dir`,
+For the exact testing procedure, including the required `dataset_dir`,
 `specific_data`, image-folder, and ground-truth-folder layout, see the
 [LiRPpaper workflow guide](../lirppaper_workflows.md).
 
@@ -235,7 +236,9 @@ For detailed explanation of each installation step and prompt, see [](#installat
 
 ```{note}
 **For Poor Network Conditions:**
-If automatic download fails, manually download from [GitHub Releases](https://github.com/pose-only-vision/PoSDK/releases/tag/v1.0.0) and copy files directly (no extraction needed):
+If automatic download fails, manually download the matching dependency assets
+from [GitHub Releases](https://github.com/pose-only-vision/PoSDK/releases) and
+copy files directly (no extraction needed):
 - `po_core` + `PoSDK dependencies` → `./dependencies/`
 - `PoSDK_test_data` → `./tests/`
 ```

@@ -1,31 +1,30 @@
-# Running the LiRPpaper Workflows
+# Running the LiRPpaper Workflows for Testing
 
-This guide is for reviewers who want to reproduce the two LiRPpaper workflows
-distributed with the PoSDK macOS arm64 DMG. The workflows are built into the
-application; a source checkout, CMake, Qt, or a local plugin build is not
-required.
+This guide explains how to test the two LiRPpaper workflows distributed with
+the PoSDK 2.0.0 macOS arm64 DMG. The workflows are built into the application;
+a source checkout, CMake, Qt, or a local plugin build is not required.
 
 The two workflow definitions are version `1.1.0`:
 
 | Workflow | Dataset loader | Default scene | Protocol |
 | --- | --- | --- | --- |
-| **LiRPpaper-Strecha** | `strecha_dataset_loader` | `castle-P30` | GNC-RANSAC LiRP, PPOopt, graph gate, Chatterjee rotation averaging, PoRobustSfMEngine |
-| **LiRPpaper-ETH3D** | `eth3d_dataset_loader` | `facade` | Direct LiRP, six-step PPOopt, 0.5-degree graph gate, Chatterjee rotation averaging, PoRobustSfMEngine |
+| **LiRPpaper-Strecha** | `strecha_dataset_loader` | `castle-P30` | GNC-RANSAC LiRP, PPOopt, Chatterjee rotation averaging, PoRobustSfMEngine |
+| **LiRPpaper-ETH3D** | `eth3d_dataset_loader` | `facade` | Direct LiRP, six-step PPOopt, Chatterjee rotation averaging, PoRobustSfMEngine |
 
-The distributed workflows are fixed single-run paper protocols. They do not
-enable a parameter sweep by default. This keeps a reviewer run comparable with
-the released configuration. The instantiated project remains editable if a
-reviewer wants to inspect or change a parameter.
+The distributed workflows are fixed single-run test protocols. They do not
+enable a parameter sweep by default. The instantiated project remains editable
+if you want to inspect or change a parameter.
 
 ## 1. Download and install the DMG
 
-1. Open the PoSDK GitHub release that contains the LiRPpaper assets:
+1. Open the PoSDK 2.0.0 GitHub release that contains the LiRPpaper assets:
    <https://github.com/pose-only-vision/PoSDK/releases>.
-2. Download the macOS arm64 PoSDK GUI DMG and its adjacent `.sha256` file.
+2. Download `PoSDK-GUI-2.0.0-macos150-arm64.dmg` and its adjacent
+   `.sha256` file.
 3. Verify the download before opening it. For example:
 
    ```bash
-   shasum -a 256 -c PoSDK-GUI-<version>-macos150-arm64.dmg.sha256
+   shasum -a 256 -c PoSDK-GUI-2.0.0-macos150-arm64.dmg.sha256
    ```
 
 4. Open the DMG and drag `PoSDK GUI.app` to `/Applications`.
@@ -33,15 +32,29 @@ reviewer wants to inspect or change a parameter.
    use **Open** only after confirming that the DMG came from the intended
    PoSDK release and that its checksum matches.
 
-The DMG contains the application and the built-in workflow definitions. It does
-not redistribute the Strecha or ETH3D datasets. Download those datasets from
-their official sources and follow their licenses before running the workflows.
+The DMG contains the application and the built-in workflow definitions. The
+dataset loader controls provide the supported download and association path.
+Dataset licenses and any restrictions imposed by the original providers still
+apply.
 
-## 2. Prepare the datasets
+## 2. Download and associate a dataset
+
+You can download and associate the data from inside PoSDK:
+
+1. In **Behavior Workspace**, double-click the relevant dataset-loader module
+   (`Strecha Dataset Loader` or `ETH3D Dataset Loader`).
+2. In the module's input panel, click **Download & auto-associate** for Strecha
+   or **Download data** to open the official ETH3D download page.
+3. After downloading and extracting ETH3D, enter or choose the common dataset
+   root and click **Associate with node**. For Strecha, the automatic download
+   flow can verify, extract, and associate the pinned package; you can also
+   choose a local root and associate it manually.
+4. Confirm that the panel reports the dataset as associated with the current
+   node before running the workflow.
 
 The loader's `dataset_dir` is a common parent directory. The default
 `specific_data` value selects one scene below that parent. The expected layouts
-for the released defaults are:
+for the default scenes are:
 
 ### Strecha (`castle-P30`)
 
@@ -99,19 +112,19 @@ PoSDK copies the immutable built-in definition to an editable `.posdk` project
 under the user's PoSDK workflow directory. Editing that copy does not modify
 the built-in release asset.
 
-## 4. Set the dataset directory
+## 4. Confirm the dataset configuration
 
-In **Behavior Workspace**, select the dataset-loader node and open its
-**Configuration** panel.
+Open the dataset-loader module again and confirm the associated root and scene
+fields in its input panel. If you entered the path manually, associate it from
+that panel before running.
 
 - For **LiRPpaper-Strecha**, set `dataset_dir` to the directory containing
   `castle-P30` (or the parent of the scene selected in `specific_data`).
 - For **LiRPpaper-ETH3D**, set `dataset_dir` to the directory containing
   `facade` (or the parent of the scene selected in `specific_data`).
 
-Use the dataset loader's folder picker when available. Keep the remaining
-paper-protocol parameters at their released values for a faithful reproduction.
-The loader validates the selected directory before the run starts.
+Keep the remaining protocol parameters at their released values for a stable
+test. The loader validates the selected directory before the run starts.
 
 ## 5. Run the workflow
 
@@ -199,7 +212,6 @@ existing child directory. For ETH3D, do not select
 ### The run ends with warnings or rejected pairs
 
 Open the Console and retain the warning/error lines. Some image pairs can be
-rejected by the LiRP quality gates or by geometric degeneracy checks while the
-workflow still completes and writes valid aggregate outputs. Treat those lines
-as scientific diagnostics, not as a reason to edit the released configuration
-without recording the change.
+rejected by LiRP quality checks or geometric degeneracy checks while the
+workflow still completes and writes aggregate outputs. Treat those lines as
+test diagnostics and record any configuration changes.
