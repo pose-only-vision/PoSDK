@@ -68,6 +68,25 @@ cd docs && ./install_docs.sh
 # Chinese: build_zh/html/index.html
 ```
 
+## LiRPpaper Workflows for Reviewers
+
+The PoSDK macOS arm64 release includes two built-in workflows used for the
+LiRPpaper reproduction protocol:
+
+- **LiRPpaper-Strecha** — GNC-RANSAC LiRP, PPOopt, graph gating, and robust
+  PoSDK reconstruction on the Strecha dataset (`castle-P30` by default).
+- **LiRPpaper-ETH3D** — Direct LiRP, six-step PPOopt, 0.5-degree graph gating,
+  and robust PoSDK reconstruction on ETH3D (`facade` by default).
+
+Reviewers can run them directly from the signed GUI DMG; no source build is
+needed. The datasets remain separate downloads because their redistribution
+terms are controlled by their respective dataset providers.
+
+See the complete English procedure, expected dataset layout, output locations,
+and troubleshooting notes in the [LiRPpaper workflow guide](docs/source/lirppaper_workflows.md).
+The same guide is available in the generated documentation under **Running the
+LiRPpaper Workflows**.
+
 ## Quick Start
 
 ### Prerequisites
@@ -90,7 +109,9 @@ cd PoSDK
 - **Resume Installation** - Re-run `./install.sh` if network timeouts occur
 - **Automated Setup** - Downloads dependencies, builds PoSDK, and prepares test data
 **For Poor Network Conditions:**
-If automatic download fails, manually download from [GitHub Releases](https://github.com/pose-only-vision/PoSDK/releases/tag/v1.0.0) and copy files directly (<span style="color: red;">no extraction needed</span>):
+If automatic download fails, manually download the matching dependency assets
+from [GitHub Releases](https://github.com/pose-only-vision/PoSDK/releases) and
+copy files directly (<span style="color: red;">no extraction needed</span>):
 - `po_core` + `PoSDK dependencies` → `./dependencies/`
 - `PoSDK_test_data` → `./tests/`
 

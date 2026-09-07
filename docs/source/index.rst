@@ -67,6 +67,7 @@ If your research benefits from the Pose-only theory or PoSDK, please cite the fo
    benchmark_comparison/index
    copyright_tracking
    installation/index
+   lirppaper_workflows
    using_precompiled
    basic_development/index
    advanced_development/index
@@ -88,4 +89,3 @@ Indices and Tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
