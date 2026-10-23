@@ -1,0 +1,22 @@
+{
+  "dataset": "eth3d",
+  "scene": "courtyard",
+  "platform": "GLOMAP",
+  "points": 25083,
+  "ply_sha256": "40277b01aafac96b383dab0ce1f921392fb6fa3751829e7d71fe24430974ca0b",
+  "original_video_sha256": "c7fc9144e3158319fe78777da485ece6f18824dc7801cab4d063a328e54c6302",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 435,
+    "fps": 30.0,
+    "duration_seconds": 14.5
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 435,
+    "fps": 30.0,
+    "duration_seconds": 14.5
+  }
+}

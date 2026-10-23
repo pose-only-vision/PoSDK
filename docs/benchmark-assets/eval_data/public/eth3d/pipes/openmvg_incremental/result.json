@@ -1,0 +1,114 @@
+{
+  "dataset": "eth3d",
+  "scene": "pipes",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 14,
+  "registered_views": 14,
+  "points": 10546,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "rotation_deg": {
+        "count": 14,
+        "min": 0.006353431509964878,
+        "max": 0.038402153833911275,
+        "mean": 0.022458572034714516,
+        "median": 0.017891913896730137,
+        "std_dev": 0.010217399322984917
+      },
+      "center": {
+        "count": 14,
+        "min": 0.0003482491665541829,
+        "max": 0.002412292003139066,
+        "mean": 0.0010555949050773661,
+        "median": 0.0008472922324359454,
+        "std_dev": 0.0006143970825801727
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        9,
+        10,
+        11
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        9,
+        10,
+        11
+      ],
+      "rotation_deg": {
+        "count": 6,
+        "min": 0.004011875518391004,
+        "max": 0.023232085610318157,
+        "mean": 0.010942818883731595,
+        "median": 0.008782993467424243,
+        "std_dev": 0.0067370883434612495
+      },
+      "center": {
+        "count": 6,
+        "min": 6.0419710516269225e-05,
+        "max": 0.0003357023798718401,
+        "mean": 0.00022938067415170134,
+        "median": 0.00025280914675533423,
+        "std_dev": 9.121930382997959e-05
+      }
+    }
+  },
+  "timing": {
+    "backend": 1.5436012079007924,
+    "frontend": 20.562658331822604,
+    "pipeline": 22.447407122701406
+  },
+  "downloads": {
+    "ply": "public/eth3d/pipes/openmvg_incremental/points.ply",
+    "g2o": "public/eth3d/pipes/openmvg_incremental/poses.g2o",
+    "metadata": "public/eth3d/pipes/openmvg_incremental/result.json",
+    "accuracy": "public/eth3d/pipes/openmvg_incremental/evaluation.json"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "dataset": "eth3d",
+  "scene": "meadow",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 15,
+  "registered_views": 15,
+  "points": 2182,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "rotation_deg": {
+        "count": 15,
+        "min": 0.03050859514259345,
+        "max": 0.7131090609712963,
+        "mean": 0.10090899367144,
+        "median": 0.0543340866208491,
+        "std_dev": 0.16479013816854615
+      },
+      "center": {
+        "count": 15,
+        "min": 0.007396766130722688,
+        "max": 0.056841043434945386,
+        "mean": 0.018869319356856616,
+        "median": 0.015109192485493193,
+        "std_dev": 0.014188121329886281
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "center_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "rotation_deg": {
+        "count": 4,
+        "min": 0.0022865794309771437,
+        "max": 0.006855685224721109,
+        "mean": 0.004463994462425807,
+        "median": 0.004356856597002487,
+        "std_dev": 0.0018869427597064331
+      },
+      "center": {
+        "count": 4,
+        "min": 0.0009869233558255739,
+        "max": 0.0018412462521130003,
+        "mean": 0.00143526105084046,
+        "median": 0.0014564372977116332,
+        "std_dev": 0.0003105065874162565
+      }
+    }
+  },
+  "timing": {
+    "backend": 2.932,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "downloads": {
+    "ply": "public/eth3d/meadow/posdk/points.ply",
+    "g2o": "public/eth3d/meadow/posdk/poses.g2o",
+    "metadata": "public/eth3d/meadow/posdk/result.json",
+    "accuracy": "public/eth3d/meadow/posdk/evaluation.json"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "units": "m",
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        12
+      ],
+      "center_view_ids": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        12
+      ],
+      "rotation_deg": {
+        "count": 6,
+        "min": 0.2558289348342337,
+        "max": 1.3777324683090142,
+        "mean": 0.4596901558915593,
+        "median": 0.26458825174700673,
+        "std_dev": 0.4114611172034186
+      },
+      "center": {
+        "count": 6,
+        "min": 0.013319598107915004,
+        "max": 0.11768380280002018,
+        "mean": 0.05260219345470043,
+        "median": 0.04626025827325657,
+        "std_dev": 0.0352013225734335
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "center_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "rotation_deg": {
+        "count": 4,
+        "min": 0.0031491337079307285,
+        "max": 0.024362125767857915,
+        "mean": 0.01259539046623594,
+        "median": 0.011435151194577558,
+        "std_dev": 0.007679204741344683
+      },
+      "center": {
+        "count": 4,
+        "min": 0.0001070073491422077,
+        "max": 0.0015144372721679893,
+        "mean": 0.0008587727458410817,
+        "median": 0.0009068231810270648,
+        "std_dev": 0.0005304464268397603
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "dataset": "eth3d",
+  "scene": "courtyard",
+  "platform": "OpenMVG Global",
+  "points": 59669,
+  "ply_sha256": "48132ffc2dee4a4805d59289ea320ea12f7cba05b1156cc42757626b7bfccbed",
+  "original_video_sha256": "38d228e44cc54164c5e326f879a0714fe690c511157f9a23fd17efecf8edebf8",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 435,
+    "fps": 30.0,
+    "duration_seconds": 14.5
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 435,
+    "fps": 30.0,
+    "duration_seconds": 14.5
+  }
+}

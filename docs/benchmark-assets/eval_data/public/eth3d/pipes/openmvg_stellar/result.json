@@ -1,0 +1,114 @@
+{
+  "dataset": "eth3d",
+  "scene": "pipes",
+  "arm": "openmvg_stellar",
+  "label": "OpenMVG Stellar",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 14,
+  "registered_views": 14,
+  "points": 10656,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "rotation_deg": {
+        "count": 14,
+        "min": 0.02089412151877072,
+        "max": 0.7164123861531027,
+        "mean": 0.25847737036311885,
+        "median": 0.1947811867545262,
+        "std_dev": 0.18722450185728842
+      },
+      "center": {
+        "count": 14,
+        "min": 0.0003279044842434422,
+        "max": 0.010102852025471388,
+        "mean": 0.0033477996575726485,
+        "median": 0.0026599821235743495,
+        "std_dev": 0.0024939231785570943
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        9,
+        10,
+        11
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        9,
+        10,
+        11
+      ],
+      "rotation_deg": {
+        "count": 6,
+        "min": 0.002979721964297351,
+        "max": 0.1504713742554998,
+        "mean": 0.058482446343767445,
+        "median": 0.022340216260177067,
+        "std_dev": 0.06352138671675478
+      },
+      "center": {
+        "count": 6,
+        "min": 0.0003238026158100728,
+        "max": 0.0009597238858909077,
+        "mean": 0.0006105726308575008,
+        "median": 0.0005332464879461307,
+        "std_dev": 0.00021527693689767666
+      }
+    }
+  },
+  "timing": {
+    "backend": 0.611656374996528,
+    "frontend": 20.48213316500187,
+    "pipeline": 21.377760289702564
+  },
+  "downloads": {
+    "ply": "public/eth3d/pipes/openmvg_stellar/points.ply",
+    "g2o": "public/eth3d/pipes/openmvg_stellar/poses.g2o",
+    "metadata": "public/eth3d/pipes/openmvg_stellar/result.json",
+    "accuracy": "public/eth3d/pipes/openmvg_stellar/evaluation.json"
+  }
+}
