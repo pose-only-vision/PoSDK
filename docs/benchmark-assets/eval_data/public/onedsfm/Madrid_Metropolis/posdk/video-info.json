@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Madrid_Metropolis",
+  "platform": "PoMVG",
+  "points": 48033,
+  "ply_sha256": "b4cdb19bcb0f2f881022d285e829f23b7cc770656cc70c9a96278e5e6775ea95",
+  "original_video_sha256": "dfc3c6763f46cfdfe7682c769d9d912811d77d3722fa155a57e07d25b621e999",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 241,
+    "fps": 30.0,
+    "duration_seconds": 8.033333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 241,
+    "fps": 30.0,
+    "duration_seconds": 8.033333
+  }
+}

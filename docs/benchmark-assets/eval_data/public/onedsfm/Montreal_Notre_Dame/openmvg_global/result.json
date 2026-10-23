@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Montreal_Notre_Dame",
+  "arm": "openmvg_global",
+  "label": "OpenMVG Global",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 474,
+  "registered_views": 409,
+  "points": 51106,
+  "accuracy": {},
+  "timing": {
+    "backend": 195.30248108319938,
+    "frontend": 31.36750291683711,
+    "pipeline": 231.5881844169926
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.9267227867041301,
+    "median": 0.7285067571452142,
+    "observations": 567106,
+    "points": 51106,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 144
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Montreal_Notre_Dame/openmvg_global/points.ply",
+    "g2o": "public/onedsfm/Montreal_Notre_Dame/openmvg_global/poses.g2o",
+    "metadata": "public/onedsfm/Montreal_Notre_Dame/openmvg_global/result.json",
+    "reprojection": "public/onedsfm/Montreal_Notre_Dame/openmvg_global/reprojection.json"
+  }
+}

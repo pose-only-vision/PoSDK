@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "NYC_Library",
+  "platform": "OpenMVG Global",
+  "points": 19941,
+  "ply_sha256": "a0f33fa4a63c384883f8dd6e6231456fc786e1677b2255e7ef84cf06c4dc11c3",
+  "original_video_sha256": "a290e29177a0c2a46e38796d7c15e7f1bc6d08728a131a59115ec141f1da2d54",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 949,
+    "fps": 30.0,
+    "duration_seconds": 31.633333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 949,
+    "fps": 30.0,
+    "duration_seconds": 31.633333
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Madrid_Metropolis",
+  "arm": "openmvg_global",
+  "label": "OpenMVG Global",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 394,
+  "registered_views": 301,
+  "points": 21554,
+  "accuracy": {},
+  "timing": {
+    "backend": 75.37779887509532,
+    "frontend": 4.159143376164138,
+    "pipeline": 80.67604966834188
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.7268354790486645,
+    "median": 0.5300242918301239,
+    "observations": 178610,
+    "points": 21554,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Madrid_Metropolis/openmvg_global/points.ply",
+    "g2o": "public/onedsfm/Madrid_Metropolis/openmvg_global/poses.g2o",
+    "metadata": "public/onedsfm/Madrid_Metropolis/openmvg_global/result.json",
+    "reprojection": "public/onedsfm/Madrid_Metropolis/openmvg_global/reprojection.json"
+  }
+}

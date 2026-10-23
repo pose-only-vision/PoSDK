@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Notre_Dame",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 553,
+  "registered_views": 553,
+  "points": 165411,
+  "accuracy": {},
+  "timing": {
+    "backend": 443.64098883303814,
+    "frontend": 34.68542629224248,
+    "pipeline": 482.12488729227334
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.8996566897901795,
+    "median": 0.6396468485581652,
+    "observations": 1590808,
+    "points": 165411,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Notre_Dame/glomap/points.ply",
+    "g2o": "public/onedsfm/Notre_Dame/glomap/poses.g2o",
+    "metadata": "public/onedsfm/Notre_Dame/glomap/result.json",
+    "reprojection": "public/onedsfm/Notre_Dame/glomap/reprojection.json"
+  }
+}

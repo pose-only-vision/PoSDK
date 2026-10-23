@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Notre_Dame",
+  "platform": "OpenMVG Global",
+  "points": 56028,
+  "ply_sha256": "174abc8fa7b8912727bae2e7ac9762d6bd32c508787014ab557defb19e7a368c",
+  "original_video_sha256": "16bd12e2d332b081a4343a0be661086f4b15c0afafd6c9dfb856ee8aca1e5516",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 791,
+    "fps": 30.0,
+    "duration_seconds": 26.366667
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 791,
+    "fps": 30.0,
+    "duration_seconds": 26.366667
+  }
+}

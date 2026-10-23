@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "NYC_Library",
+  "arm": "openmvg_stellar",
+  "label": "OpenMVG Stellar",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 376,
+  "registered_views": 325,
+  "points": 106401,
+  "accuracy": {},
+  "timing": {
+    "backend": 30.698839667020366,
+    "frontend": 9.017089166911319,
+    "pipeline": 44.980553125962615
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 15035756.141827852,
+    "median": 4.005416777827474,
+    "observations": 484706,
+    "points": 106401,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/NYC_Library/openmvg_stellar/points.ply",
+    "g2o": "public/onedsfm/NYC_Library/openmvg_stellar/poses.g2o",
+    "metadata": "public/onedsfm/NYC_Library/openmvg_stellar/result.json",
+    "reprojection": "public/onedsfm/NYC_Library/openmvg_stellar/reprojection.json"
+  }
+}
