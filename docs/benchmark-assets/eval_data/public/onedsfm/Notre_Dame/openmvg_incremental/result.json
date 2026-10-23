@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Notre_Dame",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 553,
+  "registered_views": 549,
+  "points": 292252,
+  "accuracy": {},
+  "timing": {
+    "backend": 2800.3796160419006,
+    "frontend": 77.99675720906816,
+    "pipeline": 2895.943650791887
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.8437282312722829,
+    "median": 0.638915077592565,
+    "observations": 1761666,
+    "points": 292252,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 3
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Notre_Dame/openmvg_incremental/points.ply",
+    "g2o": "public/onedsfm/Notre_Dame/openmvg_incremental/poses.g2o",
+    "metadata": "public/onedsfm/Notre_Dame/openmvg_incremental/result.json",
+    "reprojection": "public/onedsfm/Notre_Dame/openmvg_incremental/reprojection.json"
+  }
+}

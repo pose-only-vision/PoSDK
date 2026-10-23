@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Piazza_del_Popolo",
+  "arm": "openmvg_global",
+  "label": "OpenMVG Global",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 354,
+  "registered_views": 279,
+  "points": 12979,
+  "accuracy": {},
+  "timing": {
+    "backend": 67.5650144170504,
+    "frontend": 3.798912832979113,
+    "pipeline": 72.12363421032205
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.8925119078744903,
+    "median": 0.6697901312491727,
+    "observations": 119576,
+    "points": 12979,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Piazza_del_Popolo/openmvg_global/points.ply",
+    "g2o": "public/onedsfm/Piazza_del_Popolo/openmvg_global/poses.g2o",
+    "metadata": "public/onedsfm/Piazza_del_Popolo/openmvg_global/result.json",
+    "reprojection": "public/onedsfm/Piazza_del_Popolo/openmvg_global/reprojection.json"
+  }
+}

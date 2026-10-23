@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Piazza_del_Popolo",
+  "platform": "GLOMAP",
+  "points": 22435,
+  "ply_sha256": "09008ed68445083081c96877aae9b2e1e6837ab22ae9052dfb552ffbbaf5e1c3",
+  "original_video_sha256": "9a751418612d69a3d6ac4f52b5bed8c602413b6f9128b4834747ca3832cb2340",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 513,
+    "fps": 30.0,
+    "duration_seconds": 17.1
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 513,
+    "fps": 30.0,
+    "duration_seconds": 17.1
+  }
+}

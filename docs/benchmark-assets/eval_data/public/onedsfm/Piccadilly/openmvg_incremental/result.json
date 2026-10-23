@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Piccadilly",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 2508,
+  "registered_views": 2104,
+  "points": 254689,
+  "accuracy": {},
+  "timing": {
+    "backend": 5644.161722791847,
+    "frontend": 65.84336908301339,
+    "pipeline": 5723.604567040922
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.8382460956374751,
+    "median": 0.6340535645425571,
+    "observations": 1357160,
+    "points": 254689,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 5
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Piccadilly/openmvg_incremental/points.ply",
+    "g2o": "public/onedsfm/Piccadilly/openmvg_incremental/poses.g2o",
+    "metadata": "public/onedsfm/Piccadilly/openmvg_incremental/result.json",
+    "reprojection": "public/onedsfm/Piccadilly/openmvg_incremental/reprojection.json"
+  }
+}

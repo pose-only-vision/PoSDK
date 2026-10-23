@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Roman_Forum",
+  "arm": "colmap",
+  "label": "COLMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 1134,
+  "registered_views": 789,
+  "points": 152340,
+  "accuracy": {},
+  "timing": {
+    "backend": 2226.7782638750505,
+    "frontend": 31.922434333944693,
+    "pipeline": 2263.3765551261604
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.8650849545343987,
+    "median": 0.6663233243757974,
+    "observations": 1010855,
+    "points": 152340,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Roman_Forum/colmap/points.ply",
+    "g2o": "public/onedsfm/Roman_Forum/colmap/poses.g2o",
+    "metadata": "public/onedsfm/Roman_Forum/colmap/result.json",
+    "reprojection": "public/onedsfm/Roman_Forum/colmap/reprojection.json"
+  }
+}

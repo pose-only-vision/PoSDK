@@ -1,0 +1,34 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Notre_Dame",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 553,
+  "registered_views": 552,
+  "points": 289877,
+  "accuracy": {},
+  "timing": {
+    "backend": 222.81,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.7001150553577414,
+    "median": 0.546464765671296,
+    "observations": 1623356,
+    "points": 289877,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Notre_Dame/posdk/points.ply",
+    "g2o": "public/onedsfm/Notre_Dame/posdk/poses.g2o",
+    "metadata": "public/onedsfm/Notre_Dame/posdk/result.json",
+    "reprojection": "public/onedsfm/Notre_Dame/posdk/reprojection.json"
+  }
+}
