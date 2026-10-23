@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Union_Square",
+  "platform": "PoMVG",
+  "points": 45517,
+  "ply_sha256": "afd04e8f3510128589ddc9264b6f7cb27585e302dd048dd66a2679151bf516ff",
+  "original_video_sha256": "0776a8510c93fe627a886f2325bade00364a4f0473fcb4454454c6e922f5d205",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 1031,
+    "fps": 30.0,
+    "duration_seconds": 34.366667
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 1031,
+    "fps": 30.0,
+    "duration_seconds": 34.366667
+  }
+}

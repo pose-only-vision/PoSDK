@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Union_Square",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 930,
+  "registered_views": 787,
+  "points": 69812,
+  "accuracy": {},
+  "timing": {
+    "backend": 303.8798716661986,
+    "frontend": 11.651004248764366,
+    "pipeline": 319.3461432890035
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 1.1072206415806176,
+    "median": 0.9210848144171783,
+    "observations": 343123,
+    "points": 69812,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 1
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Union_Square/openmvg_incremental/points.ply",
+    "g2o": "public/onedsfm/Union_Square/openmvg_incremental/poses.g2o",
+    "metadata": "public/onedsfm/Union_Square/openmvg_incremental/result.json",
+    "reprojection": "public/onedsfm/Union_Square/openmvg_incremental/reprojection.json"
+  }
+}

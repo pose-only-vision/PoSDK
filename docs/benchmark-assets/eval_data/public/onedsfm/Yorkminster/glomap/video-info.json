@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Yorkminster",
+  "platform": "GLOMAP",
+  "points": 86685,
+  "ply_sha256": "0222309d54dca5a9f844191002d12e88a9c9b4e1da9308454acaec71d4ea0811",
+  "original_video_sha256": "22713128fdf987284de326689315c1869aaf4e856e61901e37a6ff96d4ea8732",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 854,
+    "fps": 30.0,
+    "duration_seconds": 28.466667
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 854,
+    "fps": 30.0,
+    "duration_seconds": 28.466667
+  }
+}
