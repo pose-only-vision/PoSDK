@@ -1,0 +1,119 @@
+{
+  "dataset": "strecha",
+  "scene": "fountain-P11",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 11,
+  "registered_views": 11,
+  "points": 47337,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "rotation_deg": {
+        "count": 11,
+        "min": 0.017923897070139815,
+        "max": 0.03584973635153904,
+        "mean": 0.028981779846398104,
+        "median": 0.029679535761016576,
+        "std_dev": 0.0061730659778767415
+      },
+      "center": {
+        "count": 11,
+        "min": 0.0008391334294021864,
+        "max": 0.004257382191553439,
+        "mean": 0.0025905773000865274,
+        "median": 0.0021415133052034015,
+        "std_dev": 0.0010933951012111638
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "rotation_deg": {
+        "count": 11,
+        "min": 0.017923897070139815,
+        "max": 0.03584973635153904,
+        "mean": 0.028981779846398104,
+        "median": 0.029679535761016576,
+        "std_dev": 0.0061730659778767415
+      },
+      "center": {
+        "count": 11,
+        "min": 0.0008391334294021864,
+        "max": 0.004257382191553439,
+        "mean": 0.0025905773000865274,
+        "median": 0.0021415133052034015,
+        "std_dev": 0.0010933951012111638
+      }
+    }
+  },
+  "timing": {
+    "backend": 5.887,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "downloads": {
+    "ply": "public/strecha/fountain-P11/posdk/points.ply",
+    "g2o": "public/strecha/fountain-P11/posdk/poses.g2o",
+    "metadata": "public/strecha/fountain-P11/posdk/result.json",
+    "accuracy": "public/strecha/fountain-P11/posdk/evaluation.json"
+  }
+}

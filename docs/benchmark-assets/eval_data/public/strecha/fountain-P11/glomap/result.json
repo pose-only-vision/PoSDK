@@ -1,0 +1,119 @@
+{
+  "dataset": "strecha",
+  "scene": "fountain-P11",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-17",
+  "input_views": 11,
+  "registered_views": 11,
+  "points": 14607,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "rotation_deg": {
+        "count": 11,
+        "min": 0.01457663712021338,
+        "max": 0.03479985425453494,
+        "mean": 0.026921609332107643,
+        "median": 0.027806697654920273,
+        "std_dev": 0.006848520252439074
+      },
+      "center": {
+        "count": 11,
+        "min": 0.0007707008148925311,
+        "max": 0.004031528285737341,
+        "mean": 0.0024616731576241717,
+        "median": 0.002336848952455375,
+        "std_dev": 0.0011191060305627853
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "rotation_deg": {
+        "count": 11,
+        "min": 0.01457663712021338,
+        "max": 0.03479985425453494,
+        "mean": 0.026921609332107643,
+        "median": 0.027806697654920273,
+        "std_dev": 0.006848520252439074
+      },
+      "center": {
+        "count": 11,
+        "min": 0.0007707008148925311,
+        "max": 0.004031528285737341,
+        "mean": 0.0024616731576241717,
+        "median": 0.002336848952455375,
+        "std_dev": 0.0011191060305627853
+      }
+    }
+  },
+  "timing": {
+    "backend": 5.344208291033283,
+    "frontend": 14.373388707870618,
+    "pipeline": 19.7175969989039,
+    "frontend_reused": false
+  },
+  "downloads": {
+    "ply": "public/strecha/fountain-P11/glomap/points.ply",
+    "g2o": "public/strecha/fountain-P11/glomap/poses.g2o",
+    "metadata": "public/strecha/fountain-P11/glomap/result.json",
+    "accuracy": "public/strecha/fountain-P11/glomap/evaluation.json"
+  }
+}

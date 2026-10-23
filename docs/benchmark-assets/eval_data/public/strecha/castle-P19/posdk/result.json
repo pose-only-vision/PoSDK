@@ -1,0 +1,151 @@
+{
+  "dataset": "strecha",
+  "scene": "castle-P19",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 19,
+  "registered_views": 19,
+  "points": 31884,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "rotation_deg": {
+        "count": 19,
+        "min": 0.005088806128816794,
+        "max": 0.07300159386827687,
+        "mean": 0.0364404890618567,
+        "median": 0.030898811676553267,
+        "std_dev": 0.01998122096894091
+      },
+      "center": {
+        "count": 19,
+        "min": 0.005374685138365111,
+        "max": 0.05207920359676264,
+        "mean": 0.023490178738243817,
+        "median": 0.01894610524557885,
+        "std_dev": 0.015541862784986957
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "rotation_deg": {
+        "count": 19,
+        "min": 0.005088806128816794,
+        "max": 0.07300159386827687,
+        "mean": 0.0364404890618567,
+        "median": 0.030898811676553267,
+        "std_dev": 0.01998122096894091
+      },
+      "center": {
+        "count": 19,
+        "min": 0.005374685138365111,
+        "max": 0.05207920359676264,
+        "mean": 0.023490178738243817,
+        "median": 0.01894610524557885,
+        "std_dev": 0.015541862784986957
+      }
+    }
+  },
+  "timing": {
+    "backend": 5.147,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "downloads": {
+    "ply": "public/strecha/castle-P19/posdk/points.ply",
+    "g2o": "public/strecha/castle-P19/posdk/poses.g2o",
+    "metadata": "public/strecha/castle-P19/posdk/result.json",
+    "accuracy": "public/strecha/castle-P19/posdk/evaluation.json"
+  }
+}

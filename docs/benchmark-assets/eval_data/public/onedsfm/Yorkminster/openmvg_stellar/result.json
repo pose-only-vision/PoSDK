@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Yorkminster",
+  "arm": "openmvg_stellar",
+  "label": "OpenMVG Stellar",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 458,
+  "registered_views": 415,
+  "points": 262627,
+  "accuracy": {},
+  "timing": {
+    "backend": 44.781934666913,
+    "frontend": 17.804671959020197,
+    "pipeline": 75.07338766683824
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 92421308076.65475,
+    "median": 4.938841962036328,
+    "observations": 1091591,
+    "points": 262627,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Yorkminster/openmvg_stellar/points.ply",
+    "g2o": "public/onedsfm/Yorkminster/openmvg_stellar/poses.g2o",
+    "metadata": "public/onedsfm/Yorkminster/openmvg_stellar/result.json",
+    "reprojection": "public/onedsfm/Yorkminster/openmvg_stellar/reprojection.json"
+  }
+}

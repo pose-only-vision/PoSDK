@@ -1,0 +1,151 @@
+{
+  "dataset": "strecha",
+  "scene": "castle-P19",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-17",
+  "input_views": 19,
+  "registered_views": 19,
+  "points": 12543,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "rotation_deg": {
+        "count": 19,
+        "min": 0.01006213918899378,
+        "max": 0.07196901940857098,
+        "mean": 0.04009546333507985,
+        "median": 0.03521208191944148,
+        "std_dev": 0.01938386780482205
+      },
+      "center": {
+        "count": 19,
+        "min": 0.0063245850148278505,
+        "max": 0.05493324991592138,
+        "mean": 0.024643970258744995,
+        "median": 0.016300100239962673,
+        "std_dev": 0.015932796531753578
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "rotation_deg": {
+        "count": 19,
+        "min": 0.01006213918899378,
+        "max": 0.07196901940857098,
+        "mean": 0.04009546333507985,
+        "median": 0.03521208191944148,
+        "std_dev": 0.01938386780482205
+      },
+      "center": {
+        "count": 19,
+        "min": 0.0063245850148278505,
+        "max": 0.05493324991592138,
+        "mean": 0.024643970258744995,
+        "median": 0.016300100239962673,
+        "std_dev": 0.015932796531753578
+      }
+    }
+  },
+  "timing": {
+    "backend": 8.693366624880582,
+    "frontend": 20.023047166876495,
+    "pipeline": 28.716413791757077,
+    "frontend_reused": false
+  },
+  "downloads": {
+    "ply": "public/strecha/castle-P19/glomap/points.ply",
+    "g2o": "public/strecha/castle-P19/glomap/poses.g2o",
+    "metadata": "public/strecha/castle-P19/glomap/result.json",
+    "accuracy": "public/strecha/castle-P19/glomap/evaluation.json"
+  }
+}

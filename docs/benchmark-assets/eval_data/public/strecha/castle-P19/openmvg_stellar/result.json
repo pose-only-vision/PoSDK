@@ -1,0 +1,150 @@
+{
+  "dataset": "strecha",
+  "scene": "castle-P19",
+  "arm": "openmvg_stellar",
+  "label": "OpenMVG Stellar",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 19,
+  "registered_views": 19,
+  "points": 29708,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "rotation_deg": {
+        "count": 19,
+        "min": 0.038116166170632716,
+        "max": 1.703220675398395,
+        "mean": 0.3816291296118344,
+        "median": 0.17360561557443457,
+        "std_dev": 0.4364548514470816
+      },
+      "center": {
+        "count": 19,
+        "min": 0.040016837673471806,
+        "max": 0.34316543214988243,
+        "mean": 0.11852139081618913,
+        "median": 0.09585314298753843,
+        "std_dev": 0.08318027039493676
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "rotation_deg": {
+        "count": 19,
+        "min": 0.038116166170632716,
+        "max": 1.703220675398395,
+        "mean": 0.3816291296118344,
+        "median": 0.17360561557443457,
+        "std_dev": 0.4364548514470816
+      },
+      "center": {
+        "count": 19,
+        "min": 0.040016837673471806,
+        "max": 0.34316543214988243,
+        "mean": 0.11852139081618913,
+        "median": 0.09585314298753843,
+        "std_dev": 0.08318027039493676
+      }
+    }
+  },
+  "timing": {
+    "backend": 2.2157507508527488,
+    "frontend": 7.432603872846812,
+    "pipeline": 10.395250957692042
+  },
+  "downloads": {
+    "ply": "public/strecha/castle-P19/openmvg_stellar/points.ply",
+    "g2o": "public/strecha/castle-P19/openmvg_stellar/poses.g2o",
+    "metadata": "public/strecha/castle-P19/openmvg_stellar/result.json",
+    "accuracy": "public/strecha/castle-P19/openmvg_stellar/evaluation.json"
+  }
+}

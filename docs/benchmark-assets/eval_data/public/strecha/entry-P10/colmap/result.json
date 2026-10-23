@@ -1,0 +1,114 @@
+{
+  "dataset": "strecha",
+  "scene": "entry-P10",
+  "arm": "colmap",
+  "label": "COLMAP",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 10,
+  "registered_views": 10,
+  "points": 9801,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "rotation_deg": {
+        "count": 10,
+        "min": 0.008599700662135142,
+        "max": 0.04290920232807381,
+        "mean": 0.02415290700929814,
+        "median": 0.02344521842496386,
+        "std_dev": 0.00928028446576874
+      },
+      "center": {
+        "count": 10,
+        "min": 0.0033413575179024615,
+        "max": 0.011227245551671304,
+        "mean": 0.006148063045146672,
+        "median": 0.005177088752511464,
+        "std_dev": 0.002921944115101794
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "rotation_deg": {
+        "count": 10,
+        "min": 0.008599700662135142,
+        "max": 0.04290920232807381,
+        "mean": 0.02415290700929814,
+        "median": 0.02344521842496386,
+        "std_dev": 0.00928028446576874
+      },
+      "center": {
+        "count": 10,
+        "min": 0.0033413575179024615,
+        "max": 0.011227245551671304,
+        "mean": 0.006148063045146672,
+        "median": 0.005177088752511464,
+        "std_dev": 0.002921944115101794
+      }
+    }
+  },
+  "timing": {
+    "backend": 5.283959666965529,
+    "frontend": 16.453722917241976,
+    "pipeline": 21.95949691813439
+  },
+  "downloads": {
+    "ply": "public/strecha/entry-P10/colmap/points.ply",
+    "g2o": "public/strecha/entry-P10/colmap/poses.g2o",
+    "metadata": "public/strecha/entry-P10/colmap/result.json",
+    "accuracy": "public/strecha/entry-P10/colmap/evaluation.json"
+  }
+}

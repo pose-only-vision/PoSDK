@@ -1,0 +1,118 @@
+{
+  "dataset": "strecha",
+  "scene": "fountain-P11",
+  "arm": "openmvg_global",
+  "label": "OpenMVG Global",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 11,
+  "registered_views": 11,
+  "points": 25088,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "rotation_deg": {
+        "count": 11,
+        "min": 0.015525531880750787,
+        "max": 0.03572297843502625,
+        "mean": 0.027677119511135953,
+        "median": 0.02665623999733964,
+        "std_dev": 0.006537988415846488
+      },
+      "center": {
+        "count": 11,
+        "min": 0.0005149227865303563,
+        "max": 0.004224936049493011,
+        "mean": 0.002611764035253723,
+        "median": 0.0024174524135208153,
+        "std_dev": 0.0011662304615821424
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "rotation_deg": {
+        "count": 11,
+        "min": 0.015525531880750787,
+        "max": 0.03572297843502625,
+        "mean": 0.027677119511135953,
+        "median": 0.02665623999733964,
+        "std_dev": 0.006537988415846488
+      },
+      "center": {
+        "count": 11,
+        "min": 0.0005149227865303563,
+        "max": 0.004224936049493011,
+        "mean": 0.002611764035253723,
+        "median": 0.0024174524135208153,
+        "std_dev": 0.0011662304615821424
+      }
+    }
+  },
+  "timing": {
+    "backend": 3.7243767082691193,
+    "frontend": 7.176510914694518,
+    "pipeline": 11.838803581893444
+  },
+  "downloads": {
+    "ply": "public/strecha/fountain-P11/openmvg_global/points.ply",
+    "g2o": "public/strecha/fountain-P11/openmvg_global/poses.g2o",
+    "metadata": "public/strecha/fountain-P11/openmvg_global/result.json",
+    "accuracy": "public/strecha/fountain-P11/openmvg_global/evaluation.json"
+  }
+}

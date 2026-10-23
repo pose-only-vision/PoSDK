@@ -1,0 +1,22 @@
+{
+  "dataset": "strecha",
+  "scene": "castle-P30",
+  "platform": "OpenMVG Global",
+  "points": 22661,
+  "ply_sha256": "1259f51a7cdd58b098479c2bfead5ebd69eb32558d525d701fd1f1fb0b23e3ff",
+  "original_video_sha256": "0b3bfde0a3aa16c47b946f3c86b7417765ba39ee498609a8e637ead1ca19e8cc",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 509,
+    "fps": 30.0,
+    "duration_seconds": 16.966667
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 509,
+    "fps": 30.0,
+    "duration_seconds": 16.966667
+  }
+}

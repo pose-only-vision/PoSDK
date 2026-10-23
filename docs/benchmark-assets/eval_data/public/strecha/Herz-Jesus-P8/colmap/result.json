@@ -1,0 +1,106 @@
+{
+  "dataset": "strecha",
+  "scene": "Herz-Jesus-P8",
+  "arm": "colmap",
+  "label": "COLMAP",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 8,
+  "registered_views": 8,
+  "points": 7274,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "rotation_deg": {
+        "count": 8,
+        "min": 0.009374102576677765,
+        "max": 0.03164335448329273,
+        "mean": 0.017420693970185787,
+        "median": 0.015155903127849885,
+        "std_dev": 0.006621739241832074
+      },
+      "center": {
+        "count": 8,
+        "min": 0.0018429177445322582,
+        "max": 0.00662470799845176,
+        "mean": 0.003458252387258071,
+        "median": 0.003001196573236486,
+        "std_dev": 0.0013927108948054469
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "rotation_deg": {
+        "count": 8,
+        "min": 0.009374102576677765,
+        "max": 0.03164335448329273,
+        "mean": 0.017420693970185787,
+        "median": 0.015155903127849885,
+        "std_dev": 0.006621739241832074
+      },
+      "center": {
+        "count": 8,
+        "min": 0.0018429177445322582,
+        "max": 0.00662470799845176,
+        "mean": 0.003458252387258071,
+        "median": 0.003001196573236486,
+        "std_dev": 0.0013927108948054469
+      }
+    }
+  },
+  "timing": {
+    "backend": 2.863413081970066,
+    "frontend": 6.809756916947663,
+    "pipeline": 9.873458748916164
+  },
+  "downloads": {
+    "ply": "public/strecha/Herz-Jesus-P8/colmap/points.ply",
+    "g2o": "public/strecha/Herz-Jesus-P8/colmap/poses.g2o",
+    "metadata": "public/strecha/Herz-Jesus-P8/colmap/result.json",
+    "accuracy": "public/strecha/Herz-Jesus-P8/colmap/evaluation.json"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "dataset": "strecha",
+  "scene": "Herz-Jesus-P8",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 8,
+  "registered_views": 8,
+  "points": 26745,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "rotation_deg": {
+        "count": 8,
+        "min": 0.002684244243239246,
+        "max": 0.029592399883941276,
+        "mean": 0.01655895597633086,
+        "median": 0.016349545153688506,
+        "std_dev": 0.007392172751562465
+      },
+      "center": {
+        "count": 8,
+        "min": 0.0017993007844763634,
+        "max": 0.0069903828818588185,
+        "mean": 0.0038457289114807807,
+        "median": 0.003644085363317411,
+        "std_dev": 0.0014092816313424975
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "rotation_deg": {
+        "count": 8,
+        "min": 0.002684244243239246,
+        "max": 0.029592399883941276,
+        "mean": 0.01655895597633086,
+        "median": 0.016349545153688506,
+        "std_dev": 0.007392172751562465
+      },
+      "center": {
+        "count": 8,
+        "min": 0.0017993007844763634,
+        "max": 0.0069903828818588185,
+        "mean": 0.0038457289114807807,
+        "median": 0.003644085363317411,
+        "std_dev": 0.0014092816313424975
+      }
+    }
+  },
+  "timing": {
+    "backend": 4.114,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "downloads": {
+    "ply": "public/strecha/Herz-Jesus-P8/posdk/points.ply",
+    "g2o": "public/strecha/Herz-Jesus-P8/posdk/poses.g2o",
+    "metadata": "public/strecha/Herz-Jesus-P8/posdk/result.json",
+    "accuracy": "public/strecha/Herz-Jesus-P8/posdk/evaluation.json"
+  }
+}

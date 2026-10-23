@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Yorkminster",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 458,
+  "registered_views": 412,
+  "points": 169852,
+  "accuracy": {},
+  "timing": {
+    "backend": 600.8336936668493,
+    "frontend": 17.804671959020197,
+    "pipeline": 627.0864168747794
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.876944937363716,
+    "median": 0.6742551071734997,
+    "observations": 738055,
+    "points": 169852,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 1
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Yorkminster/openmvg_incremental/points.ply",
+    "g2o": "public/onedsfm/Yorkminster/openmvg_incremental/poses.g2o",
+    "metadata": "public/onedsfm/Yorkminster/openmvg_incremental/result.json",
+    "reprojection": "public/onedsfm/Yorkminster/openmvg_incremental/reprojection.json"
+  }
+}
