@@ -1,0 +1,34 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Roman_Forum",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 1134,
+  "registered_views": 1134,
+  "points": 266012,
+  "accuracy": {},
+  "timing": {
+    "backend": 127.939,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.594828995982337,
+    "median": 0.4616437606399475,
+    "observations": 1222948,
+    "points": 266012,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Roman_Forum/posdk/points.ply",
+    "g2o": "public/onedsfm/Roman_Forum/posdk/poses.g2o",
+    "metadata": "public/onedsfm/Roman_Forum/posdk/result.json",
+    "reprojection": "public/onedsfm/Roman_Forum/posdk/reprojection.json"
+  }
+}

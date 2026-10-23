@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Trafalgar",
+  "platform": "GLOMAP",
+  "points": 213084,
+  "ply_sha256": "d0ad3bd2ae4b76ce8319c815f56fd078a1b8aab127ca73287bc812525d6d7183",
+  "original_video_sha256": "76c94bf6b135a1f77fbe9f3aef777d8429b3b044580b343cfa39bb162ef5687e",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 726,
+    "fps": 30.0,
+    "duration_seconds": 24.2
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 726,
+    "fps": 30.0,
+    "duration_seconds": 24.2
+  }
+}

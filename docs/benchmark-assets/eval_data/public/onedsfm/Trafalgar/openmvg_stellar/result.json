@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Trafalgar",
+  "arm": "openmvg_stellar",
+  "label": "OpenMVG Stellar",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 5433,
+  "registered_views": 4911,
+  "points": 882717,
+  "accuracy": {},
+  "timing": {
+    "backend": 2111.3752529579215,
+    "frontend": 147.00309008313343,
+    "pipeline": 2305.523022541078
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 510707443773.2175,
+    "median": 10.915572782241522,
+    "observations": 4139268,
+    "points": 882717,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Trafalgar/openmvg_stellar/points.ply",
+    "g2o": "public/onedsfm/Trafalgar/openmvg_stellar/poses.g2o",
+    "metadata": "public/onedsfm/Trafalgar/openmvg_stellar/result.json",
+    "reprojection": "public/onedsfm/Trafalgar/openmvg_stellar/reprojection.json"
+  }
+}

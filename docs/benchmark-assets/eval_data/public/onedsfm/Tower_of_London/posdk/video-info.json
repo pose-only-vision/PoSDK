@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Tower_of_London",
+  "platform": "PoMVG",
+  "points": 151324,
+  "ply_sha256": "2cd53939a78acc793ea5977fb8f498e66a2ecbc0ee3246fdf73aacbfab644a26",
+  "original_video_sha256": "984211d9af28d8d38cd8dc997775f856956223486c4dcd01a6e39b2d25b6029f",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 355,
+    "fps": 30.0,
+    "duration_seconds": 11.833333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 355,
+    "fps": 30.0,
+    "duration_seconds": 11.833333
+  }
+}

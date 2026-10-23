@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Union_Square",
+  "arm": "colmap",
+  "label": "COLMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 930,
+  "registered_views": 586,
+  "points": 42610,
+  "accuracy": {},
+  "timing": {
+    "backend": 701.371654791059,
+    "frontend": 9.820350082824007,
+    "pipeline": 712.9509705398232
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.8104297222469746,
+    "median": 0.6385984249931137,
+    "observations": 328172,
+    "points": 42610,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Union_Square/colmap/points.ply",
+    "g2o": "public/onedsfm/Union_Square/colmap/poses.g2o",
+    "metadata": "public/onedsfm/Union_Square/colmap/result.json",
+    "reprojection": "public/onedsfm/Union_Square/colmap/reprojection.json"
+  }
+}

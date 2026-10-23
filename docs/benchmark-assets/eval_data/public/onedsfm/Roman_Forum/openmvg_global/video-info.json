@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Roman_Forum",
+  "platform": "OpenMVG Global",
+  "points": 91054,
+  "ply_sha256": "276a09edafeb0784bfd2932b9a8848587d271e4f09700510423184764340c584",
+  "original_video_sha256": "ebb3704fcf9241c6d976a83ae072aa32f016cfa3ccb4db4f1b5d2021b31561c6",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 751,
+    "fps": 30.0,
+    "duration_seconds": 25.033333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 751,
+    "fps": 30.0,
+    "duration_seconds": 25.033333
+  }
+}

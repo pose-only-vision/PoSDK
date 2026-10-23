@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Tower_of_London",
+  "arm": "colmap",
+  "label": "COLMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 508,
+  "registered_views": 341,
+  "points": 97206,
+  "accuracy": {},
+  "timing": {
+    "backend": 498.1733695000876,
+    "frontend": 12.415562958223745,
+    "pipeline": 513.5774170821533
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.7707428358103057,
+    "median": 0.5903364549428879,
+    "observations": 640825,
+    "points": 97206,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Tower_of_London/colmap/points.ply",
+    "g2o": "public/onedsfm/Tower_of_London/colmap/poses.g2o",
+    "metadata": "public/onedsfm/Tower_of_London/colmap/result.json",
+    "reprojection": "public/onedsfm/Tower_of_London/colmap/reprojection.json"
+  }
+}
