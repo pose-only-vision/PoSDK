@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Montreal_Notre_Dame",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 474,
+  "registered_views": 461,
+  "points": 91280,
+  "accuracy": {},
+  "timing": {
+    "backend": 172.99996191682294,
+    "frontend": 15.887269208906218,
+    "pipeline": 190.98046504193917
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.8979961722976623,
+    "median": 0.6574558873485162,
+    "observations": 752421,
+    "points": 91280,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Montreal_Notre_Dame/glomap/points.ply",
+    "g2o": "public/onedsfm/Montreal_Notre_Dame/glomap/poses.g2o",
+    "metadata": "public/onedsfm/Montreal_Notre_Dame/glomap/result.json",
+    "reprojection": "public/onedsfm/Montreal_Notre_Dame/glomap/reprojection.json"
+  }
+}

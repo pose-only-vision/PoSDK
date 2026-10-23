@@ -1,0 +1,115 @@
+{
+  "dataset": "eth3d",
+  "scene": "pipes",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-17",
+  "input_views": 14,
+  "registered_views": 14,
+  "points": 3110,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "rotation_deg": {
+        "count": 14,
+        "min": 0.007551426635338489,
+        "max": 0.056776290790381045,
+        "mean": 0.023182970153458556,
+        "median": 0.017283956036838313,
+        "std_dev": 0.01514782976679861
+      },
+      "center": {
+        "count": 14,
+        "min": 0.0001793232832437128,
+        "max": 0.0037225751143838666,
+        "mean": 0.0012305817556105298,
+        "median": 0.0009122620767120337,
+        "std_dev": 0.0008953867106269803
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        9,
+        10,
+        11
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        9,
+        10,
+        11
+      ],
+      "rotation_deg": {
+        "count": 6,
+        "min": 0.005528700592085829,
+        "max": 0.021347107401759532,
+        "mean": 0.010385447878487738,
+        "median": 0.007561370928996858,
+        "std_dev": 0.005763629881468605
+      },
+      "center": {
+        "count": 6,
+        "min": 5.6202843342255894e-05,
+        "max": 0.0003013281140013825,
+        "mean": 0.00020252314147881223,
+        "median": 0.00023173172102526856,
+        "std_dev": 8.258930703226287e-05
+      }
+    }
+  },
+  "timing": {
+    "backend": 5.397353375796229,
+    "frontend": 12.360715416725725,
+    "pipeline": 17.758068792521954,
+    "frontend_reused": false
+  },
+  "downloads": {
+    "ply": "public/eth3d/pipes/glomap/points.ply",
+    "g2o": "public/eth3d/pipes/glomap/poses.g2o",
+    "metadata": "public/eth3d/pipes/glomap/result.json",
+    "accuracy": "public/eth3d/pipes/glomap/evaluation.json"
+  }
+}

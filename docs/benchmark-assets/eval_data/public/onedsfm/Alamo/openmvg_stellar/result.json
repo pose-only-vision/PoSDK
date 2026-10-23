@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Alamo",
+  "arm": "openmvg_stellar",
+  "label": "OpenMVG Stellar",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 627,
+  "registered_views": 560,
+  "points": 220928,
+  "accuracy": {},
+  "timing": {
+    "backend": 104.80998112494126,
+    "frontend": 36.03092895774171,
+    "pipeline": 152.99085116479546
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 678124680.9073226,
+    "median": 3.5572695854935548,
+    "observations": 1134362,
+    "points": 220928,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Alamo/openmvg_stellar/points.ply",
+    "g2o": "public/onedsfm/Alamo/openmvg_stellar/poses.g2o",
+    "metadata": "public/onedsfm/Alamo/openmvg_stellar/result.json",
+    "reprojection": "public/onedsfm/Alamo/openmvg_stellar/reprojection.json"
+  }
+}

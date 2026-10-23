@@ -1,0 +1,34 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Piccadilly",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 2508,
+  "registered_views": 2483,
+  "points": 250284,
+  "accuracy": {},
+  "timing": {
+    "backend": 309.235,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.672695436912678,
+    "median": 0.5241313911516106,
+    "observations": 1266338,
+    "points": 250284,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Piccadilly/posdk/points.ply",
+    "g2o": "public/onedsfm/Piccadilly/posdk/poses.g2o",
+    "metadata": "public/onedsfm/Piccadilly/posdk/result.json",
+    "reprojection": "public/onedsfm/Piccadilly/posdk/reprojection.json"
+  }
+}

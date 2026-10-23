@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Trafalgar",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-15",
+  "input_views": 5433,
+  "registered_views": 5331,
+  "points": 213084,
+  "accuracy": {},
+  "timing": {
+    "backend": 2156.51664620894,
+    "frontend": null,
+    "pipeline": 2219.833992500091
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 1.063275942732068,
+    "median": 0.6425312860153787,
+    "observations": 1861157,
+    "points": 213084,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Trafalgar/glomap/points.ply",
+    "g2o": "public/onedsfm/Trafalgar/glomap/poses.g2o",
+    "metadata": "public/onedsfm/Trafalgar/glomap/result.json",
+    "reprojection": "public/onedsfm/Trafalgar/glomap/reprojection.json"
+  }
+}

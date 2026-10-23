@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 669" role="img">
+<title>ETH3D / coverage / all measured configurations</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<g fill="#183247" font-family="sans-serif" font-size="13">
+<rect x="20" y="12" width="9" height="9" fill="#2176e7"/>
+<text x="35.00" y="22.00" >PoMVG P3P + PA2 / batch LiGT (n=13)</text>
+<rect x="470" y="12" width="9" height="9" fill="#e19729"/>
+<text x="485.00" y="22.00" >GLOMAP (n=13)</text>
+<rect x="20" y="33" width="9" height="9" fill="#25a593"/>
+<text x="35.00" y="43.00" >OpenMVG Incremental (n=13)</text>
+<rect x="470" y="33" width="9" height="9" fill="#8663bd"/>
+<text x="485.00" y="43.00" >OpenMVG Global (n=13)</text>
+<path d="M200.00,78 V624" stroke="#e2e9ef"/>
+<text x="200.00" y="644.00" fill="#65758b" text-anchor="middle">0</text>
+<path d="M367.50,78 V624" stroke="#e2e9ef"/>
+<text x="367.50" y="644.00" fill="#65758b" text-anchor="middle">25</text>
+<path d="M535.00,78 V624" stroke="#e2e9ef"/>
+<text x="535.00" y="644.00" fill="#65758b" text-anchor="middle">50</text>
+<path d="M702.50,78 V624" stroke="#e2e9ef"/>
+<text x="702.50" y="644.00" fill="#65758b" text-anchor="middle">75</text>
+<path d="M870.00,78 V624" stroke="#e2e9ef"/>
+<text x="870.00" y="644.00" fill="#65758b" text-anchor="middle">100</text>
+<text x="188.00" y="103.00" text-anchor="end" fill="#65758b">meadow</text>
+<rect x="200" y="87.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="meadow" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / meadow: 100%</title></rect>
+<rect x="200" y="93.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="meadow" data-value="100"><title>GLOMAP / meadow: 100%</title></rect>
+<rect x="200" y="99.00" width="268.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="meadow" data-value="40"><title>OpenMVG Incremental / meadow: 40%</title></rect>
+<rect x="200" y="105.00" width="178.67" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="meadow" data-value="26.6666666667"><title>OpenMVG Global / meadow: 26.7%</title></rect>
+<text x="188.00" y="145.00" text-anchor="end" fill="#65758b">office</text>
+<rect x="200" y="129.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="office" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / office: 100%</title></rect>
+<rect x="200" y="135.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="office" data-value="100"><title>GLOMAP / office: 100%</title></rect>
+<rect x="200" y="141.00" width="618.46" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="office" data-value="92.3076923077"><title>OpenMVG Incremental / office: 92.3%</title></rect>
+<rect x="200" y="147.00" width="386.54" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="office" data-value="57.6923076923"><title>OpenMVG Global / office: 57.7%</title></rect>
+<text x="188.00" y="187.00" text-anchor="end" fill="#65758b">kicker</text>
+<rect x="200" y="171.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="kicker" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / kicker: 100%</title></rect>
+<rect x="200" y="177.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="kicker" data-value="100"><title>GLOMAP / kicker: 100%</title></rect>
+<rect x="200" y="183.00" width="540.32" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="kicker" data-value="80.6451612903"><title>OpenMVG Incremental / kicker: 80.6%</title></rect>
+<rect x="200" y="189.00" width="497.10" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="kicker" data-value="74.1935483871"><title>OpenMVG Global / kicker: 74.2%</title></rect>
+<text x="188.00" y="229.00" text-anchor="end" fill="#65758b">courtyard</text>
+<rect x="200" y="213.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="courtyard" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / courtyard: 100%</title></rect>
+<rect x="200" y="219.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="courtyard" data-value="100"><title>GLOMAP / courtyard: 100%</title></rect>
+<rect x="200" y="225.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="courtyard" data-value="100"><title>OpenMVG Incremental / courtyard: 100%</title></rect>
+<rect x="200" y="231.00" width="634.74" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="courtyard" data-value="94.7368421053"><title>OpenMVG Global / courtyard: 94.7%</title></rect>
+<text x="188.00" y="271.00" text-anchor="end" fill="#65758b">delivery area</text>
+<rect x="200" y="255.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="delivery_area" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / delivery_area: 100%</title></rect>
+<rect x="200" y="261.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="delivery_area" data-value="100"><title>GLOMAP / delivery_area: 100%</title></rect>
+<rect x="200" y="267.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="delivery_area" data-value="100"><title>OpenMVG Incremental / delivery_area: 100%</title></rect>
+<rect x="200" y="273.00" width="670.00" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="delivery_area" data-value="100"><title>OpenMVG Global / delivery_area: 100%</title></rect>
+<text x="188.00" y="313.00" text-anchor="end" fill="#65758b">electro</text>
+<rect x="200" y="297.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="electro" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / electro: 100%</title></rect>
+<rect x="200" y="303.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="electro" data-value="100"><title>GLOMAP / electro: 100%</title></rect>
+<rect x="200" y="309.00" width="625.33" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="electro" data-value="93.3333333333"><title>OpenMVG Incremental / electro: 93.3%</title></rect>
+<rect x="200" y="315.00" width="610.44" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="electro" data-value="91.1111111111"><title>OpenMVG Global / electro: 91.1%</title></rect>
+<text x="188.00" y="355.00" text-anchor="end" fill="#65758b">facade</text>
+<rect x="200" y="339.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="facade" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / facade: 100%</title></rect>
+<rect x="200" y="345.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="facade" data-value="100"><title>GLOMAP / facade: 100%</title></rect>
+<rect x="200" y="351.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="facade" data-value="100"><title>OpenMVG Incremental / facade: 100%</title></rect>
+<rect x="200" y="357.00" width="661.18" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="facade" data-value="98.6842105263"><title>OpenMVG Global / facade: 98.7%</title></rect>
+<text x="188.00" y="397.00" text-anchor="end" fill="#65758b">pipes</text>
+<rect x="200" y="381.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="pipes" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / pipes: 100%</title></rect>
+<rect x="200" y="387.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="pipes" data-value="100"><title>GLOMAP / pipes: 100%</title></rect>
+<rect x="200" y="393.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="pipes" data-value="100"><title>OpenMVG Incremental / pipes: 100%</title></rect>
+<rect x="200" y="399.00" width="287.14" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="pipes" data-value="42.8571428571"><title>OpenMVG Global / pipes: 42.9%</title></rect>
+<text x="188.00" y="439.00" text-anchor="end" fill="#65758b">playground</text>
+<rect x="200" y="423.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="playground" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / playground: 100%</title></rect>
+<rect x="200" y="429.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="playground" data-value="100"><title>GLOMAP / playground: 100%</title></rect>
+<rect x="200" y="435.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="playground" data-value="100"><title>OpenMVG Incremental / playground: 100%</title></rect>
+<rect x="200" y="441.00" width="528.95" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="playground" data-value="78.9473684211"><title>OpenMVG Global / playground: 78.9%</title></rect>
+<text x="188.00" y="481.00" text-anchor="end" fill="#65758b">relief</text>
+<rect x="200" y="465.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="relief" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / relief: 100%</title></rect>
+<rect x="200" y="471.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="relief" data-value="100"><title>GLOMAP / relief: 100%</title></rect>
+<rect x="200" y="477.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="relief" data-value="100"><title>OpenMVG Incremental / relief: 100%</title></rect>
+<rect x="200" y="483.00" width="670.00" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="relief" data-value="100"><title>OpenMVG Global / relief: 100%</title></rect>
+<text x="188.00" y="523.00" text-anchor="end" fill="#65758b">relief 2</text>
+<rect x="200" y="507.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="relief_2" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / relief_2: 100%</title></rect>
+<rect x="200" y="513.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="relief_2" data-value="100"><title>GLOMAP / relief_2: 100%</title></rect>
+<rect x="200" y="519.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="relief_2" data-value="100"><title>OpenMVG Incremental / relief_2: 100%</title></rect>
+<rect x="200" y="525.00" width="432.26" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="relief_2" data-value="64.5161290323"><title>OpenMVG Global / relief_2: 64.5%</title></rect>
+<text x="188.00" y="565.00" text-anchor="end" fill="#65758b">terrace</text>
+<rect x="200" y="549.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="terrace" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / terrace: 100%</title></rect>
+<rect x="200" y="555.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="terrace" data-value="100"><title>GLOMAP / terrace: 100%</title></rect>
+<rect x="200" y="561.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="terrace" data-value="100"><title>OpenMVG Incremental / terrace: 100%</title></rect>
+<rect x="200" y="567.00" width="670.00" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="terrace" data-value="100"><title>OpenMVG Global / terrace: 100%</title></rect>
+<text x="188.00" y="607.00" text-anchor="end" fill="#65758b">terrains</text>
+<rect x="200" y="591.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="terrains" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / terrains: 100%</title></rect>
+<rect x="200" y="597.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="terrains" data-value="100"><title>GLOMAP / terrains: 100%</title></rect>
+<rect x="200" y="603.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="terrains" data-value="100"><title>OpenMVG Incremental / terrains: 100%</title></rect>
+<rect x="200" y="609.00" width="478.57" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="terrains" data-value="71.4285714286"><title>OpenMVG Global / terrains: 71.4%</title></rect>
+<text x="535.00" y="663.00" fill="#65758b" text-anchor="middle">Recovered / input views (%)</text>
+</g></svg>

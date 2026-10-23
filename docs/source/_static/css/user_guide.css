@@ -1,0 +1,275 @@
+/* Quick-start flow: scoped styles, independent of Sphinx list markers. */
+.rst-content figure.posdk-installation-options {
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto 24px;
+}
+.rst-content figure.posdk-installation-options img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+}
+.rst-content figure.posdk-guide-video {
+  width: 100%;
+  max-width: 960px;
+  margin: 22px auto 28px;
+}
+.rst-content figure.posdk-guide-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #111;
+  border-radius: 10px;
+}
+.rst-content figure.posdk-guide-video figcaption {
+  margin-top: 9px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #52647a;
+  text-align: center;
+}
+.rst-content figure.posdk-guide-workflow-image {
+  width: 100%;
+  max-width: 760px;
+  margin: 22px auto 28px;
+  padding: 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e1e8f2;
+  border-radius: 16px;
+}
+.rst-content figure.posdk-guide-workflow-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+}
+.rst-content figure.posdk-concept-diagram {
+  width: 100%;
+  max-width: 720px;
+  margin: 20px auto 24px;
+  padding: 8px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #e1e8f2;
+  border-radius: 14px;
+}
+.rst-content figure.posdk-concept-diagram img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+}
+.rst-content figure.posdk-concept-diagram figcaption {
+  margin: 9px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #52647a;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .rst-content figure.posdk-guide-workflow-image,
+  .rst-content figure.posdk-concept-diagram {
+    padding: 4px;
+    border-radius: 9px;
+  }
+}
+
+.posdk-guide-journey {
+  --flow-blue: #3265c5;
+  --flow-ink: #22344e;
+  --flow-muted: #586b82;
+  --flow-line: #9db6df;
+  --flow-gap: 20px;
+  --flow-row-gap: 28px;
+  container: posdk-guide-journey / inline-size;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1040px;
+  margin: 20px auto 26px;
+  padding: 16px;
+  border: 1px solid #dbe5f3;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #f0f5ff 0%, #f8faff 48%, #f4fbf9 100%);
+  color: var(--flow-ink);
+}
+.posdk-guide-journey__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px 16px;
+  margin-bottom: 14px;
+}
+.posdk-guide-journey__heading strong {
+  color: var(--flow-ink);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.posdk-guide-journey__heading span {
+  color: var(--flow-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.rst-content ol.posdk-guide-flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--flow-row-gap) var(--flow-gap);
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.rst-content ol.posdk-guide-flow > li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 12px !important;
+  list-style: none !important;
+  border: 1px solid #d4e0f1;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 3px 10px #24447507;
+}
+.rst-content ol.posdk-guide-flow > li::marker { content: ''; }
+.posdk-guide-flow__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.posdk-guide-flow__number {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d7e5fb;
+  border-radius: 7px;
+  background: #edf3ff;
+  color: var(--flow-blue);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.posdk-guide-flow__icon {
+  width: 22px;
+  height: 22px;
+  color: #7091c3;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.posdk-guide-flow__title {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--flow-ink);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.posdk-guide-flow__description {
+  display: block;
+  color: var(--flow-muted);
+  font-size: 13px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+/* The second row returns right-to-left: 1 → 2 → 3 ↓ 4 → 5 → 6. */
+.posdk-guide-flow > li:nth-child(4) { grid-area: 2 / 3; }
+.posdk-guide-flow > li:nth-child(5) { grid-area: 2 / 2; }
+.posdk-guide-flow > li:nth-child(6) { grid-area: 2 / 1; }
+.rst-content ol.posdk-guide-flow > li:last-child {
+  border-color: #badfd4;
+  background: #f3fbf7;
+}
+.posdk-guide-flow > li:last-child .posdk-guide-flow__number {
+  border-color: #c4e6d9;
+  background: #e3f5ed;
+  color: #23785d;
+}
+.posdk-guide-flow > li:last-child .posdk-guide-flow__icon { color: #479779; }
+.posdk-guide-flow > li:not(:last-child)::after,
+.posdk-guide-flow > li:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+.posdk-guide-flow > li:not(:last-child)::after {
+  top: 50%;
+  right: calc(2px - var(--flow-gap));
+  width: calc(var(--flow-gap) - 4px);
+  height: 2px;
+  background: var(--flow-line);
+}
+.posdk-guide-flow > li:not(:last-child)::before {
+  z-index: 1;
+  top: calc(50% - 3px);
+  right: calc(5px - var(--flow-gap));
+  width: 6px;
+  height: 6px;
+  border-top: 2px solid var(--flow-line);
+  border-right: 2px solid var(--flow-line);
+  transform: rotate(45deg);
+}
+.posdk-guide-flow > li:nth-child(3)::after {
+  top: calc(100% + 2px);
+  right: auto;
+  left: calc(50% - 1px);
+  width: 2px;
+  height: calc(var(--flow-row-gap) - 4px);
+}
+.posdk-guide-flow > li:nth-child(3)::before {
+  top: calc(100% + var(--flow-row-gap) - 10px);
+  right: auto;
+  left: calc(50% - 3px);
+  transform: rotate(135deg);
+}
+.posdk-guide-flow > li:nth-child(4)::after,
+.posdk-guide-flow > li:nth-child(5)::after {
+  right: auto;
+  left: calc(2px - var(--flow-gap));
+}
+.posdk-guide-flow > li:nth-child(4)::before,
+.posdk-guide-flow > li:nth-child(5)::before {
+  right: auto;
+  left: calc(5px - var(--flow-gap));
+  transform: rotate(-135deg);
+}
+/* Narrow panels keep the DOM order and use a single vertical connector. */
+@container posdk-guide-journey (max-width: 540px) {
+  .rst-content ol.posdk-guide-flow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+  .rst-content ol.posdk-guide-flow > li { grid-area: auto; padding: 12px !important; }
+  .posdk-guide-flow__top { margin-bottom: 8px; }
+  .posdk-guide-flow > li:not(:last-child)::after {
+    top: calc(100% + 2px);
+    right: auto;
+    left: calc(50% - 1px);
+    width: 2px;
+    height: 22px;
+  }
+  .posdk-guide-flow > li:not(:last-child)::before {
+    top: calc(100% + 16px);
+    right: auto;
+    left: calc(50% - 3px);
+    transform: rotate(135deg);
+  }
+}
+@media print {
+  .posdk-guide-journey { break-inside: avoid; background: #f8faff; box-shadow: none; }
+}

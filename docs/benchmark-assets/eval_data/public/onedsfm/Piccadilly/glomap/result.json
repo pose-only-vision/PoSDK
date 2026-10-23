@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Piccadilly",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 2508,
+  "registered_views": 2380,
+  "points": 154922,
+  "accuracy": {},
+  "timing": {
+    "backend": 655.1832309579477,
+    "frontend": 34.85495666600764,
+    "pipeline": 693.6209042910486
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 1.003600321895896,
+    "median": 0.6676221654765977,
+    "observations": 1248122,
+    "points": 154922,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Piccadilly/glomap/points.ply",
+    "g2o": "public/onedsfm/Piccadilly/glomap/poses.g2o",
+    "metadata": "public/onedsfm/Piccadilly/glomap/result.json",
+    "reprojection": "public/onedsfm/Piccadilly/glomap/reprojection.json"
+  }
+}

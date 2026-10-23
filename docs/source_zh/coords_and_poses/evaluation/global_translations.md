@@ -5,7 +5,7 @@
 ## 数学定义
 
 ### 全局位移表示
-在PoSDK中，全局位移是指相机光心在世界坐标系中的位置向量：
+在PoMVG中，全局位移是指相机光心在世界坐标系中的位置向量：
 
 - **RwTw格式**: $\mathbf{t}_w$ 直接表示相机光心的世界坐标
 - **RwTc格式**: $\mathbf{t}_c = -R_w^c \cdot \mathbf{t}_w$，需要转换得到世界坐标
@@ -29,7 +29,7 @@ $$\text{Position Error} = ||\mathbf{t}_w^{gt} - \mathbf{t}_w^{est}||_2$$
 
 评估位移方向的准确性：
 
-$$\text{Direction Error} = \arccos\left(\frac{\mathbf{t}_w^{gt\,T} \mathbf{t}_w^{est}}{||\mathbf{t}_w^{gt}|| \cdot ||\mathbf{t}_w^{est}||}\right) \times \frac{180°}{\pi}$$
+$$\text{Direction Error} = \arccos\left(\frac{\mathbf{t}_w^{gt\,T} \mathbf{t}_w^{est}}{||\mathbf{t}_w^{gt}|| \cdot ||\mathbf{t}_w^{est}||}\right) \times \frac{180^\circ}{\pi}$$
 
 **物理意义**: 两个位移向量之间的夹角，单位为度。适用于尺度不确定的情况。
 
@@ -441,7 +441,7 @@ for (size_t i = 0; i < position_errors.size(); ++i) {
 ---
 
 **相关参考**:
-- [PoSDK 位姿约定](../conventions/posdk.md)
+- [PoMVG 位姿约定](../conventions/posdk.md)
 - [全局位姿评估](global_poses.md)
 - [相对位姿评估](relative_poses.md)
 - [评估体系概览](index.md)

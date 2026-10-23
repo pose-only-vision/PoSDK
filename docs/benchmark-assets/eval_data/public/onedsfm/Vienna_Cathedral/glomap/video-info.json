@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Vienna_Cathedral",
+  "platform": "GLOMAP",
+  "points": 177446,
+  "ply_sha256": "f8db026f13f8bdf3c8e1897caf80fc82d7f23e4ae52e6ca0bfc60e8376fac2b4",
+  "original_video_sha256": "4f8b582974688154083ee63b093d68310381e89f186bb1c48c2a7291b02ab8f4",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 679,
+    "fps": 30.0,
+    "duration_seconds": 22.633333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 679,
+    "fps": 30.0,
+    "duration_seconds": 22.633333
+  }
+}

@@ -1,7 +1,7 @@
 # COLMAP File Converter
 (COLMAP-converter)=
 
-The COLMAP file converter provides data interoperability with COLMAP SfM tools, supporting reading COLMAP reconstruction results and exporting PoSDK data to COLMAP format.
+The COLMAP file converter provides data interoperability with COLMAP SfM tools, supporting reading COLMAP reconstruction results and exporting PoMVG data to COLMAP format.
 
 ---
 
@@ -12,18 +12,18 @@ The COLMAP file converter provides data interoperability with COLMAP SfM tools, 
 
 | Operation Type     | Function Description                    | Conversion Function                                |
 | ------------------ | --------------------------------------- | -------------------------------------------------- |
-| **COLMAP → PoSDK** | Match data → PoSDK matches              | [`ToDataMatches`](COLMAP-to-data-matches)          |
-| **COLMAP → PoSDK** | SfM data → Global poses                 | [`ToDataGlobalPoses`](COLMAP-to-data-global-poses) |
-| **PoSDK → COLMAP** | Complete reconstruction → COLMAP format | [`OutputPoSDK2Colmap`](output-posdk-to-COLMAP)     |
+| **COLMAP → PoMVG** | Match data → PoMVG matches              | [`ToDataMatches`](COLMAP-to-data-matches)          |
+| **COLMAP → PoMVG** | SfM data → Global poses                 | [`ToDataGlobalPoses`](COLMAP-to-data-global-poses) |
+| **PoMVG → COLMAP** | Complete reconstruction → COLMAP format | [`OutputPoSDK2Colmap`](output-posdk-to-COLMAP)     |
 
 ---
 
-## COLMAP → PoSDK Conversion
+## COLMAP → PoMVG Conversion
 
 ### `ToDataMatches`
 (COLMAP-to-data-matches)=
 
-Convert COLMAP match files to PoSDK match data
+Convert COLMAP match files to PoMVG match data
 
 **Function Signature**:
 ```cpp
@@ -37,7 +37,7 @@ bool ToDataMatches(
 | Parameter         | Type                          | Description                        |
 | ----------------- | ----------------------------- | ---------------------------------- |
 | `matches_folder`  | `const std::string&`          | [Input] COLMAP matches folder path |
-| `matches_data`    | `Interface::DataPtr&`         | [Output] PoSDK match data          |
+| `matches_data`    | `Interface::DataPtr&`         | [Output] PoMVG match data          |
 | `file_name_to_id` | `std::map<std::string, int>&` | [Input] File name to ID mapping    |
 
 **Return Value**: `bool` - Whether conversion succeeded
@@ -49,7 +49,7 @@ bool ToDataMatches(
 **Usage Example**:
 ```cpp
 #include "converter_colmap_file.hpp"
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // Prepare file name to ID mapping (needs to be extracted from COLMAP SfM data)
 std::map<std::string, int> file_name_to_id;
@@ -64,14 +64,14 @@ bool success = ToDataMatches(
 
 if (success) {
     auto matches_ptr = GetDataPtr<types::Matches>(matches_data);
-    LOG_INFO_ZH << "Loaded " << matches_ptr->size() << " image pair matches";
+    LOG_INFO_EN << "Loaded " << matches_ptr->size() << " image pair matches";
 }
 ```
 
 ### `ToDataGlobalPoses`
 (COLMAP-to-data-global-poses)=
 
-Convert COLMAP SfM data files to PoSDK global pose data
+Convert COLMAP SfM data files to PoMVG global pose data
 
 **Function Signature**:
 ```cpp
@@ -85,21 +85,21 @@ bool ToDataGlobalPoses(
 | Parameter           | Type                          | Description                          |
 | ------------------- | ----------------------------- | ------------------------------------ |
 | `global_poses_file` | `const std::string&`          | [Input] COLMAP global pose file path |
-| `global_poses_data` | `Interface::DataPtr&`         | [Output] PoSDK global pose data      |
+| `global_poses_data` | `Interface::DataPtr&`         | [Output] PoMVG global pose data      |
 | `file_name_to_id`   | `std::map<std::string, int>&` | [Input] File name to ID mapping      |
 
 **Return Value**: `bool` - Whether conversion succeeded
 
 **Input Format**: COLMAP `images.txt` text file (contains image poses and observation information)
 
-**Output Format**: PoSDK `GlobalPoses`, pose format is `RwTc` (consistent with COLMAP)
+**Output Format**: PoMVG `GlobalPoses`, pose format is `RwTc` (consistent with COLMAP)
 
 **Dependency**: Requires `file_name_to_id` mapping table to map file names to view IDs
 
 **Usage Example**:
 ```cpp
 #include "converter_colmap_file.hpp"
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // Prepare file name to ID mapping (needs to be extracted from COLMAP SfM data)
 std::map<std::string, int> file_name_to_id;
@@ -114,18 +114,18 @@ bool success = ToDataGlobalPoses(
 
 if (success) {
     auto poses_ptr = GetDataPtr<types::GlobalPoses>(global_poses_data);
-    LOG_INFO_ZH << "Loaded " << poses_ptr->Size() << " camera poses";
+    LOG_INFO_EN << "Loaded " << poses_ptr->Size() << " camera poses";
 }
 ```
 
 ---
 
-## PoSDK → COLMAP Export
+## PoMVG → COLMAP Export
 
 ### `OutputPoSDK2Colmap`
 (output-posdk-to-COLMAP)=
 
-Export PoSDK data to COLMAP format
+Export PoMVG data to COLMAP format
 
 **Function Signature**:
 ```cpp
@@ -151,11 +151,11 @@ void OutputPoSDK2Colmap(
 **Output Files**:
 ```
 output_path/
-├── cameras.bin              # Camera intrinsics (required)
-├── images.bin               # Image poses and observations (required)
-├── points3D.bin             # 3D point cloud (required)
-└── posdk2colmap_scene.ply   # PLY visualization camera+point cloud file (optional)
-└── posdk2colmap_points_only.ply # PLY visualization point cloud file (optional)
++-- cameras.bin              # Camera intrinsics (required)
++-- images.bin               # Image poses and observations (required)
++-- points3D.bin             # 3D point cloud (required)
+-- posdk2colmap_scene.ply   # PLY visualization camera+point cloud file (optional)
+-- posdk2colmap_points_only.ply # PLY visualization point cloud file (optional)
 ```
 
 **Function Description**:
@@ -165,7 +165,7 @@ output_path/
 **Usage Example**:
 ```cpp
 #include "converter_colmap_file.hpp"
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // Prepare PoSDK data
 types::GlobalPosesPtr global_poses = GetGlobalPoses();
@@ -186,7 +186,7 @@ OutputPoSDK2Colmap(
     tracks,
     pts3d);
 
-LOG_INFO_ZH << "PoSDK data exported to: " << colmap_dir;
+LOG_INFO_EN << "PoSDK data exported to: " << colmap_dir;
 
 // Use COLMAP visualization
 // $ COLMAP gui
@@ -281,16 +281,16 @@ struct Point3D {
 
 ## Coordinate System Conventions
 
-### PoSDK vs COLMAP Coordinate Conventions
+### PoMVG vs COLMAP Coordinate Conventions
 (posdk-vs-COLMAP-conventions)=
 
-| Aspect                  | PoSDK                  | COLMAP                 |
+| Aspect                  | PoMVG                  | COLMAP                 |
 | ----------------------- | ---------------------- | ---------------------- |
 | **Pose Representation** | RwTc (World-to-Camera) | RwTc (World-to-Camera) |
 | **Rotation Matrix**     | Column-major (Eigen)   | Column-major           |
 | **Quaternion**          | `[qw, qx, qy, qz]`     | `[qw, qx, qy, qz]`     |
 
-**Note**: PoSDK and COLMAP use the same pose format (RwTc), no coordinate conversion needed. The `OutputPoSDK2Colmap` function directly uses PoSDK pose data.
+**Note**: PoMVG and COLMAP use the same pose format (RwTc), no coordinate conversion needed. The `OutputPoSDK2Colmap` function directly uses PoMVG pose data.
 
 ---
 
@@ -304,13 +304,13 @@ struct Point3D {
 #include <po_core.hpp>
 
 using namespace PoSDK;
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // COLMAP sparse reconstruction directory structure
 // colmap_sparse/
-// ├── cameras.bin
-// ├── images.bin (or images.txt)
-// └── points3D.bin
+// +-- cameras.bin
+// +-- images.bin (or images.txt)
+// -- points3D.bin
 
 // ==== Step 1: Prepare file name mapping ====
 // Need to extract file name to ID mapping from COLMAP SfM data
@@ -325,7 +325,7 @@ bool success = ToDataGlobalPoses(
     file_name_to_id);
 
 if (!success) {
-    LOG_ERROR_ZH << "Failed to load COLMAP pose data";
+    LOG_ERROR_EN << "Failed to load COLMAP pose data";
     return;
 }
 
@@ -346,10 +346,10 @@ if (matches_data) {
 }
 
 auto poses_ptr = GetDataPtr<types::GlobalPoses>(global_poses_data);
-LOG_INFO_ZH << "Successfully loaded COLMAP reconstruction: " << poses_ptr->Size() << " camera poses";
+LOG_INFO_EN << "Successfully loaded COLMAP reconstruction: " << poses_ptr->Size() << " camera poses";
 ```
 
-### PoSDK Result Export to COLMAP
+### PoMVG Result Export to COLMAP
 (posdk-to-COLMAP-export-workflow)=
 
 ```cpp
@@ -357,7 +357,7 @@ LOG_INFO_ZH << "Successfully loaded COLMAP reconstruction: " << poses_ptr->Size(
 #include <po_core.hpp>
 
 using namespace PoSDK;
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // ==== Step 1: Prepare PoSDK data ====
 // Assume complete reconstruction data is available
@@ -367,11 +367,11 @@ types::FeaturesInfoPtr features = GetFeatures();
 types::TracksPtr tracks = GetTracks();
 types::Points3dPtr pts3d = GetPoints3D();
 
-LOG_INFO_ZH << "PoSDK reconstruction statistics:";
-LOG_INFO_ZH << "  - Cameras: " << global_poses->Size();
-LOG_INFO_ZH << "  - Features: " << features->Size();
-LOG_INFO_ZH << "  - Tracks: " << tracks->size();
-LOG_INFO_ZH << "  - 3D points: " << pts3d->cols();
+LOG_INFO_EN << "PoSDK reconstruction statistics:";
+LOG_INFO_EN << "  - Cameras: " << global_poses->Size();
+LOG_INFO_EN << "  - Features: " << features->Size();
+LOG_INFO_EN << "  - Tracks: " << tracks->size();
+LOG_INFO_EN << "  - 3D points: " << pts3d->cols();
 
 // ==== Step 2: Create COLMAP output directory ====
 std::string colmap_dir = "export_to_colmap/sparse/0";
@@ -386,19 +386,19 @@ OutputPoSDK2Colmap(
     tracks,
     pts3d);
 
-LOG_INFO_ZH << "PoSDK data exported to COLMAP format";
-LOG_INFO_ZH << "Output directory: " << colmap_dir;
+LOG_INFO_EN << "PoSDK data exported to COLMAP format";
+LOG_INFO_EN << "Output directory: " << colmap_dir;
 
 // ==== Step 4: Verify export (optional) ====
-LOG_INFO_ZH << "Exported files:";
-LOG_INFO_ZH << "  - " << colmap_dir << "/cameras.bin";
-LOG_INFO_ZH << "  - " << colmap_dir << "/images.bin";
-LOG_INFO_ZH << "  - " << colmap_dir << "/points3D.bin";
+LOG_INFO_EN << "Exported files:";
+LOG_INFO_EN << "  - " << colmap_dir << "/cameras.bin";
+LOG_INFO_EN << "  - " << colmap_dir << "/images.bin";
+LOG_INFO_EN << "  - " << colmap_dir << "/points3D.bin";
 
 // ==== Step 5: Use COLMAP tools ====
-LOG_INFO_ZH << "Can use COLMAP GUI to view:";
-LOG_INFO_ZH << "  $ COLMAP gui";
-LOG_INFO_ZH << "  Then open: " << colmap_dir;
+LOG_INFO_EN << "Can use COLMAP GUI to view:";
+LOG_INFO_EN << "  $ COLMAP gui";
+LOG_INFO_EN << "  Then open: " << colmap_dir;
 ```
 
 ---
@@ -460,7 +460,7 @@ for each point3D:
 // Check if file is COLMAP binary format
 std::ifstream file(path, std::ios::binary);
 if (!file.is_open()) {
-    LOG_ERROR_ZH << "Cannot open file: " << path;
+    LOG_ERROR_EN << "Cannot open file: " << path;
     return false;
 }
 
@@ -473,7 +473,7 @@ if (!file.is_open()) {
 // Verify quaternion normalization
 double norm = std::sqrt(qw*qw + qx*qx + qy*qy + qz*qz);
 if (std::abs(norm - 1.0) > 1e-6) {
-    LOG_WARNING_ZH << "Quaternion not normalized: " << norm;
+    LOG_WARNING_EN << "Quaternion not normalized: " << norm;
     NormalizeQuaternion(qw, qx, qy, qz);
 }
 ```

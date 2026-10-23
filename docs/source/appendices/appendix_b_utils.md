@@ -181,3 +181,147 @@ The following utility functions are member functions of the `MethodPreset` class
 ### Deprecated Functions
 
 - **String2IndexT (Deprecated)**: This function has been removed from `types.hpp`, related functionality is replaced by `MethodPreset::GetOptionAsIndexT()`.
+
+## Factory Advanced Functions
+
+The following functions are available in all three factory classes (`FactoryBehavior`, `FactoryMethod`, `FactoryData`) unless otherwise noted. They are defined in `<po_core/factory.hpp>`.
+
+### ManagePlugins
+- Function: Manually manage plugin directory, supports dynamic re-specification of plugin loading paths.
+- Signature: `static void ManagePlugins(const std::string &plugin_path, bool append = false)`
+- Parameters:
+  - `plugin_path`: const std::string& - New plugin directory path.
+  - `append`: bool - When `true`, appends to existing plugin map without clearing loaded plugins; when `false`, clears existing map and reloads. Defaults to `false`.
+- Return Value: None.
+- Applicable Classes: `FactoryBehavior`, `FactoryMethod`, `FactoryData`.
+- Usage Example:
+  ```cpp
+  // Clear and reload plugins from specified directory
+  FactoryMethod::ManagePlugins("/path/to/new/plugins");
+
+  // Append additional plugin directory (preserving existing plugins)
+  FactoryMethod::ManagePlugins("/path/to/extra/plugins", true);
+
+  // Also applicable to data and behavior factories
+  FactoryData::ManagePlugins("/path/to/data/plugins");
+  FactoryBehavior::ManagePlugins("/path/to/behavior/plugins", true);
+  ```
+
+### RemovePlugins
+- Function: Remove loaded plugins from specified path.
+- Signature: `static int RemovePlugins(const std::string &plugin_path)`
+- Parameters:
+  - `plugin_path`: const std::string& - Plugin directory path to remove.
+- Return Value: `int` - Number of plugins successfully removed.
+- Applicable Classes: `FactoryBehavior`, `FactoryMethod`, `FactoryData`.
+- Usage Example:
+  ```cpp
+  int removed_count = FactoryMethod::RemovePlugins("/path/to/old/plugins");
+  // removed_count is the actual number of plugins removed
+  ```
+
+### GetRegisteredPaths
+- Function: Get list of all currently registered plugin paths.
+- Signature: `static std::vector<std::string> GetRegisteredPaths()`
+- Parameters: None.
+- Return Value: `std::vector<std::string>` - List of registered plugin directory paths.
+- Applicable Classes: `FactoryBehavior`, `FactoryMethod`, `FactoryData`.
+- Usage Example:
+  ```cpp
+  auto paths = FactoryMethod::GetRegisteredPaths();
+  for (const auto &path : paths) {
+      std::cout << "Registered plugin path: " << path << std::endl;
+  }
+  ```
+
+### FactoryMethod::Create\<TSample\> (Template-Based Creation Interface)
+- Function: Create method instances based on template parameters, for methods that require specifying sample data types (e.g., `RANSACEstimator`, `GNCIRLSEstimator`, etc.).
+- Signature: `template <typename TSample> static Interface::MethodPtr Create(const std::string &type)`
+- Template Parameters:
+  - `TSample`: Sample data type (e.g., `std::vector<Eigen::Vector2d>`).
+- Parameters:
+  - `type`: const std::string& - Method type name.
+- Return Value: `Interface::MethodPtr` - Created method pointer, returns `nullptr` on failure.
+- Applicable Classes: `FactoryMethod` only.
+- Note: Using this interface requires including the `factory_template_impl.hpp` header file.
+- Usage Example:
+  ```cpp
+  #include <po_core/factory_template_impl.hpp>
+
+  // Create a RANSAC estimator with template parameters
+  auto ransac = FactoryMethod::Create<std::vector<Eigen::Vector2d>>("ransac_estimator");
+  if (ransac) {
+      ransac->SetRequiredData(input_data);
+      auto result = ransac->Build();
+  }
+  ```
+
+## Global Utility Functions
+
+The following are global utility functions under the `PoSDK` namespace.
+
+### DisplayAllPluginVersions
+- Function: Display version information for all registered plugins.
+- Header: `<po_core/factory.hpp>`
+- Signature: `void PoSDK::DisplayAllPluginVersions()`
+- Parameters: None.
+- Return Value: None.
+- Usage Example:
+  ```cpp
+  #include <po_core/factory.hpp>
+
+  int main() {
+      // Load plugins
+      FactoryMethod factory("/path/to/plugins");
+
+      // Display all plugin version information
+      PoSDK::DisplayAllPluginVersions();
+      return 0;
+  }
+  ```
+
+### DisplayCopyrightSummary
+- Function: Display all collected copyright information lists and dependency graph. Suitable for calling at the end of program execution to summarize copyright information for all components used during runtime.
+- Header: `<po_core/method_utils.hpp>`
+- Signature: `void PoSDK::Interface::DisplayCopyrightSummary()`
+- Parameters: None.
+- Return Value: None.
+- Usage Example:
+  ```cpp
+  #include <po_core/method_utils.hpp>
+
+  int main() {
+      // ... Execute your algorithms ...
+
+      // Display copyright summary before program ends
+      PoSDK::Interface::DisplayCopyrightSummary();
+      return 0;
+  }
+  ```
+
+### CreateAndConfigureSubMethod
+- Function: Create and configure a sub-method, automatically inheriting parameter configurations and Profiler labels from the parent method. This is a generic utility function that simplifies the process of creating and configuring sub-methods within composite methods.
+- Header: `<po_core/method_utils.hpp>`
+- Signature: `Interface::MethodPresetProfilerPtr PoSDK::Interface::CreateAndConfigureSubMethod(const std::string &method_type, Interface::MethodPresetProfiler *parent_method = nullptr)`
+- Parameters:
+  - `method_type`: const std::string& - Method type name to create.
+  - `parent_method`: Interface::MethodPresetProfiler* - Parent method instance pointer for parameter and Profiler label inheritance. Defaults to `nullptr` (no inheritance).
+- Return Value: `Interface::MethodPresetProfilerPtr` - Created and configured method instance. Returns `nullptr` if creation fails or type conversion fails.
+- Workflow:
+  1. Creates a method instance of the specified type via `FactoryMethod::Create()`.
+  2. Converts the instance to `MethodPresetProfiler` type.
+  3. If a parent method is provided, automatically inherits its parameter configurations (via `PassingMethodOptions`) and Profiler labels.
+- Usage Example:
+  ```cpp
+  #include <po_core/method_utils.hpp>
+
+  // Create sub-method in a parent method's Build()
+  auto sub_method = PoSDK::Interface::CreateAndConfigureSubMethod("method_LiGT", this);
+  if (sub_method) {
+      sub_method->SetRequiredData(tracks_data);
+      auto result = sub_method->Build();
+  }
+
+  // Standalone creation without parent parameter inheritance
+  auto standalone = PoSDK::Interface::CreateAndConfigureSubMethod("method_rotation_averaging");
+  ```

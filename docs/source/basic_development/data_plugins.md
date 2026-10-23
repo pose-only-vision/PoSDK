@@ -2,6 +2,21 @@
 
 Data plugins are responsible for data encapsulation, loading, saving, and access.
 
+## Current Build and Loading Notes
+
+Data plugins follow the same runtime contract as method plugins:
+
+- Build with `add_posdk_plugin(... PLUGIN_TYPE data ...)`
+- Register in the `.cpp` with `REGISTRATION_PLUGIN(...)`
+- Optional deployment declarations:
+  - `SUPPORTED_SYSTEMS`
+  - `SUPPORTED_ARCHES`
+- Runtime build artifact pair:
+  - `posdk_plugin_<name>.{dylib|so|dll}`
+  - `posdk_plugin_<name>.posdk.json`
+
+The runtime loader uses the generated sidecar manifest when available. Unsupported or invalid binaries can still appear in diagnostics, but they are filtered out of `Modules` and factory registration.
+
 ## Interface Introduction
 
 ### Required Override Interfaces
@@ -9,12 +24,17 @@ Data plugins are responsible for data encapsulation, loading, saving, and access
 ```{important}
 Each data plugin must implement the following core interfaces, which are the foundation for the plugin to work properly:
 
-- ** `virtual const std::string& GetType() const override;`**
+- **`virtual const std::string& GetType() const override;`**
   - Returns the plugin's unique type string identifier
   - Only **declare** in header file, automatically implemented by `REGISTRATION_PLUGIN` macro
   - **Example**: `"data_images"`, `"data_tracks"`
 - **`virtual void* GetData() override;`**
   - Returns a `void*` pointer to the plugin's internal core data storage. Users perform type-safe conversion when using `GetDataPtr<T>`.
+- **`virtual DataDetails Details() const override;`**
+  - Returns metadata about the data plugin, used for strong-typed code generation and UI display.
+  - Returns a `DataDetails` struct with the following fields:
+    - `coreTypeName`: C++ core type name usable in templates (e.g. `"Tracks"`, `"Package"`)
+    - `readme`: Human-readable usage description
 ```
 
 ### Optional Override Interfaces
@@ -49,6 +69,14 @@ Parameter type macros are provided in interfaces.hpp - simplifying parameter acc
 - **`virtual DataPtr CopyData() const override;`**
   - Implement deep copy logic for data, output DataPtr has same data content as original DataPtr, addresses are independent.
 
+- **`virtual EvaluatorStatus Evaluate(DataPtr gt_data) override;`**
+  - Evaluate custom data and return its status and metrics. Custom data used by automatic evaluation also needs `CopyData()`.
+
+- **`virtual std::vector<std::string> GetSupportedOutputTypes() const;`**
+  - Returns a list of supported output file extensions for this data plugin.
+  - Default implementation returns `{".pb"}`.
+  - Override to declare additional formats, e.g. `{".pb", ".g2o", ".ply"}`.
+
 ## Optional Derivation Methods
 
 - **Virtual Base Class**: **`Interface::DataIO`**
@@ -72,6 +100,9 @@ add_posdk_plugin(my_custom_data
     PLUGIN_TYPE data
     SOURCES my_data_plugin.cpp
     HEADERS my_data_plugin.hpp
+    # Optional deployment declaration:
+    # SUPPORTED_SYSTEMS windows
+    # SUPPORTED_ARCHES x86_64
 )
 ```
 
@@ -98,7 +129,10 @@ public:
     void* GetData() override {
         return static_cast<void*>(&data_);
     }
-    // Optional: implement Save/Load/Call/CopyData
+    DataDetails Details() const override {
+        return {"CustomData", "Custom data with id and values."};
+    }
+    // Optional: implement Save/Load/Call/CopyData/GetSupportedOutputTypes
 };
 } // namespace MyPlugin
 
@@ -130,12 +164,7 @@ if (custom_data) {
     custom_data->values = {1.0, 2.0, 3.0};
 }
 
-// Save data
-data->Save("/path/to/folder", "my_data");
-
-// Load data
-auto loaded_data = FactoryData::Create("my_custom_data");
-loaded_data->Load("/path/to/folder/my_data.dat");
+// This example provides in-memory access; implement Save/Load before file I/O.
 ```
 
 ## Data Configuration
@@ -173,15 +202,15 @@ Data plugins typically do not use independent `.ini` configuration files for par
 
 4.  **Direct Member Function Calls**: Users can directly call public member functions after creating instances to get core data for algorithm design.
     ```cpp
-    auto camera_data = FactoryData::Create("data_camera_model");
+    auto camera_data = FactoryData::Create("data_camera_models");
     auto camera_models = GetDataPtr<CameraModels>(camera_data);
     if (camera_models) {
         CameraModel cam; 
-        cam.SetCameraIntrinsics(/*...*/);
+        cam.SetCameraIntrinsics(1000.0, 1000.0, 640.0, 480.0);
         camera_models->push_back(cam);
     }
     ```
 
 ## Core Data Types
 
-The core library provides various predefined data types that can be directly used in plugins or as reference (see **Core Data Type Detailed Description**: Please refer to [Appendix A: PoSDK Core Data Types](../appendices/appendix_a_types.md))
+The core library provides various predefined data types that can be directly used in plugins or as reference (see **Core Data Type Detailed Description**: Please refer to [Appendix A: PoMVG Core Data Types](../appendices/appendix_a_types.md))

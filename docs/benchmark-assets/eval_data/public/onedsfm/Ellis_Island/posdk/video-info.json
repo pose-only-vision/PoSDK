@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Ellis_Island",
+  "platform": "PoMVG",
+  "points": 42433,
+  "ply_sha256": "9eef88a1f011b114e02404522dec65ef54573d1f8bf1dd22c2cd0e6d654e2500",
+  "original_video_sha256": "fd6fa45063a73a90fe488a5b367a061ced15f6234ae5ff1342d1690325fa26e9",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 432,
+    "fps": 30.0,
+    "duration_seconds": 14.4
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 432,
+    "fps": 30.0,
+    "duration_seconds": 14.4
+  }
+}

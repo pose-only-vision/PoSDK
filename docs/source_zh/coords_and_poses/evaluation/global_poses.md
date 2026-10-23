@@ -1,11 +1,11 @@
 # 全局位姿评估 (GlobalPoses Evaluation)
 
-全局位姿评估用于衡量相机在世界坐标系中的全局位姿估计精度。PoSDK 提供了多种评估方法，包括完整的相似变换对齐评估和仅旋转部分的评估。
+全局位姿评估用于衡量相机在世界坐标系中的全局位姿估计精度。PoMVG 提供了多种评估方法，包括完整的相似变换对齐评估和仅旋转部分的评估。
 
 ## 数学定义
 
 ### 全局位姿表示
-在PoSDK中，全局位姿默认使用 `PoseFormat::RwTw` 格式：
+在PoMVG中，全局位姿默认使用 `PoseFormat::RwTw` 格式：
 
 $$\mathbf{x}_c \sim R_w^c \cdot (\mathbf{X}_w - \mathbf{t}_w)$$
 
@@ -17,7 +17,7 @@ $$\mathbf{x}_c \sim R_w^c \cdot (\mathbf{X}_w - \mathbf{t}_w)$$
 
 ## 评估方法
 
-PoSDK 提供了三种主要的全局位姿评估方法：
+PoMVG 提供了三种主要的全局位姿评估方法：
 
 ### 1. 完整相似变换评估 (EvaluateWithSimilarityTransform)
 
@@ -85,7 +85,7 @@ bool EvaluateRotationsSVD(
 
 ### 1. 旋转误差 (Rotation Error)
 
-$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{gt}^T R_{est}) - 1}{2}\right) \times \frac{180°}{\pi}$$
+$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{gt}^T R_{est}) - 1}{2}\right) \times \frac{180^\circ}{\pi}$$
 
 **物理意义**: 两个旋转矩阵之间的最小旋转角度，单位为度。
 
@@ -118,7 +118,7 @@ public:
 
 ### 旋转补偿优化
 
-PoSDK 使用Ceres优化器进行旋转补偿计算：
+PoMVG 使用Ceres优化器进行旋转补偿计算：
 
 ```cpp
 // 旋转补偿代价函数
@@ -362,7 +362,7 @@ try {
 ---
 
 **相关参考**:
-- [PoSDK 位姿约定](../conventions/posdk.md)
+- [PoMVG 位姿约定](../conventions/posdk.md)
 - [相对位姿评估](relative_poses.md)
 - [全局位移评估](global_translations.md)
 - [评估体系概览](index.md)

@@ -1,6 +1,6 @@
 # OpenGV约定
 
-OpenGV库在其 `experiment_helpers` 中提供了一些工具函数，可以生成带有真值的相机位姿、3D点以及对应的2D观测（bearing vectors）。理解这些仿真数据中的位姿约定对于将其正确导入PoSDK进行测试和评估至关重要。
+OpenGV库在其 `experiment_helpers` 中提供了一些工具函数，可以生成带有真值的相机位姿、3D点以及对应的2D观测（bearing vectors）。理解这些仿真数据中的位姿约定对于将其正确导入PoMVG进行测试和评估至关重要。
 
 ## 1. OpenGV仿真中的位姿约定
 
@@ -42,20 +42,20 @@ $$R = ({R_i^w})^T \cdot R_j^w$$
 
  $$\mathbf{t} = (R_i^w)^T \cdot (\mathbf{t}_j - \mathbf{t}_i)$$
 
-```{important} PoSDK的标准位姿约定
+```{important} PoMVG的标准位姿约定
 >
-> 为清晰起见，我们单独在 [PoSDK标准位姿约定](./posdk.md) 中详细描述PoSDK的定义。
+> 为清晰起见，我们单独在 [PoMVG标准位姿约定](./posdk.md) 中详细描述PoMVG的定义。
 >
 >
 ``` 
 
-## 3. 从OpenGV仿真数据到PoSDK的转换
+## 3. 从OpenGV仿真数据到PoMVG的转换
 
 ### 3.1 全局位姿转换
 
 假设从OpenGV仿真中获得了单个相机的全局位姿 `position_opengv` $(\mathbf{t}_w)$ 和 `rotation_opengv` $(R_b^w)$:
 
--   PoSDK全局位姿初始化为 `PoseFormat::RwTw` 格式，即 $\mathbf{x}_c \sim R_w^c \cdot (\mathbf{X}_w - \mathbf{t}_w)$
+-   PoMVG全局位姿初始化为 `PoseFormat::RwTw` 格式，即 $\mathbf{x}_c \sim R_w^c \cdot (\mathbf{X}_w - \mathbf{t}_w)$
 -   OpenGV的 全局位姿初始化为 `PoseFormat::RcTw` 格式，即 $\mathbf{x}_c \sim (R_c^w)^T \cdot (\mathbf{X}_w - \mathbf{t}_w)$
 
 -   **转换**:
@@ -66,7 +66,7 @@ $$R = ({R_i^w})^T \cdot R_j^w$$
 
 假设从OpenGV `extractRelativePose` 获得了相对位姿$(R_{opengv}, \mathbf{t}_{opengv})$:
 
--   PoSDK的 `RelativePose` 定义是 $\mathbf{x}_{j} \sim R_{po} \cdot \mathbf{x}_{i} + \mathbf{t}$，其中:
+-   PoMVG的 `RelativePose` 定义是 $\mathbf{x}_{j} \sim R_{po} \cdot \mathbf{x}_{i} + \mathbf{t}$，其中:
 -  OpenGV的相对位姿定义是 $\mathbf{x}_{i} \sim R_{opengv} \cdot \mathbf{x}_{j} + \mathbf{t}_{opengv}$，其中:
 
 -   **转换**:

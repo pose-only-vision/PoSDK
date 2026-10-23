@@ -1,7 +1,7 @@
 (prior-and-gt)=
 # Ground Truth and Evaluation
 
-This document describes how to set ground truth data for algorithm evaluation in PoSDK method plugins and the core functionality of data package operations.
+This document describes how to set ground truth data for algorithm evaluation in PoMVG method plugins and the core functionality of data package operations.
 
 ## Quick Navigation
 
@@ -14,40 +14,34 @@ This document describes how to set ground truth data for algorithm evaluation in
 #### Required Package Operations
 | Function Name             | Brief Description                                      | Details Link                     |
 | ------------------------- | ------------------------------------------------------ | -------------------------------- |
-| `SetRequiredData()`       | Set single required input data                         | [Details](#setrequireddata)      |
-| `GetRequiredPackage()`    | Get required input data package reference              | [Details](#getrequiredpackage)   |
+| `SetRequiredData()`       | Set single required input data                         | [Details](#prior-setrequireddata)      |
+| `GetRequiredPackage()`    | Get required input data package reference              | [Details](#prior-getrequiredpackage)   |
 | `SetRequiredPackage()`    | Batch set required input data package                  | [Details](#setrequiredpackage)   |
-| `GetRequiredDataTypes()`  | Get required input data type list                      | [Details](#getrequireddatatypes) |
-| `GetRequiredDataPtr<T>()` | Simplified access to required input data (recommended) | [Details](#getrequireddataptr)   |
+| `GetRequiredDataTypes()`  | ~~Get required input data type list~~ *(Deprecated, use `GetInputTypes()`)* | [Details](#prior-getrequireddatatypes) |
+| `GetRequiredDataPtr<T>()` | Simplified access to required input data (recommended) | [Details](#prior-getrequireddataptr)   |
 
 #### Output Package Operations
-```{warning}
-**Reserved Interface**
 
-The following output package operations are reserved interfaces and are not yet implemented in the current version. Algorithms should directly obtain result data through the return value of `Build()` or `Run()`.
-
-The following output package operations are reserved interfaces and are not yet implemented in the current version. Algorithms should directly obtain result data through the return value of `Build()` or `Run()`.
-```
 
 | Function Name          | Brief Description               | Details Link                   | Status   |
 | ---------------------- | ------------------------------- | ------------------------------ | -------- |
-| `GetOutputPackage()`   | Get output data package pointer | [Details](#getoutputpackage)   | Reserved |
-| `AddOutputDataPtr()`   | Add data to output package      | [Details](#addoutputdataptr)   | Reserved |
-| `GetOutputDataTypes()` | Get output data type list       | [Details](#getoutputdatatypes) | Reserved |
-| `ClearOutputPackage()` | Clear output data package       | [Details](#clearoutputpackage) | Reserved |
+| `GetOutputPackage()`   | Get output data package pointer | [Details](#prior-getoutputpackage)   | Implemented |
+| `AddOutputDataPtr()`   | Add data to output package      | [Details](#prior-addoutputdataptr)   | Implemented |
+| `GetOutputDataTypes()` | ~~Get output data type list~~ *(Deprecated, use `GetOutputTypes()`)* | [Details](#prior-getoutputdatatypes) | Implemented |
+| `ClearOutputPackage()` | Clear output data package       | [Details](#prior-clearoutputpackage) | Implemented |
 
 #### Ground Truth Operations
 | Function Name | Brief Description     | Details Link          |
 | ------------- | --------------------- | --------------------- |
-| `SetGTData()` | Set ground truth data | [Details](#setgtdata) |
-| `GetGTData()` | Get ground truth data | [Details](#getgtdata) |
+| `SetGTData()` | Set ground truth data | [Details](#prior-setgtdata) |
+| `GetGTData()` | Get ground truth data | [Details](#prior-getgtdata) |
 
 #### Evaluator Operations
 | Function Name             | Brief Description            | Details Link                      |
 | ------------------------- | ---------------------------- | --------------------------------- |
-| `SetEvaluatorAlgorithm()` | Set evaluator algorithm name | [Details](#setevaluatoralgorithm) |
-| `GetEvaluatorAlgorithm()` | Get evaluator algorithm name | [Details](#getevaluatoralgorithm) |
-| `CallEvaluator()`         | Manually call evaluator      | [Details](#callevaluator)         |
+| `SetEvaluatorAlgorithm()` | Set evaluator algorithm name | [Details](#prior-setevaluatoralgorithm) |
+| `GetEvaluatorAlgorithm()` | Get evaluator algorithm name | [Details](#prior-getevaluatoralgorithm) |
+| `CallEvaluator()`         | Manually call evaluator      | [Details](#prior-callevaluator)         |
 
 ### Function Navigation
 - [Required Package Functions](#required-package-functions)
@@ -56,6 +50,8 @@ The following output package operations are reserved interfaces and are not yet 
 - [Evaluator Functions](#evaluator-functions)
 
 ### Application Examples
+
+These are implementation excerpts; see the [quick examples](method_example.md) for `GetType()`, registration and building. Loading and algorithm helpers such as `LoadTracks()` and `EstimatePoses()` are plugin-defined. Cast the base pointer returned by `FactoryMethod::Create()` before calling preset or evaluator interfaces.
 - [Basic Package Operations](#example-basic-package)
 - [Ground Truth Evaluation Flow](#example-gt-evaluation)
 
@@ -64,7 +60,7 @@ The following output package operations are reserved interfaces and are not yet 
 (data-type-classification)=
 ## Data Package Management
 
-PoSDK's `MethodPreset` class provides two core data management mechanisms:
+PoMVG's `MethodPreset` class provides two core data management mechanisms:
 
 ### 1. Required Input Package (`required_package_`)
 - Input data **required** by the algorithm
@@ -73,17 +69,13 @@ PoSDK's `MethodPreset` class provides two core data management mechanisms:
 - Accessed via `required_package_["key"]`
 
 ### 2. Output Package (`output_package_`)
-```{warning}
-**Reserved Feature**
 
-Output package functionality is a reserved interface and is not yet implemented in the current version. Algorithms should directly obtain result data through the return value of `Build()` or `Run()`.
+The output package is created on the first `AddOutputDataPtr()` call. `GetOutputPackage()` returns `nullptr` before data is added or after `ClearOutputPackage()`. Return `GetOutputPackage()` from `Run()` to pass it downstream.
 
-Output package functionality is a reserved interface and is not yet implemented in the current version. Algorithms should directly obtain result data through the return value of `Build()` or `Run()`.
-```
-- **Result data** after algorithm execution (reserved)
-- Results added via `AddOutputDataPtr()` (reserved)
-- Can contain multiple types of output data (reserved)
-- Retrieved via `GetOutputPackage()` (reserved)
+- **Result data** after algorithm execution
+- Results added via `AddOutputDataPtr()`
+- Can contain multiple types of output data
+- Retrieved via `GetOutputPackage()`
 
 (gt-evaluation-system)=
 ### Ground Truth Evaluation System
@@ -96,16 +88,16 @@ Output package functionality is a reserved interface and is not yet implemented 
 
 ### Key Differences Comparison
 
-| Feature               | Required Input Package              | Output Package (Reserved)                | Ground Truth Data       |
-| --------------------- | ----------------------------------- | ---------------------------------------- | ----------------------- |
-| **Direction**         | Input                               | Output                                   | Evaluation              |
-| **Required**          | **Required**                        | Generated by algorithm (reserved)        | Optional                |
-| **Purpose**           | Core input for algorithm            | Algorithm execution results (reserved)   | Accuracy evaluation     |
-| **Impact if Missing** | Algorithm cannot run                | No output results (reserved)             | Only affects evaluation |
-| **Typical Content**   | Features, tracks, camera parameters | Poses, reconstruction results (reserved) | Standard answers        |
-| **Access Method**     | `GetRequiredDataPtr<T>()`           | `AddOutputDataPtr()` (reserved)          | `SetGTData()`           |
-| **Setting Time**      | Set before execution                | Generated during execution (reserved)    | Set before execution    |
-| **Current Status**    | ✓ Implemented                       | ⚠️ Reserved interface, not implemented    | ✓ Implemented           |
+| Feature               | Required Input Package              | Output Package                    | Ground Truth Data       |
+| --------------------- | ----------------------------------- | ------------------------------------------- | ----------------------- |
+| **Direction**         | Input                               | Output                                      | Evaluation              |
+| **Required**          | **Required**                        | Generated by algorithm            | Optional                |
+| **Purpose**           | Core input for algorithm            | Algorithm execution results       | Accuracy evaluation     |
+| **Impact if Missing** | Algorithm cannot run                | A single result can still be returned                 | Only affects evaluation |
+| **Typical Content**   | Features, tracks, camera parameters | Poses, reconstruction results     | Standard answers        |
+| **Access Method**     | `GetRequiredDataPtr<T>()`           | `AddOutputDataPtr()`              | `SetGTData()`           |
+| **Setting Time**      | Set before execution                | Generated during execution        | Set before execution    |
+| **Current Status**    | Yes Implemented                     | Implemented | Yes Implemented         |
 
 ---
 
@@ -114,7 +106,7 @@ Output package functionality is a reserved interface and is not yet implemented 
 (required-package-functions)=
 ### Required Package Functions
 
-(setrequireddata)=
+(prior-setrequireddata)=
 #### `SetRequiredData()`
 **Function Signature**:
 ```cpp
@@ -124,7 +116,7 @@ bool SetRequiredData(const DataPtr &data_ptr);
 **Purpose**: Set a single required input data
 
 **Parameters**:
-- `data_ptr` [`DataPtr`](../appendices/appendix_a_types.md#ptr-type): Data pointer to set
+- `data_ptr` [`DataPtr`](../appendices/appendix_a_types.md): Data pointer to set
 
 **Return**: `bool` - Whether setting was successful
 
@@ -136,7 +128,7 @@ method_ptr->SetRequiredData(tracks_data);
 
 ---
 
-(getrequiredpackage)=
+(prior-getrequiredpackage)=
 #### `GetRequiredPackage()`
 **Function Signature**:
 ```cpp
@@ -146,7 +138,7 @@ Package& GetRequiredPackage();              // non-const version
 
 **Purpose**: Get reference to required input package
 
-**Return**: [`Package`](../appendices/appendix_a_types.md#package) & - Reference to required package
+**Return**: [`Package`](../appendices/appendix_a_types.md) & - Reference to required package
 
 **Usage Example**:
 ```cpp
@@ -168,7 +160,7 @@ void SetRequiredPackage(const Package &package);
 **Purpose**: Batch set required input package
 
 **Parameters**:
-- `package` [`Package`](../appendices/appendix_a_types.md#package): Package to set
+- `package` [`Package`](../appendices/appendix_a_types.md): Package to set
 
 **Usage Example**:
 ```cpp
@@ -180,10 +172,14 @@ method_ptr->SetRequiredPackage(input_package);
 
 ---
 
-(getrequireddatatypes)=
-#### `GetRequiredDataTypes()`
+(prior-getrequireddatatypes)=
+#### `GetRequiredDataTypes()` *(Deprecated)*
+```{warning}
+This function is deprecated. Use `GetInputTypes()` instead.
+```
 **Function Signature**:
 ```cpp
+[[deprecated("Use GetInputTypes() instead")]]
 std::vector<std::string> GetRequiredDataTypes() const;
 ```
 
@@ -201,7 +197,7 @@ for (const auto& type : required_types) {
 
 ---
 
-(getrequireddataptr)=
+(prior-getrequireddataptr)=
 #### `GetRequiredDataPtr<T>()` (Recommended)
 **Function Signature**:
 ```cpp
@@ -242,78 +238,75 @@ if (method_preset) {
 (output-package-functions)=
 ### Output Package Functions
 
-```{warning}
-**Reserved Interface**
 
-The following output package operations are reserved interfaces and are not yet implemented in the current version. Algorithms should directly obtain result data through the return value of `Build()` or `Run()`.
-
-The following output package operations are reserved interfaces and are not yet implemented in the current version. Algorithms should directly obtain result data through the return value of `Build()` or `Run()`.
-```
-
-(getoutputpackage)=
-#### `GetOutputPackage()` ⚠️ Reserved Interface
+(prior-getoutputpackage)=
+#### `GetOutputPackage()`
 **Function Signature**:
 ```cpp
 DataPackagePtr GetOutputPackage() const;
 ```
 
-**Purpose**: Get output data package pointer (reserved)
+**Purpose**: Get output data package pointer
 
-**Return**: [`DataPackagePtr`](../appendices/appendix_a_types.md#data-package-ptr) - Smart pointer to output package
+**Return**: [`DataPackagePtr`](../appendices/appendix_a_types.md) - Smart pointer to output package
 
-**Current Status**: ⚠️ Reserved interface, not yet implemented
+**Current Status**: Implemented
 
 ---
 
-(addoutputdataptr)=
-#### `AddOutputDataPtr()` ⚠️ Reserved Interface
+(prior-addoutputdataptr)=
+#### `AddOutputDataPtr()`
 **Function Signature**:
 ```cpp
 void AddOutputDataPtr(const DataPtr &data_ptr, const std::string &data_name = "");
 ```
 
-**Purpose**: Add data to output package (reserved)
+**Purpose**: Add data to output package
 
 **Parameters**:
-- `data_ptr` [`DataPtr`](../appendices/appendix_a_types.md#ptr-type): Data pointer to add
+- `data_ptr` [`DataPtr`](../appendices/appendix_a_types.md): Data pointer to add
 - `data_name` `std::string`: Data name (optional, uses data_ptr type if empty)
 
-**Current Status**: ⚠️ Reserved interface, not yet implemented
+**Current Status**: Implemented
 
 ---
 
-(getoutputdatatypes)=
-#### `GetOutputDataTypes()` ⚠️ Reserved Interface
+(prior-getoutputdatatypes)=
+#### `GetOutputDataTypes()` *(Deprecated)*
+```{warning}
+This function is deprecated. Use `GetOutputTypes()` instead.
+```
 **Function Signature**:
 ```cpp
+[[deprecated("Use GetOutputTypes() instead")]]
 std::vector<std::string> GetOutputDataTypes() const;
 ```
 
-**Purpose**: Get list of output data types (reserved)
+**Purpose**: Get the declared output type list
 
 **Return**: `std::vector<std::string>` - List of output data type names
 
-**Current Status**: ⚠️ Reserved interface, not yet implemented
+**Current Status**: Implemented
 
 ---
 
-(clearoutputpackage)=
-#### `ClearOutputPackage()` ⚠️ Reserved Interface
+(prior-clearoutputpackage)=
+#### `ClearOutputPackage()`
 **Function Signature**:
 ```cpp
 void ClearOutputPackage();
 ```
 
-**Purpose**: Clear output data package (reserved)
+**Purpose**: Clear output data package
 
-**Current Status**: ⚠️ Reserved interface, not yet implemented
+**Current Status**: Implemented
 
 ---
 
 (gt-data-functions)=
 ### Ground Truth Functions
 
-(setgtdata)=
+(prior-setgtdata)=
 #### `SetGTData()`
 **Function Signature**:
 ```cpp
@@ -323,7 +316,7 @@ void SetGTData(DataPtr &gt_data);
 **Purpose**: Set ground truth data for evaluation
 
 **Parameters**:
-- `gt_data` [`DataPtr`](../appendices/appendix_a_types.md#ptr-type): Ground truth data pointer
+- `gt_data` [`DataPtr`](../appendices/appendix_a_types.md): Ground truth data pointer
 
 **Usage Example**:
 ```cpp
@@ -337,7 +330,7 @@ auto result = method_ptr->Build(input_data);
 
 ---
 
-(getgtdata)=
+(prior-getgtdata)=
 #### `GetGTData()`
 **Function Signature**:
 ```cpp
@@ -346,7 +339,7 @@ DataPtr GetGTData() const;
 
 **Purpose**: Get currently set ground truth data
 
-**Return**: [`DataPtr`](../appendices/appendix_a_types.md#ptr-type) - Ground truth data pointer
+**Return**: [`DataPtr`](../appendices/appendix_a_types.md) - Ground truth data pointer
 
 **Usage Example**:
 ```cpp
@@ -361,7 +354,7 @@ if (gt_data) {
 (evaluator-functions)=
 ### Evaluator Functions
 
-(setevaluatoralgorithm)=
+(prior-setevaluatoralgorithm)=
 #### `SetEvaluatorAlgorithm()`
 **Function Signature**:
 ```cpp
@@ -381,7 +374,7 @@ method_ptr->SetEvaluatorAlgorithm("PoSDK_v2");
 
 ---
 
-(getevaluatoralgorithm)=
+(prior-getevaluatoralgorithm)=
 #### `GetEvaluatorAlgorithm()`
 **Function Signature**:
 ```cpp
@@ -390,11 +383,11 @@ virtual std::string GetEvaluatorAlgorithm() const;
 
 **Purpose**: Get algorithm name for evaluation
 
-**Return**: `std::string` - Algorithm name (defaults to `GetType()` value)
+**Return**: `std::string` - Algorithm name (empty when unset)
 
 ---
 
-(callevaluator)=
+(prior-callevaluator)=
 #### `CallEvaluator()`
 **Function Signature**:
 ```cpp
@@ -404,7 +397,7 @@ bool CallEvaluator(const DataPtr &result_data);
 **Purpose**: Manually call evaluator for accuracy evaluation
 
 **Parameters**:
-- `result_data` [`DataPtr`](../appendices/appendix_a_types.md#ptr-type): Result data to evaluate
+- `result_data` [`DataPtr`](../appendices/appendix_a_types.md): Result data to evaluate
 
 **Return**: `bool` - Whether evaluation was successful
 
@@ -431,6 +424,8 @@ If `enable_evaluator` is `false`, you need to manually call `CallEvaluator()` af
 
 ## Application Examples
 
+These are implementation excerpts; see the [quick examples](method_example.md) for `GetType()`, registration and building. Loading and algorithm helpers such as `LoadTracks()` and `EstimatePoses()` are plugin-defined. Cast the base pointer returned by `FactoryMethod::Create()` before calling preset or evaluator interfaces.
+
 (example-basic-package)=
 ### Example 1: Basic Package Operations
 
@@ -439,6 +434,7 @@ Demonstrates basic usage of required input package:
 ```cpp
 class MyPoseEstimator : public MethodPresetProfiler {
 public:
+    const std::string& GetType() const override;
     MyPoseEstimator() {
         // Declare required input data
         required_package_["data_tracks"] = nullptr;
@@ -452,9 +448,11 @@ public:
 
         // Execute pose estimation algorithm
         auto result_poses = EstimatePoses(tracks, cameras);
+        auto poses = GetDataPtr<GlobalPoses>(result_poses);
+        if (!poses) return nullptr;
 
-        LOG_INFO_ZH << "位姿估计完成，输出" << result_poses->Size() << "个位姿";
-        LOG_INFO_EN << "Pose estimation completed, output " << result_poses->Size() << " poses";
+        LOG_INFO_ZH << "位姿估计完成，输出" << poses->Size() << "个位姿";
+        LOG_INFO_EN << "Pose estimation completed, output " << poses->Size() << " poses";
 
         // Directly return result data
         return result_poses;
@@ -462,7 +460,9 @@ public:
 };
 
 // Usage
-auto estimator = FactoryMethod::Create("my_pose_estimator");
+auto estimator = std::dynamic_pointer_cast<MethodPresetProfiler>(
+    FactoryMethod::Create("my_pose_estimator"));
+if (!estimator) throw std::runtime_error("Plugin is unavailable: my_pose_estimator");
 
 // Set required inputs
 estimator->SetRequiredData(tracks_data);
@@ -486,17 +486,18 @@ Demonstrates how to set ground truth data and perform automatic evaluation:
 ```cpp
 class MyBundleAdjustment : public MethodPresetProfiler {
 public:
+    const std::string& GetType() const override;
     MyBundleAdjustment() {
         required_package_["data_tracks"] = nullptr;
         required_package_["data_camera_models"] = nullptr;
-        required_package_["data_initial_poses"] = nullptr;
+        required_package_["data_global_poses"] = nullptr;
     }
 
     DataPtr Run() override {
         // Get input data
         auto tracks = GetRequiredDataPtr<Tracks>("data_tracks");
         auto cameras = GetRequiredDataPtr<CameraModels>("data_camera_models");
-        auto initial_poses = GetRequiredDataPtr<GlobalPoses>("data_initial_poses");
+        auto initial_poses = GetRequiredDataPtr<GlobalPoses>("data_global_poses");
 
         // Execute Bundle Adjustment optimization
         auto optimized_poses = OptimizePoses(tracks, cameras, initial_poses);
@@ -512,7 +513,9 @@ public:
 // Complete evaluation flow
 int main() {
     // 1. Create algorithm instance
-    auto ba_method = FactoryMethod::Create("my_bundle_adjustment");
+    auto ba_method = std::dynamic_pointer_cast<MethodPresetProfiler>(
+    FactoryMethod::Create("my_bundle_adjustment"));
+    if (!ba_method) throw std::runtime_error("Plugin is unavailable: my_bundle_adjustment");
 
     // 2. Set algorithm name identifier
     ba_method->SetEvaluatorAlgorithm("PoSDK_BA_v2.1");
@@ -538,9 +541,9 @@ int main() {
     // 6. Execute algorithm (will automatically call evaluator if enable_evaluator=true)
     auto result = ba_method->Build();
 
-    // 7. View evaluation results (evaluator automatically outputs to console and files)
-    LOG_INFO_ZH << "算法执行完成，评估结果已保存";
-    LOG_INFO_EN << "Algorithm completed, evaluation results saved";
+    // 7. View results in the GUI Evaluator window and export files when needed
+    LOG_INFO_ZH << "算法执行完成，可查看评估结果";
+    LOG_INFO_EN << "Algorithm completed; evaluation results are available";
 
     // 8. Use returned result data
     if (result) {
@@ -563,7 +566,8 @@ int main() {
 // Ground truth pose data preparation example
 void PrepareGroundTruthData() {
     // 1. Create ground truth poses
-    auto gt_poses = FactoryData::Create("global_poses");
+    auto gt_poses_data = FactoryData::Create("data_global_poses");
+    auto gt_poses = GetDataPtr<GlobalPoses>(gt_poses_data);
     gt_poses->Init(5);  // 5 camera poses
 
     // Set reference camera pose (usually identity transformation)
@@ -581,7 +585,8 @@ void PrepareGroundTruthData() {
     }
 
     // 2. Create ground truth 3D points
-    auto gt_points = FactoryData::Create("world_point_info");
+    auto gt_points_data = FactoryData::Create("data_points_3d");
+    auto gt_points = GetDataPtr<WorldPointInfo>(gt_points_data);
     gt_points->resize(1000);  // 1000 3D points
 
     for (size_t i = 0; i < 1000; ++i) {
@@ -591,8 +596,8 @@ void PrepareGroundTruthData() {
     }
 
     // 3. Save ground truth data for algorithm use
-    gt_poses->Save("ground_truth_poses.posdk");
-    gt_points->Save("ground_truth_points.posdk");
+    gt_poses_data->Save("ground_truth", "ground_truth_poses", ".pb");
+    gt_points_data->Save("ground_truth", "ground_truth_points", ".pb");
 
     LOG_INFO_ZH << "真值数据准备完成：" << gt_poses->Size() << "个位姿，"
                 << gt_points->getValidPointsCount() << "个3D点";
@@ -611,16 +616,17 @@ void PrepareGroundTruthData() {
 // Recommended: Clearly distinguish input data, directly return results
 class MyAlgorithm : public MethodPresetProfiler {
 public:
+    const std::string& GetType() const override;
     MyAlgorithm() {
         // Required input data declaration
         required_package_["data_tracks"] = nullptr;
-        required_package_["data_cameras"] = nullptr;
+        required_package_["data_camera_models"] = nullptr;
     }
 
     DataPtr Run() override {
         // Get input data
         auto tracks = GetRequiredDataPtr<Tracks>("data_tracks");
-        auto cameras = GetRequiredDataPtr<CameraModels>("data_cameras");
+        auto cameras = GetRequiredDataPtr<CameraModels>("data_camera_models");
 
         // Algorithm processing
         auto result = ProcessData(tracks, cameras);
@@ -632,14 +638,16 @@ public:
 
 // ❌ Not recommended: Confusing input/output management
 // Don't dynamically add required_package_ items outside constructor
-// ⚠️ Note: Current version does not support AddOutputDataPtr(), should directly return results
+// For multiple results, use AddOutputDataPtr() and return GetOutputPackage().
 ```
 
 ### 2. Complete Ground Truth Evaluation
 
 ```cpp
 // Recommended: Complete evaluation flow setup
-auto algorithm = FactoryMethod::Create("my_algorithm");
+auto algorithm = std::dynamic_pointer_cast<MethodPresetProfiler>(
+    FactoryMethod::Create("my_algorithm"));
+if (!algorithm) throw std::runtime_error("Plugin is unavailable: my_algorithm");
 
 // Set algorithm identifier (for evaluation result distinction)
 algorithm->SetEvaluatorAlgorithm("MyAlgo_v1.2");
@@ -704,7 +712,7 @@ The plugin's README should clearly state:
 ### Output Data
 - Algorithm returns result data through return value of `Build()` or `Run()`
 - Return type: `DataPtr`, can get specific type via `GetDataPtr<T>()`
-- ⚠️ Note: Current version does not support `AddOutputDataPtr()` and `GetOutputPackage()`, should directly use return value
+- Warning Note: Current version does not support `AddOutputDataPtr()` and `GetOutputPackage()`, should directly use return value
 
 ### Ground Truth Support
 - Supports pose ground truth evaluation (same format as output poses)

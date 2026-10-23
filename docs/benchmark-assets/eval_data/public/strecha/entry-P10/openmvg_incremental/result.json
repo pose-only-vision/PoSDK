@@ -1,0 +1,114 @@
+{
+  "dataset": "strecha",
+  "scene": "entry-P10",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 10,
+  "registered_views": 10,
+  "points": 22488,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "rotation_deg": {
+        "count": 10,
+        "min": 0.007914883551459872,
+        "max": 0.0415683963530223,
+        "mean": 0.028240079425056137,
+        "median": 0.027130443495899374,
+        "std_dev": 0.010293575640406505
+      },
+      "center": {
+        "count": 10,
+        "min": 0.001546517832705237,
+        "max": 0.012561297706251275,
+        "mean": 0.006161535703438033,
+        "median": 0.005402865590162608,
+        "std_dev": 0.003252582786775145
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "rotation_deg": {
+        "count": 10,
+        "min": 0.007914883551459872,
+        "max": 0.0415683963530223,
+        "mean": 0.028240079425056137,
+        "median": 0.027130443495899374,
+        "std_dev": 0.010293575640406505
+      },
+      "center": {
+        "count": 10,
+        "min": 0.001546517832705237,
+        "max": 0.012561297706251275,
+        "mean": 0.006161535703438033,
+        "median": 0.005402865590162608,
+        "std_dev": 0.003252582786775145
+      }
+    }
+  },
+  "timing": {
+    "backend": 3.97879929211922,
+    "frontend": 5.8922299582045525,
+    "pipeline": 10.543570375302806
+  },
+  "downloads": {
+    "ply": "public/strecha/entry-P10/openmvg_incremental/points.ply",
+    "g2o": "public/strecha/entry-P10/openmvg_incremental/poses.g2o",
+    "metadata": "public/strecha/entry-P10/openmvg_incremental/result.json",
+    "accuracy": "public/strecha/entry-P10/openmvg_incremental/evaluation.json"
+  }
+}

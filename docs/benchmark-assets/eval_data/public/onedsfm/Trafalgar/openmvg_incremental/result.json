@@ -1,0 +1,20 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Trafalgar",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "failed",
+  "input_views": 5433,
+  "accuracy": {},
+  "timing": {},
+  "failure": {
+    "reason": "timeout",
+    "timeout_seconds": 21600
+  },
+  "reprojection": {
+    "status": "unavailable"
+  },
+  "downloads": {
+    "metadata": "public/onedsfm/Trafalgar/openmvg_incremental/result.json"
+  }
+}

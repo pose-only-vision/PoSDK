@@ -1,0 +1,114 @@
+{
+  "dataset": "eth3d",
+  "scene": "pipes",
+  "arm": "colmap",
+  "label": "COLMAP",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 14,
+  "registered_views": 14,
+  "points": 3179,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "rotation_deg": {
+        "count": 14,
+        "min": 0.006223462650636288,
+        "max": 0.052004020339667376,
+        "mean": 0.022224908444849725,
+        "median": 0.01692345332692158,
+        "std_dev": 0.014958147123608937
+      },
+      "center": {
+        "count": 14,
+        "min": 0.00019977518516500262,
+        "max": 0.0034092366603465573,
+        "mean": 0.0011997384264658029,
+        "median": 0.0008992593422257685,
+        "std_dev": 0.0008486539863953704
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        9,
+        10,
+        11
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        9,
+        10,
+        11
+      ],
+      "rotation_deg": {
+        "count": 6,
+        "min": 0.006492324114744944,
+        "max": 0.01924497426936143,
+        "mean": 0.010994581339424556,
+        "median": 0.007967524866757624,
+        "std_dev": 0.0053077793398500234
+      },
+      "center": {
+        "count": 6,
+        "min": 5.172784114130016e-05,
+        "max": 0.00026013996159713216,
+        "mean": 0.00020351092195549386,
+        "median": 0.00025343220174848624,
+        "std_dev": 7.88567852334423e-05
+      }
+    }
+  },
+  "timing": {
+    "backend": 6.4687736260239035,
+    "frontend": 16.077746832743287,
+    "pipeline": 22.73465008358471
+  },
+  "downloads": {
+    "ply": "public/eth3d/pipes/colmap/points.ply",
+    "g2o": "public/eth3d/pipes/colmap/poses.g2o",
+    "metadata": "public/eth3d/pipes/colmap/result.json",
+    "accuracy": "public/eth3d/pipes/colmap/evaluation.json"
+  }
+}

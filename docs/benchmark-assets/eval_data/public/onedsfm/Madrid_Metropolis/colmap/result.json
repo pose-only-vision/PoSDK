@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Madrid_Metropolis",
+  "arm": "colmap",
+  "label": "COLMAP",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 394,
+  "registered_views": 146,
+  "points": 21359,
+  "accuracy": {},
+  "timing": {
+    "backend": 167.8969644580502,
+    "frontend": 3.5066275000572205,
+    "pipeline": 171.86709650116973
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.6494270909099373,
+    "median": 0.48427677147325043,
+    "observations": 104971,
+    "points": 21359,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Madrid_Metropolis/colmap/points.ply",
+    "g2o": "public/onedsfm/Madrid_Metropolis/colmap/poses.g2o",
+    "metadata": "public/onedsfm/Madrid_Metropolis/colmap/result.json",
+    "reprojection": "public/onedsfm/Madrid_Metropolis/colmap/reprojection.json"
+  }
+}

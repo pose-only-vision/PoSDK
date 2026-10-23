@@ -1,0 +1,113 @@
+{
+  "dataset": "eth3d",
+  "scene": "meadow",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-17",
+  "input_views": 15,
+  "registered_views": 15,
+  "points": 765,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "rotation_deg": {
+        "count": 15,
+        "min": 0.042733863861669316,
+        "max": 0.7681951114964927,
+        "mean": 0.1438768292485375,
+        "median": 0.07703226479474823,
+        "std_dev": 0.17791092478565423
+      },
+      "center": {
+        "count": 15,
+        "min": 0.009190649330218568,
+        "max": 0.447304391668586,
+        "mean": 0.0722013038349007,
+        "median": 0.03820722650729371,
+        "std_dev": 0.10231974726460888
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "center_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "rotation_deg": {
+        "count": 4,
+        "min": 0.002069652049130182,
+        "max": 0.0052708776524577035,
+        "mean": 0.0034533624587377103,
+        "median": 0.003236460066681477,
+        "std_dev": 0.0012451518511477277
+      },
+      "center": {
+        "count": 4,
+        "min": 0.0009663318872599249,
+        "max": 0.0019180930037062081,
+        "mean": 0.0014528842362317427,
+        "median": 0.0014635560269804192,
+        "std_dev": 0.00034051748317827417
+      }
+    }
+  },
+  "timing": {
+    "backend": 5.8531564578879625,
+    "frontend": 20.979777082800865,
+    "pipeline": 26.832933540688828,
+    "frontend_reused": false
+  },
+  "downloads": {
+    "ply": "public/eth3d/meadow/glomap/points.ply",
+    "g2o": "public/eth3d/meadow/glomap/poses.g2o",
+    "metadata": "public/eth3d/meadow/glomap/result.json",
+    "accuracy": "public/eth3d/meadow/glomap/evaluation.json"
+  }
+}

@@ -2,6 +2,18 @@
 
 Method plugins are used to implement specific algorithm logic and data processing workflows.
 
+## Current Build and Loading Notes
+
+Method plugins are expected to follow the current PoMVG build and runtime model:
+
+- Build with `add_posdk_plugin(...)` from `plugins/cmake/plugin-config.cmake`
+- Register with `REGISTRATION_PLUGIN(...)` in the `.cpp`
+- Optional platform declarations: `SUPPORTED_SYSTEMS` and `SUPPORTED_ARCHES`
+- Runtime build artifact pair:
+  - `posdk_plugin_<name>.{dylib|so|dll}`
+  - `posdk_plugin_<name>.posdk.json`
+- Incompatible or invalid method plugin binaries are filtered out of `Modules` and runtime factory registration
+
 ---
 
 ## MethodPreset Common Operation Functions Quick Reference
@@ -10,16 +22,22 @@ The following list covers common operation functions of `MethodPreset` and its d
 
 ### Data Management | Data Management
 
-| Function                                          | Brief Description                                       |
-| ------------------------------------------------- | ------------------------------------------------------- |
-| [`SetRequiredData()`](#setrequireddata)           | Set single required input data                          |
-| [`GetRequiredPackage()`](#getrequiredpackage)     | Get required input data package reference               |
-| [`GetRequiredDataTypes()`](#getrequireddatatypes) | Get required input data type list                       |
-| [`GetRequiredDataPtr<T>()`](#getrequireddataptr)  | Simplified access to required input data (recommended⭐) |
-| [`GetOutputPackage()`](#getoutputpackage)         | Get output data package pointer                         |
-| [`AddOutputDataPtr()`](#addoutputdataptr)         | Add data to output package                              |
-| [`GetOutputDataTypes()`](#getoutputdatatypes)     | Get output data type list                               |
-| [`ClearOutputPackage()`](#clearoutputpackage)     | Clear output data package                               |
+| Function                                              | Brief Description                                         |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| [`SetRequiredData()`](#setrequireddata)               | Set single required input data                            |
+| [`GetRequiredPackage()`](#getrequiredpackage)         | Get required input data package reference                 |
+| [`GetInputTypes()`](#getinputtypes)                   | Get input data type list (recommended⭐)                   |
+| [`GetRequiredDataPtr<T>()`](#getrequireddataptr)      | Simplified access to required input data (recommended⭐)   |
+| [`GetInputData()`](#getinputdata)                     | Get input data by name                                    |
+| [`GetInputDataAs<T>()`](#getinputdataas)              | Get typed input data by name (recommended⭐)               |
+| [`GetOutputPackage()`](#getoutputpackage)             | Get output data package pointer                           |
+| [`AddOutputDataPtr()`](#addoutputdataptr)             | Add data to output package                                |
+| [`GetOutputTypes()`](#getoutputtypes)                 | Get output data type list (recommended⭐)                  |
+| [`CreateOutputData()`](#createoutputdata)             | Create output data by name                                |
+| [`CreateOutputDataAs<T>()`](#createoutputdataas)      | Create typed output data by name (recommended⭐)           |
+| [`ClearOutputPackage()`](#clearoutputpackage)         | Clear output data package                                 |
+| ~~[`GetRequiredDataTypes()`](#getrequireddatatypes)~~ | ⚠️ Deprecated, use `GetInputTypes()` instead              |
+| ~~[`GetOutputDataTypes()`](#getoutputdatatypes)~~     | ⚠️ Deprecated, use `GetOutputTypes()` instead             |
 
 ### Configuration Management | Configuration Management
 
@@ -52,13 +70,19 @@ The following list covers common operation functions of `MethodPreset` and its d
 | [`SetGTData()`](#setgtdata)           | Set ground truth data   |
 | [`GetGTData()`](#getgtdata)           | Get ground truth data   |
 
-### Profiling (MethodPresetProfiler) | Profiling
+### Profiling & Evaluation (MethodPresetProfiler) | Profiling & Evaluation
 
-| Function                                  | Brief Description             |
-| ----------------------------------------- | ----------------------------- |
-| [`EnableProfiling()`](#enableprofiling)   | Enable performance analysis   |
-| [`DisableProfiling()`](#disableprofiling) | Disable performance analysis  |
-| [`GetProfilerInfo()`](#getprofilerinfo)   | Get performance analysis info |
+| Function                                                          | Brief Description                              |
+| ----------------------------------------------------------------- | ---------------------------------------------- |
+| [`SetProfilerLabel()`](#setprofilerlabel)                         | Set profiler label (string)                    |
+| [`SetProfilerLabels()`](#setprofilerlabels)                       | Set structured profiler labels (key-value)     |
+| [`GetProfilerLabel()`](#getprofilerlabel)                         | Get profiler label string                      |
+| [`GetProfilerLabels()`](#getprofilerlabels)                       | Get structured profiler labels                 |
+| [`HasStructuredLabels()`](#hasstructuredlabels)                   | Check if structured labels are available       |
+| [`SetEvaluatorAlgorithm()`](#setevaluatoralgorithm)               | Set algorithm name used in evaluator           |
+| [`GetEvaluatorAlgorithm()`](#getevaluatoralgorithm)               | Get algorithm name used in evaluator           |
+| [`ClearEvaluatorAlgorithm()`](#clearevaluatoralgorithm)           | Clear evaluator algorithm setting              |
+| [`CallEvaluator()`](#callevaluator)                               | Call evaluator for evaluation                  |
 
 ```{seealso}
 - [Prior Information and Ground Truth Setup Details](prior_and_gt.md)
@@ -72,10 +96,10 @@ The following list covers common operation functions of `MethodPreset` and its d
 
 ### Required Override Interfaces
 
-```{important}
-Each method plugin must implement one of the following core interfaces:
+````{important}
+Each method plugin must declare `GetType()` and implement the algorithm entrypoint required by its base class:
 
-- ** Method Name**: Only **declare** in header file
+- **Method Name**: Only **declare** in header file
   ```cpp
   virtual const std::string& GetType() const override;
   // Returns plugin's unique type string identifier.
@@ -83,7 +107,7 @@ Each method plugin must implement one of the following core interfaces:
   // Example: `"method_sift"`, `"method_matches2tracks"`
   ```
 
-- **Algorithm Main Entry**: Choose between Build and Run functions, recommend using Run function
+- **Algorithm Main Entry**: Implement `Build()` when deriving directly from `Method`; implement `Run()` when deriving from `MethodPreset` or `MethodPresetProfiler`
   ```cpp
   virtual DataPtr Build(const DataPtr& material_ptr = nullptr) override;
   // Used to implement core algorithm:
@@ -101,27 +125,29 @@ Each method plugin must implement one of the following core interfaces:
   ```
 
 
-### Optional Override Interfaces (for `MethodPreset` and its derived classes)
+````
+
+### Prior Information and Copyright Interfaces
 
 - **Set algorithm's prior information:**
 ```cpp
-virtual void SetPriorInfo(const DataPtr& data_ptr, const std::string& type = "");
+void SetPriorInfo(const DataPtr& data_ptr, const std::string& type = "");
 // (1) `MethodPreset` sets prior information for algorithms requiring additional guidance information (such as initial poses, weights).
 // (2) `data_ptr` is prior information data pointer, `type` is prior information type string.
 
-virtual void ResetPriorInfo();
+void ResetPriorInfo();
 // Reset prior information (clear all prior information)
 ```
 
 ```{seealso}
-For detailed descriptions and usage examples of prior information, required input data, and ground truth data, please refer to [Prior Information and Ground Truth Setup](prior-and-gt).
+For detailed descriptions and usage examples of prior information, required input data, and ground truth data, please refer to [Prior Information and Ground Truth Setup](prior_and_gt.md).
 ```
 
 ```cpp
 virtual CopyrightData Copyright() const;
 ```
 
-`Copyright()` is a virtual function provided by the `Method` base class for plugin developers to declare copyright information. The system automatically calls this function when the method is created, and `CopyrightManager` collects and manages copyright data. For details, see [Copyright Tracking Feature](copyright-tracking).
+`Copyright()` is a virtual function provided by the `Method` base class for plugin developers to declare copyright information. When copyright tracking is enabled, the `MethodPreset::Build()` execution path collects and manages this information through `CopyrightManager`. For details, see [Copyright Tracking Feature](../copyright_tracking.rst).
 
 ## Optional Derivation Methods
 
@@ -135,14 +161,16 @@ virtual CopyrightData Copyright() const;
     - **Core Logic Separation**: Implement core algorithm in `Run()`, `Build()` handles flow control.
 - **`Interface::MethodPresetProfiler`** (derived from `MethodPreset`)
   - Adds **performance analysis** functionality on top of `MethodPreset`.
-  - Automatically records execution time, memory usage, and can export CSV reports.
+  - Records selected metrics (time only by default) when profiling macros are enabled in `Run()`, and supports CSV export.
   - Can control whether to enable analysis through `enable_profiling` option.
-- **`Interface::RobustEstimator<TSample>`** (derived from `MethodPresetProfiler`)
-  - (Functionality to be expanded)
+- **`Interface::RobustEstimator`** (derived from `MethodPresetProfiler`)
+  - Robust estimator base class, provides model estimation and cost evaluation framework.
+  - Supports automatic initialization of model estimator and cost evaluator.
+  - See [Robust Estimators](../advanced_development/robust_estimators.md) for details.
 
 ## Example
 
-The `method_options_` assignments in the example code below are only for demonstrating the existence of configuration items. Actual default values should be provided when calling `GetOptionAs...()`.
+The example below supplies fallback values through `GetOptionAs...()` and reads configured values from INI.
 
 **CMakeLists.txt**:
 ```cmake
@@ -170,11 +198,10 @@ public:
     const std::string& GetType() const override;
     DataPtr Run() override; // Implement core logic
 
-    // Optional: If inheriting MethodPreset, can override GetInputTypes
-    // const std::vector<std::string>& GetInputTypes() const override;
+    // Declare input types through required_package_; GetInputTypes() is not virtual.
 
     // Optional: Override Copyright() to declare copyright information
-    Interface::CopyrightData Copyright() const override;
+    // Interface::CopyrightData Copyright() const override;
 };
 } // namespace MyPlugin
 
@@ -189,15 +216,8 @@ MyMethod::MyMethod() {
     required_package_["data_tracks"] = nullptr;
     required_package_["data_global_poses"] = nullptr;
 
-    // ⚠️ Note: The following code only declares config items, NOT effective default values
-    // Actual default values should be provided when calling GetOptionAs...()
-    method_options_["threshold"] = "0.5";          // Only declares config item
-    method_options_["max_iterations"] = "100";     // Only declares config item
-
     // Load default config file (if exists)
     InitializeDefaultConfigPath();
-    // Initialize log directory
-    InitializeLogDir();
 }
 
 // Don't need to manually implement GetType(), macro automatically generates
@@ -227,7 +247,7 @@ DataPtr MyMethod::Run() {
 
     // 4. Create and return result (e.g., return processed poses)
     // Note: If you don't want to modify input data, deep copy DataPtr first
-    // auto result_poses_data = poses->CopyData(); // Assume DataGlobalPoses implements CopyData
+    // auto result_poses_data = GetInputData("data_global_poses")->CopyData();
     // auto result_poses = GetDataPtr<GlobalPoses>(result_poses_data);
     // ... Modify result_poses ...
     // return result_poses_data;
@@ -244,23 +264,25 @@ DataPtr MyMethod::Run() {
 REGISTRATION_PLUGIN(MyPlugin::MyMethod)
 ```
 
-```{warning}
+````{warning}
 **Parameter Default Value Setting in Constructor**
 
-**Cannot** use `method_options_["..."] = "..."` in constructor to provide default values. Values set this way will be overwritten when configuration file is loaded.
+Values preloaded into `method_options_` are overridden by matching INI entries. Prefer defaults in `GetOptionAs...()` calls so missing or reset options still have fallback values.
 
 **Correct Approach**:
 - Directly provide default value parameter when calling `GetOptionAs...()` function
 - For example: `0.5f` in `GetOptionAsFloat("threshold", 0.5f)` is the default value
 
-**Incorrect Approach**:
+**Not Recommended**:
 ```cpp
-// ❌ Error: Don't set default values like this in constructor
+// Matching INI entries override these values
 method_options_["threshold"] = "0.5";
 method_options_["max_iterations"] = "100";
 ```
 
 
+
+````
 
 ## Method Parameter Configuration
 
@@ -272,6 +294,7 @@ method_options_["max_iterations"] = "100";
   - File format is standard INI format, containing a section with the same name as method type `[my_method]`.
   - Define `key=value` pairs under the section.
   - `MethodPreset` automatically loads this file, values in config file will override default values.
+  - For PoMVG GUI visual grouping, keep ordinary method parameters inside `[my_method]` and use `## Group | 分组` markers such as `## Input | 输入` or `## Algorithm | 算法`. Extra `[section]` blocks are runtime namespaces for sub-method/component configuration and are not automatically read by `GetOptionAs...()`.
 - **Runtime Settings**:
   - Can batch set options through `SetMethodOptions(const MethodOptions& options)`.
   - Can set options individually through `SetMethodOption(const MethodParams& key, const ParamsValue& value)`.
@@ -283,11 +306,9 @@ method_options_["max_iterations"] = "100";
 ```{important}
 **Correct Method for Setting Default Values**
 
-**❌ Incorrect**: Use `method_options_["param"] = "value"` in constructor to set default values
-- Values set this way will be overwritten when configuration file is loaded
-- If config file doesn't have this parameter, the parameter will become empty string or undefined
+**Configuration overrides**: Matching INI entries override preloaded `method_options_` values. `LoadMethodOptions()` does not clear an existing value when its key is absent from the INI.
 
-**✅ Correct**: Provide default values through function parameters when calling `GetOptionAs...()`
+**Recommended**: Provide fallback values through function parameters when calling `GetOptionAs...()`
 - For example: `GetOptionAsFloat("threshold", 0.5f)`
 - When both config file and runtime don't set this parameter, will use `0.5f` as default value
 ```
@@ -295,7 +316,7 @@ method_options_["max_iterations"] = "100";
 
 ## Core Data Types
 
-The core library provides various predefined data types that can be directly used in plugins or as reference (see **Core Data Type Detailed Description**: Please refer to [Appendix A: PoSDK Core Data Types](../appendices/appendix_a_types.md))
+The core library provides various predefined data types that can be directly used in plugins or as reference (see **Core Data Type Detailed Description**: Please refer to [Appendix A: PoMVG Core Data Types](../appendices/appendix_a_types.md))
 
 ---
 
@@ -353,23 +374,18 @@ for (const auto& [key, value] : pkg) {
 ---
 
 (getrequireddatatypes)=
-#### `GetRequiredDataTypes()`
+#### `GetRequiredDataTypes()` ⚠️ Deprecated
+
+```{warning}
+Use [`GetInputTypes()`](#getinputtypes) instead.
+```
 
 Get list of all required input data types.
 
 **Function Signature**:
 ```cpp
+[[deprecated("Use GetInputTypes() instead")]]
 std::vector<std::string> GetRequiredDataTypes() const;
-```
-
-**Return Value**: String vector of required data types
-
-**Usage Example**:
-```cpp
-auto types = method->GetRequiredDataTypes();
-for (const auto& type : types) {
-    std::cout << "Required type: " << type << std::endl;
-}
 ```
 
 ---
@@ -471,23 +487,125 @@ AddOutputDataPtr(sub_package, "sub_results");
 ---
 
 (getoutputdatatypes)=
-#### `GetOutputDataTypes()`
+#### `GetOutputDataTypes()` ⚠️ Deprecated
+
+```{warning}
+Use [`GetOutputTypes()`](#getoutputtypes) instead.
+```
 
 Get list of all data types in output data package.
 
 **Function Signature**:
 ```cpp
+[[deprecated("Use GetOutputTypes() instead")]]
 std::vector<std::string> GetOutputDataTypes() const;
 ```
 
-**Return Value**: String vector of output data types
+---
+
+(getinputtypes)=
+#### `GetInputTypes()` (Recommended)
+
+Get input data type list. Replaces deprecated `GetRequiredDataTypes()`.
+
+**Function Signature**:
+```cpp
+const std::vector<std::string>& GetInputTypes() const;
+```
+
+**Return Value**: Reference to string vector of input data types
 
 **Usage Example**:
 ```cpp
-auto output_types = method->GetOutputDataTypes();
-for (const auto& type : output_types) {
-    std::cout << "Output type: " << type << std::endl;
+const auto& types = method->GetInputTypes();
+for (const auto& type : types) {
+    std::cout << "Input type: " << type << std::endl;
 }
+```
+
+---
+
+(getoutputtypes)=
+#### `GetOutputTypes()` (Recommended)
+
+Get output data type list. Replaces deprecated `GetOutputDataTypes()`.
+
+**Function Signature**:
+```cpp
+const std::vector<std::string>& GetOutputTypes() const;
+```
+
+**Return Value**: Reference to string vector of output data types
+
+---
+
+(getinputdata)=
+#### `GetInputData()`
+
+Get input data from `required_package_` by name.
+
+**Function Signature**:
+```cpp
+DataPtr GetInputData(const std::string &dataName) const;
+```
+
+**Parameters**:
+- `dataName`: Key name of data in `required_package_`
+
+**Return Value**: Data pointer, returns `nullptr` if not found
+
+---
+
+(getinputdataas)=
+#### `GetInputDataAs<T>()` (Recommended)
+
+Get typed input data pointer by name. Equivalent to `GetDataPtr<T>(GetInputData(dataName))`.
+
+**Function Signature**:
+```cpp
+template <typename T>
+std::shared_ptr<T> GetInputDataAs(const std::string &dataName) const;
+```
+
+**Usage Example**:
+```cpp
+auto tracks = method->GetInputDataAs<Tracks>("data_tracks");
+```
+
+---
+
+(createoutputdata)=
+#### `CreateOutputData()`
+
+Create output data by name via factory, optionally auto-add to output package.
+
+**Function Signature**:
+```cpp
+DataPtr CreateOutputData(const std::string &dataName, bool addToPackage = true);
+```
+
+**Parameters**:
+- `dataName`: Data type name
+- `addToPackage`: Whether to automatically add to output data package (default `true`)
+
+**Return Value**: Created data pointer
+
+---
+
+(createoutputdataas)=
+#### `CreateOutputDataAs<T>()` (Recommended)
+
+Create typed output data pointer by name.
+
+**Function Signature**:
+```cpp
+template <typename T>
+std::shared_ptr<T> CreateOutputDataAs(const std::string &dataName, bool addToPackage = true);
+```
+
+**Usage Example**:
+```cpp
+auto result_poses = method->CreateOutputDataAs<GlobalPoses>("data_global_poses");
 ```
 
 ---
@@ -727,23 +845,176 @@ DataPtr GetGTData() const;
 
 ---
 
-### Profiling Functions (MethodPresetProfiler)
+### Profiling & Evaluation Functions (MethodPresetProfiler)
 
-(enableprofiling)=
-#### `EnableProfiling()`
+(setprofilerlabel)=
+#### `SetProfilerLabel()`
 
-Enable performance analysis. For details, see [Performance Analysis System](../advanced_development/profiler.md).
+Set profiler label (string version).
+
+**Function Signature**:
+```cpp
+void SetProfilerLabel(const std::string &profiler_label);
+```
+
+**Parameters**:
+- `profiler_label`: Profiler label string
+
+**Usage Example**:
+```cpp
+method->SetProfilerLabel("MyAlgorithm_v2");
+```
 
 ---
 
-(disableprofiling)=
-#### `DisableProfiling()`
+(setprofilerlabels)=
+#### `SetProfilerLabels()`
 
-Disable performance analysis.
+Set structured profiler labels (key-value pairs), used for custom headers in CSV export.
+
+**Function Signature**:
+```cpp
+void SetProfilerLabels(const std::unordered_map<std::string, std::string> &structured_labels);
+```
+
+**Usage Example**:
+```cpp
+method->SetProfilerLabels({{"pipeline", "PoSDK"}, {"dataname", "test_data1"}});
+```
 
 ---
 
-(getprofilerinfo)=
-#### `GetProfilerInfo()`
+(getprofilerlabel)=
+#### `GetProfilerLabel()`
 
-Get performance analysis information.
+Get profiler label string. Defaults to `GetType()` value if not set.
+
+**Function Signature**:
+```cpp
+std::string GetProfilerLabel() const;
+```
+
+---
+
+(getprofilerlabels)=
+#### `GetProfilerLabels()`
+
+Get structured profiler labels.
+
+**Function Signature**:
+```cpp
+const std::unordered_map<std::string, std::string>& GetProfilerLabels() const;
+```
+
+---
+
+(hasstructuredlabels)=
+#### `HasStructuredLabels()`
+
+Check if structured labels are available.
+
+**Function Signature**:
+```cpp
+bool HasStructuredLabels() const;
+```
+
+---
+
+(setevaluatoralgorithm)=
+#### `SetEvaluatorAlgorithm()`
+
+Set algorithm name used in evaluator, used to distinguish different algorithm configurations. Defaults to `GetType()` value if not set.
+
+**Function Signature**:
+```cpp
+void SetEvaluatorAlgorithm(const std::string &algorithm_name);
+```
+
+---
+
+(getevaluatoralgorithm)=
+#### `GetEvaluatorAlgorithm()`
+
+Get algorithm name used in evaluator. Returns empty string if not set, caller should use `GetType()` as fallback if needed.
+
+**Function Signature**:
+```cpp
+std::string GetEvaluatorAlgorithm() const;
+```
+
+---
+
+(clearevaluatoralgorithm)=
+#### `ClearEvaluatorAlgorithm()`
+
+Clear evaluator algorithm setting, resets `algorithm_` to empty string. Call this before each test run to avoid cached algorithm name from previous runs affecting current run.
+
+**Function Signature**:
+```cpp
+void ClearEvaluatorAlgorithm();
+```
+
+---
+
+(callevaluator)=
+#### `CallEvaluator()`
+
+Call evaluator for evaluation. This function copies input data, checks ground truth data, and calls `DataIO::Evaluate()` for evaluation. Supports both single data objects and `DataPackage` cases.
+
+**Function Signature**:
+```cpp
+bool CallEvaluator(const DataPtr &result_data);
+```
+
+**Parameters**:
+- `result_data`: Result data to be evaluated
+
+**Return Value**: Whether evaluator was successfully called
+
+```{seealso}
+- [Performance Analysis System Details](../advanced_development/profiler.md)
+- [EvaluatorManager](../advanced_development/evaluator_manager.md)
+```
+
+## Pluggable two-view estimator contract
+
+An estimator intended for selection inside `two_view_estimator` must not rely
+on its plugin ID being known by the wrapper. Implement the optional capability
+provider in addition to `MethodPresetProfiler`:
+
+```cpp
+class MyEstimator final
+    : public PoSDK::Interface::MethodPresetProfiler,
+      public PoSDK::Interface::StaticTwoViewEstimatorCapabilities<
+          PoSDK::Interface::TwoViewEstimatorInputContract::IdMatchesWithFeaturesAndCameras,
+          PoSDK::Interface::TwoViewEstimatorPoseConvention::PoSDK,
+          PoSDK::Interface::TwoViewEstimatorInlierContract::MatchesInPlace,
+          PoSDK::Interface::TwoViewEstimatorRefinementContract::Unsupported>
+{
+    // Run() and GetType() ...
+};
+```
+
+Declare the same contract in the strict source manifest so the GUI can offer
+the installed plugin without loading native code in the GUI process:
+
+```json
+"capabilities": {
+  "two_view_estimator": {
+    "contract_version": 1,
+    "input_contract": "id_matches_features_cameras",
+    "output_contract": "relative_pose",
+    "pose_convention": "posdk",
+    "inlier_contract": "matches_in_place",
+    "refinement_contract": "unsupported"
+  }
+}
+```
+
+The manifest and runtime provider must agree. `BearingPairs` estimators use
+`bearing_pairs + sample_best_inliers`; match-based estimators use
+`id_matches_features_cameras` and normally `matches_in_place`. Pose convention
+and refinement ownership are intrinsic contract properties, not user-tunable
+options. A contract method must return `DataMap<RelativePose>` and must never
+silently perform a second external refinement when it declares
+`estimator_optional` or `estimator_always`.

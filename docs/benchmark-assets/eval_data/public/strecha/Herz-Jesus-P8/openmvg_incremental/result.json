@@ -1,0 +1,106 @@
+{
+  "dataset": "strecha",
+  "scene": "Herz-Jesus-P8",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 8,
+  "registered_views": 8,
+  "points": 25862,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "rotation_deg": {
+        "count": 8,
+        "min": 0.009087354380869198,
+        "max": 0.03518664675344355,
+        "mean": 0.017404851928081378,
+        "median": 0.014864222417323818,
+        "std_dev": 0.007629744094468475
+      },
+      "center": {
+        "count": 8,
+        "min": 0.001464074890640033,
+        "max": 0.005719882250333772,
+        "mean": 0.00323014142967025,
+        "median": 0.002831342776509039,
+        "std_dev": 0.0012157371966539446
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "rotation_deg": {
+        "count": 8,
+        "min": 0.009087354380869198,
+        "max": 0.03518664675344355,
+        "mean": 0.017404851928081378,
+        "median": 0.014864222417323818,
+        "std_dev": 0.007629744094468475
+      },
+      "center": {
+        "count": 8,
+        "min": 0.001464074890640033,
+        "max": 0.005719882250333772,
+        "mean": 0.00323014142967025,
+        "median": 0.002831342776509039,
+        "std_dev": 0.0012157371966539446
+      }
+    }
+  },
+  "timing": {
+    "backend": 3.761233165860176,
+    "frontend": 3.596372375031933,
+    "pipeline": 8.049424081807956
+  },
+  "downloads": {
+    "ply": "public/strecha/Herz-Jesus-P8/openmvg_incremental/points.ply",
+    "g2o": "public/strecha/Herz-Jesus-P8/openmvg_incremental/poses.g2o",
+    "metadata": "public/strecha/Herz-Jesus-P8/openmvg_incremental/result.json",
+    "accuracy": "public/strecha/Herz-Jesus-P8/openmvg_incremental/evaluation.json"
+  }
+}

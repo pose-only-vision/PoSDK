@@ -1,7 +1,7 @@
 # COLMAP 文件转换器
 (COLMAP-converter)=
 
-COLMAP文件转换器提供与COLMAP SfM工具的数据互操作功能，支持读取COLMAP重建结果和导出PoSDK数据为COLMAP格式。
+COLMAP文件转换器提供与COLMAP SfM工具的数据互操作功能，支持读取COLMAP重建结果和导出PoMVG数据为COLMAP格式。
 
 ---
 
@@ -12,18 +12,18 @@ COLMAP文件转换器提供与COLMAP SfM工具的数据互操作功能，支持�
 
 | 操作类型           | 功能描述              | 转换函数                                           |
 | ------------------ | --------------------- | -------------------------------------------------- |
-| **COLMAP → PoSDK** | 匹配数据 → PoSDK匹配  | [`ToDataMatches`](COLMAP-to-data-matches)          |
-| **COLMAP → PoSDK** | SfM数据 → 全局位姿    | [`ToDataGlobalPoses`](COLMAP-to-data-global-poses) |
-| **PoSDK → COLMAP** | 完整重建 → COLMAP格式 | [`OutputPoSDK2Colmap`](output-posdk-to-COLMAP)     |
+| **COLMAP → PoMVG** | 匹配数据 → PoMVG匹配  | [`ToDataMatches`](COLMAP-to-data-matches)          |
+| **COLMAP → PoMVG** | SfM数据 → 全局位姿    | [`ToDataGlobalPoses`](COLMAP-to-data-global-poses) |
+| **PoMVG → COLMAP** | 完整重建 → COLMAP格式 | [`OutputPoSDK2Colmap`](output-posdk-to-COLMAP)     |
 
 ---
 
-## COLMAP → PoSDK 转换
+## COLMAP → PoMVG 转换
 
 ### `ToDataMatches`
 (COLMAP-to-data-matches)=
 
-将COLMAP的匹配文件转换为PoSDK的匹配数据
+将COLMAP的匹配文件转换为PoMVG的匹配数据
 
 **函数签名**:
 ```cpp
@@ -37,7 +37,7 @@ bool ToDataMatches(
 | 参数              | 类型                          | 说明                        |
 | ----------------- | ----------------------------- | --------------------------- |
 | `matches_folder`  | `const std::string&`          | [输入] COLMAP匹配文件夹路径 |
-| `matches_data`    | `Interface::DataPtr&`         | [输出] PoSDK匹配数据        |
+| `matches_data`    | `Interface::DataPtr&`         | [输出] PoMVG匹配数据        |
 | `file_name_to_id` | `std::map<std::string, int>&` | [输入] 文件名到ID的映射     |
 
 **返回值**: `bool` - 转换是否成功
@@ -49,7 +49,7 @@ bool ToDataMatches(
 **使用示例**:
 ```cpp
 #include "converter_colmap_file.hpp"
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // 准备文件名到ID的映射（需从COLMAP SfM数据中提取）
 std::map<std::string, int> file_name_to_id;
@@ -71,7 +71,7 @@ if (success) {
 ### `ToDataGlobalPoses`
 (COLMAP-to-data-global-poses)=
 
-将COLMAP的SfM数据文件转换为PoSDK的全局位姿数据
+将COLMAP的SfM数据文件转换为PoMVG的全局位姿数据
 
 **函数签名**:
 ```cpp
@@ -85,21 +85,21 @@ bool ToDataGlobalPoses(
 | 参数                | 类型                          | 说明                          |
 | ------------------- | ----------------------------- | ----------------------------- |
 | `global_poses_file` | `const std::string&`          | [输入] COLMAP全局位姿文件路径 |
-| `global_poses_data` | `Interface::DataPtr&`         | [输出] PoSDK全局位姿数据      |
+| `global_poses_data` | `Interface::DataPtr&`         | [输出] PoMVG全局位姿数据      |
 | `file_name_to_id`   | `std::map<std::string, int>&` | [输入] 文件名到ID的映射       |
 
 **返回值**: `bool` - 转换是否成功
 
 **输入格式**: COLMAP `images.txt` 文本文件（包含图像位姿和观测信息）
 
-**输出格式**: PoSDK `GlobalPoses`，位姿格式为 `RwTc`（与COLMAP一致）
+**输出格式**: PoMVG `GlobalPoses`，位姿格式为 `RwTc`（与COLMAP一致）
 
 **依赖**: 需要提供 `file_name_to_id` 映射表，用于将文件名映射到视图ID
 
 **使用示例**:
 ```cpp
 #include "converter_colmap_file.hpp"
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // 准备文件名到ID的映射（需从COLMAP SfM数据中提取）
 std::map<std::string, int> file_name_to_id;
@@ -120,12 +120,12 @@ if (success) {
 
 ---
 
-## PoSDK → COLMAP 导出
+## PoMVG → COLMAP 导出
 
 ### `OutputPoSDK2Colmap`
 (output-posdk-to-COLMAP)=
 
-导出PoSDK数据为COLMAP格式
+导出PoMVG数据为COLMAP格式
 
 **函数签名**:
 ```cpp
@@ -151,11 +151,11 @@ void OutputPoSDK2Colmap(
 **输出文件**:
 ```
 output_path/
-├── cameras.bin              # 相机内参（必需）
-├── images.bin               # 图像位姿和观测（必需）
-├── points3D.bin             # 3D点云（必需）
-└── posdk2colmap_scene.ply   # PLY可视化相机+点云文件（可选）
-└── posdk2colmap_points_only.ply # PLY可视化点云文件（可选）
++-- cameras.bin              # 相机内参（必需）
++-- images.bin               # 图像位姿和观测（必需）
++-- points3D.bin             # 3D点云（必需）
+-- posdk2colmap_scene.ply   # PLY可视化相机+点云文件（可选）
+-- posdk2colmap_points_only.ply # PLY可视化点云文件（可选）
 ```
 
 **功能说明**:
@@ -165,7 +165,7 @@ output_path/
 **使用示例**:
 ```cpp
 #include "converter_colmap_file.hpp"
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // 准备PoSDK数据
 types::GlobalPosesPtr global_poses = GetGlobalPoses();
@@ -281,16 +281,16 @@ struct Point3D {
 
 ## 坐标系约定
 
-### PoSDK vs COLMAP 坐标约定
+### PoMVG vs COLMAP 坐标约定
 (posdk-vs-COLMAP-conventions)=
 
-| 方面         | PoSDK                  | COLMAP                 |
+| 方面         | PoMVG                  | COLMAP                 |
 | ------------ | ---------------------- | ---------------------- |
 | **位姿表示** | RwTc (World-to-Camera) | RwTc (World-to-Camera) |
 | **旋转矩阵** | Column-major (Eigen)   | Column-major           |
 | **四元数**   | `[qw, qx, qy, qz]`     | `[qw, qx, qy, qz]`     |
 
-**说明**: PoSDK与COLMAP使用相同的位姿格式（RwTc），无需坐标转换。`OutputPoSDK2Colmap` 函数直接使用PoSDK的位姿数据。
+**说明**: PoMVG与COLMAP使用相同的位姿格式（RwTc），无需坐标转换。`OutputPoSDK2Colmap` 函数直接使用PoMVG的位姿数据。
 
 ---
 
@@ -304,13 +304,13 @@ struct Point3D {
 #include <po_core.hpp>
 
 using namespace PoSDK;
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // COLMAP sparse重建目录结构
 // colmap_sparse/
-// ├── cameras.bin
-// ├── images.bin (或 images.txt)
-// └── points3D.bin
+// +-- cameras.bin
+// +-- images.bin (或 images.txt)
+// -- points3D.bin
 
 // ==== 步骤1: 准备文件名映射 ====
 // 需要从COLMAP SfM数据中提取文件名到ID的映射
@@ -349,7 +349,7 @@ auto poses_ptr = GetDataPtr<types::GlobalPoses>(global_poses_data);
 LOG_INFO_ZH << "成功加载COLMAP重建: " << poses_ptr->Size() << " 个相机位姿";
 ```
 
-### PoSDK结果导出为COLMAP
+### PoMVG结果导出为COLMAP
 (posdk-to-COLMAP-export-workflow)=
 
 ```cpp
@@ -357,7 +357,7 @@ LOG_INFO_ZH << "成功加载COLMAP重建: " << poses_ptr->Size() << " 个相机�
 #include <po_core.hpp>
 
 using namespace PoSDK;
-using namespace PoSDK::Converter::COLMAP;
+using namespace PoSDK::Converter::Colmap;
 
 // ==== 步骤1: 准备PoSDK数据 ====
 // 假设已有完整的重建数据

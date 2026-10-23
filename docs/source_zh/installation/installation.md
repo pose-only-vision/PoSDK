@@ -1,6 +1,10 @@
-# 安装指南
+# v1.0.0 安装说明（历史源码版）
 
-本文档说明 PoSDK 的安装要求和步骤。
+```{note}
+**后续功能更新与用户文档以 GUI 版本为主。** 本页保留旧版源码安装与编译说明，供历史版本查阅。新用户请阅读 [v2.1.1 GUI 安装说明](gui_installation.md)，下载 DMG 安装。
+```
+
+以下为 v1.0.0 的环境要求、安装脚本和常见问题。
 
 ## 系统要求
 
@@ -15,16 +19,16 @@
 
 ## 一键安装
 
-PoSDK 提供了自动安装脚本，可以一键安装所有必需的系统依赖和插件依赖。详细安装步骤请参见 [快速开始](#quick-start)。
+PoMVG 提供了自动安装脚本，可以一键安装所有必需的系统依赖和插件依赖。详细安装步骤请参见 [快速开始](#quick-start)。
 
 安装脚本会自动完成以下步骤：
 1. 更新系统包列表
-2. 安装PoSDK框架开发依赖
+2. 安装PoMVG框架开发依赖
 3. 安装当前插件所需依赖
 
-## PoSDK框架开发依赖
+## PoMVG框架开发依赖
 
-以下是PoSDK框架正常运行所需的系统依赖库：
+以下是PoMVG框架正常运行所需的系统依赖库：
 
 | 依赖库              | 最低版本 | 用途                                    | 安装命令                                                                             |
 | ------------------- | -------- | --------------------------------------- | ------------------------------------------------------------------------------------ |
@@ -53,11 +57,11 @@ PoSDK 提供了自动安装脚本，可以一键安装所有必需的系统依�
 (installation-flow-explained)=
 ## 安装流程详解
 
-本节详细说明 PoSDK 的多阶段安装流程，帮助您理解每个安装步骤的作用以及何时应该跳过重复安装。
+本节详细说明 PoMVG 的多阶段安装流程，帮助您理解每个安装步骤的作用以及何时应该跳过重复安装。
 
 ### 安装流程总览
 
-PoSDK 安装分为三个主要阶段：
+PoMVG 安装分为三个主要阶段：
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -114,6 +118,7 @@ PoSDK 安装分为三个主要阶段：
 
 (installation-prompt-table)=
 
+```{only} html
 | 阶段         | 脚本文件                   | 提示信息                                                              | 默认值  | 含义                                           | 建议操作                                   |
 | ------------ | -------------------------- | --------------------------------------------------------------------- | ------- | ---------------------------------------------- | ------------------------------------------ |
 | **系统依赖** | `install.sh`               | `Would you like to upgrade Qt now? 是否现在升级Qt?`                   | `[Y/n]` | Qt版本过旧时询问是否升级                       | 按回车（升级Qt避免冲突）                   |
@@ -141,6 +146,79 @@ PoSDK 安装分为三个主要阶段：
 | **依赖构建** | `install_glomap.sh`        | `是否跳过此次安装并使用现有构建？[Y/n]`                               | `[Y/n]` | 检测到GLOMAP已构建时询问是否跳过安装           | 按回车（跳过安装）                         |
 | **依赖构建** | `install_glomap.sh`        | `是否使用本地依赖构建? \| Use local dependencies for build?`          | `[Y/n]` | 询问是否使用本地依赖构建GLOMAP                 | 按回车（使用本地依赖）                     |
 | **错误处理** | `install_dependencies.sh`  | `Continue with remaining installations?`                              | `[Y/n]` | 某个依赖安装失败时询问是否继续后续安装         | 按回车（继续安装其他依赖）                 |
+```
+
+```{only} latex
+.. raw:: latex
+
+   \begin{footnotesize}
+   \begin{longtable}{|p{0.12\textwidth}|p{0.16\textwidth}|p{0.25\textwidth}|p{0.08\textwidth}|p{0.18\textwidth}|p{0.16\textwidth}|}
+   \hline
+   \textbf{阶段} & \textbf{脚本文件} & \textbf{提示信息} & \textbf{默认值} & \textbf{含义} & \textbf{建议操作} \\
+   \hline
+   \endfirsthead
+   
+   \hline
+   \textbf{阶段} & \textbf{脚本文件} & \textbf{提示信息} & \textbf{默认值} & \textbf{含义} & \textbf{建议操作} \\
+   \hline
+   \endhead
+   
+   \hline
+   \endfoot
+   
+   \textbf{系统依赖} & \texttt{install.sh} & Would you like to upgrade Qt now? 是否现在升级Qt? & [Y/n] & Qt版本过旧时询问是否升级 & 按回车（升级Qt避免冲突） \\
+   \hline
+   \textbf{系统依赖} & \texttt{install.sh} & Would you like to fix this automatically? 是否自动修复? & [y/N] & 检测到Qt版本冲突时询问是否自动修复 & 按回车（不自动修复，手动处理更安全） \\
+   \hline
+   \textbf{系统依赖} & \texttt{install.sh} & Continue with Qt6 installation? 继续安装Qt6吗? & [y/N] & 检测到Qt5时询问是否继续安装Qt6 & 按回车（跳过Qt6安装，避免冲突） \\
+   \hline
+   \textbf{下载阶段} & \texttt{download\_dependencies.sh} & Skip download and use local package? & [Y/n] & 检测到本地依赖包时询问是否跳过下载并解压使用 & 按回车（使用本地包，解压所有内容覆盖现有） \\
+   \hline
+   \textbf{下载阶段} & \texttt{download\_po\_core.sh} & Skip reinstall and use existing po\_core installation? & [Y/n] & 检测到po\_core已安装时询问是否跳过重新安装 & 按回车（跳过安装，节省时间） \\
+   \hline
+   \textbf{下载阶段} & \texttt{download\_po\_core.sh} & Skip download and use local package? & [Y/n] & 检测到本地po\_core压缩包时询问是否跳过下载 & 按回车（使用本地包，节省网络流量） \\
+   \hline
+   \textbf{测试数据} & \texttt{download\_Strecha.sh} & Do you want to re-download test data? & [y/N] & 检测到测试数据已存在时询问是否重新下载 & 按回车（跳过重新下载） \\
+   \hline
+   \textbf{测试数据} & \texttt{download\_Strecha.sh} & Skip download and use existing local package? & [Y/n] & 检测到本地测试数据包时询问是否跳过下载 & 按回车（使用本地包） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_cmake.sh} & 版本已满足要求，跳过安装？ | Version sufficient, skip installation? & [Y/n] & CMake版本满足要求时询问是否跳过安装 & 按回车（跳过安装，节省时间） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_boost.sh} & Skip rebuild and use existing Boost installation? & [Y/n] & 检测到Boost已安装时询问是否跳过重建 & 按回车（跳过重建） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_absl.sh} & Do you want to skip this installation and use the existing build? & [Y/n] & 检测到Abseil已安装时询问是否跳过安装 & 按回车（跳过安装） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_nlohmann.sh} & Do you want to skip this installation and use the existing build? & [Y/n] & 检测到nlohmann/json已安装时询问是否跳过安装 & 按回车（跳过安装） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_protobuf.sh} & Do you want to skip this installation and use the existing build? & [Y/n] & 检测到Protocol Buffers已安装时询问是否跳过安装 & 按回车（跳过安装） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_opencv.sh} & （无跳过提示，自动检测并使用现有安装） & - & OpenCV安装脚本会自动检测并使用现有安装 & 无需操作（自动处理） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_ceres.sh} & Skip rebuild and use existing Ceres Solver installation? & [Y/n] & 检测到Ceres已安装时询问是否跳过重建 & 按回车（跳过重建，节省时间） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_magsac.sh} & Skip rebuild and use existing MAGSAC installation? & [Y/n] & 检测到MAGSAC已安装时询问是否跳过重建 & 按回车（跳过重建） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_opengv.sh} & Skip rebuild and use existing OpenGV installation? & [Y/n] & 检测到OpenGV已安装时询问是否跳过重建 & 按回车（跳过重建） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_poselib.sh} & Skip rebuild and use existing PoseLib installation? & [Y/n] & 检测到PoseLib已安装时询问是否跳过重建 & 按回车（跳过重建） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_openmvg.sh} & Skip rebuild and use existing OpenMVG installation? & [Y/n] & 检测到OpenMVG已构建时询问是否跳过重建 & 按回车（跳过重建） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_colmap.sh} & Skip rebuild and use existing COLMAP installation? & [Y/n] & 检测到COLMAP已安装时询问是否跳过重建 & 按回车（跳过重建） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_graphoptim.sh} & Skip rebuild and use existing GraphOptim build? & [Y/n] & 检测到GraphOptim已构建时询问是否跳过重建 & 按回车（跳过重建） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_graphoptim.sh} & 跳过构建内部 COLMAP 支持（仅构建核心功能）？ & [Y/n] & 询问是否跳过构建内部COLMAP支持 & 按回车（跳过COLMAP支持，仅构建核心功能） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_glomap.sh} & 是否跳过此次安装并使用现有构建？[Y/n] & [Y/n] & 检测到GLOMAP已构建时询问是否跳过安装 & 按回车（跳过安装） \\
+   \hline
+   \textbf{依赖构建} & \texttt{install\_glomap.sh} & 是否使用本地依赖构建? | Use local dependencies for build? & [Y/n] & 询问是否使用本地依赖构建GLOMAP & 按回车（使用本地依赖） \\
+   \hline
+   \textbf{错误处理} & \texttt{install\_dependencies.sh} & Continue with remaining installations? & [Y/n] & 某个依赖安装失败时询问是否继续后续安装 & 按回车（继续安装其他依赖） \\
+   \hline
+   \end{longtable}
+   \end{footnotesize}
+```
 
 ```{important}
 **默认值使用说明 | Default Values:**
@@ -171,7 +249,7 @@ For first-time installation and normal use cases, press Enter to use default val
 
 ## Quick Start
 
-You can quickly launch the PoSDK Global SfM pipeline by following these steps:
+You can quickly launch the PoMVG Global SfM pipeline by following these steps:
 
 ### Prerequisites
 
@@ -193,7 +271,7 @@ cd PoSDK
 
 **Features:**
 - **Resume Installation** - Re-run `./install.sh` if network timeouts occur
-- **Automated Setup** - Downloads dependencies, builds PoSDK, and prepares test data
+- **Automated Setup** - Downloads dependencies, builds PoMVG, and prepares test data
 - **Skip Detection** - Automatically detects existing installations and prompts to skip (default: Y)
 
 ```{tip}
@@ -215,7 +293,7 @@ If automatic download fails, manually download from [GitHub Releases](https://gi
 
 Then run `./install.sh` to complete setup.
 
-### Step 2: Build PoSDK (if not done during installation)
+### Step 2: Build PoMVG (if not done during installation)
 
 ```bash
 mkdir build && cd build
@@ -226,7 +304,7 @@ make -j$(nproc)
 ### Build Output Directory Structure
 (posdk-build-output-structure)=
 
-After successful build, PoSDK generates an `output` directory in the build folder with the following structure:
+After successful build, PoMVG generates an `output` directory in the build folder with the following structure:
 
 ```text
 output/
@@ -282,7 +360,7 @@ output/
 ```{note}
 **Directory Descriptions**:
 - **bin/**: Contains all executable files and runtime-generated data directories
-- **lib/**: Contains PoSDK aggregate library and CMake configurations
+- **lib/**: Contains PoMVG aggregate library and CMake configurations
 - **include/**: Contains all header files needed for development (public interfaces)
 - **configs/**: Contains all plugin configuration files (read at runtime)
 - **plugins/**: Contains all dynamically loaded plugin libraries
@@ -294,10 +372,10 @@ output/
 ```{tip}
 **Development Tips**:
 1. Modify configuration files directly in `output/configs/methods/` without rebuilding
-2. Test data default path is `{exe_dir}/../tests/Strecha`, use relative paths in config files
+2. GUI 工作流运行前，请在 Dataset Loader 中关联 `output/tests/Strecha` 的绝对目录
 ```
 
-### Step 3: Run PoSDK
+### Step 3: Run PoMVG
 
 ```bash
 # Run PoSDK from build directory
@@ -306,7 +384,7 @@ output/
 
 ### Step 4: View Results
 
-PoSDK generates results in the working directory:
+PoMVG generates results in the working directory:
 
 #### Directory Structure
 - **`globalsfm_pipeline_work/`** - Main working directory (configured in `globalsfm_pipeline.ini`)
@@ -437,7 +515,7 @@ brew upgrade cmake
 #### 4. 网络问题导致依赖下载失败
 
 **解决方案**：
-- 从GitHub Releases手动下载依赖包：[PoSDK Releases](https://github.com/pose-only-vision/PoSDK/releases)
+- 从GitHub Releases手动下载依赖包：[PoMVG Releases](https://github.com/pose-only-vision/PoSDK/releases)
 - 将下载的文件放到相应目录：
   - `po_core` + 依赖包 → `./dependencies/`
   - 测试数据 → `./tests/`
@@ -471,7 +549,7 @@ brew upgrade cmake
 如果问题仍未解决：
 1. 检查本FAQ是否有相关问题
 2. 查看各个依赖库的官方文档
-3. 在[PoSDK GitHub Issues](https://github.com/pose-only-vision/PoSDK/issues)提交问题，提供：
+3. 在[PoMVG GitHub Issues](https://github.com/pose-only-vision/PoSDK/issues)提交问题，提供：
    - 操作系统和版本
    - 错误日志
    - 已尝试的解决方案

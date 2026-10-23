@@ -1,0 +1,380 @@
+{
+  "schema": "pomvg.documentation-pages.v1",
+  "pages": {
+    "source_zh/advanced_development/configuration_files.md": {
+      "build": true
+    },
+    "source_zh/advanced_development/data_mapping_exceptions.md": {
+      "build": true
+    },
+    "source_zh/advanced_development/evaluator_manager.md": {
+      "build": true
+    },
+    "source_zh/advanced_development/index.rst": {
+      "build": true
+    },
+    "source_zh/advanced_development/plugin_derivation_choices.md": {
+      "build": true
+    },
+    "source_zh/advanced_development/profiler.md": {
+      "build": true
+    },
+    "source_zh/advanced_development/robust_estimators.md": {
+      "build": true
+    },
+    "source_zh/advanced_development/serialization.md": {
+      "build": true
+    },
+    "source_zh/appendices/appendix_a_types.md": {
+      "build": true
+    },
+    "source_zh/appendices/appendix_b_utils.md": {
+      "build": true
+    },
+    "source_zh/appendices/appendix_e_logging.md": {
+      "build": true
+    },
+    "source_zh/appendices/index.rst": {
+      "build": true
+    },
+    "source_zh/basic_development/behavior_plugins.md": {
+      "build": true
+    },
+    "source_zh/basic_development/data_plugins.md": {
+      "build": true
+    },
+    "source_zh/basic_development/data_types.md": {
+      "build": true
+    },
+    "source_zh/basic_development/dataio_file_formats.md": {
+      "build": true
+    },
+    "source_zh/basic_development/gui_quick_start.md": {
+      "build": true
+    },
+    "source_zh/basic_development/headless_cli_remote_development.md": {
+      "build": true
+    },
+    "source_zh/basic_development/index.rst": {
+      "build": true
+    },
+    "source_zh/basic_development/method_example.md": {
+      "build": true
+    },
+    "source_zh/basic_development/method_plugins.md": {
+      "build": true
+    },
+    "source_zh/basic_development/plugin_guide.md": {
+      "build": true
+    },
+    "source_zh/basic_development/plugin_list.md": {
+      "build": true
+    },
+    "source_zh/basic_development/prior_and_gt.md": {
+      "build": true
+    },
+    "source_zh/basic_development/workflow_library.md": {
+      "build": true
+    },
+    "source_zh/benchmark_comparison/index.rst": {
+      "build": true
+    },
+    "source_zh/benchmark_comparison/installation.md": {
+      "build": true
+    },
+    "source_zh/benchmark_comparison/results.rst": {
+      "build": true
+    },
+    "source_zh/converters/colmap_converter.md": {
+      "build": true
+    },
+    "source_zh/converters/index.rst": {
+      "build": true
+    },
+    "source_zh/converters/opencv_converter.md": {
+      "build": true
+    },
+    "source_zh/converters/opengv_converter.md": {
+      "build": true
+    },
+    "source_zh/converters/openmvg_converter.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/conventions/colmap.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/conventions/graphoptim.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/conventions/index.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/conventions/opencv.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/conventions/opengv.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/conventions/openmvg.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/conventions/posdk.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/datasets/1dsfm.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/datasets/eth3d.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/datasets/index.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/datasets/strecha.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/evaluation/global_poses.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/evaluation/global_translations.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/evaluation/index.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/evaluation/relative_poses.md": {
+      "build": true
+    },
+    "source_zh/coords_and_poses/index.rst": {
+      "build": true
+    },
+    "source_zh/copyright_tracking.rst": {
+      "build": true
+    },
+    "source_zh/faq/general.md": {
+      "build": true
+    },
+    "source_zh/faq/index.rst": {
+      "build": true
+    },
+    "source_zh/index.rst": {
+      "build": true
+    },
+    "source_zh/installation/cli_gui_guide.md": {
+      "build": true
+    },
+    "source_zh/installation/gui_installation.md": {
+      "build": true
+    },
+    "source_zh/installation/index.rst": {
+      "build": true
+    },
+    "source_zh/installation/installation.md": {
+      "build": true
+    },
+    "source_zh/installation/po_core_build_environment.md": {
+      "build": true
+    },
+    "source_zh/installation/using_precompiled.md": {
+      "build": true
+    },
+    "source_zh/introduction.rst": {
+      "build": true
+    },
+    "source_zh/introduction/user_guide.md": {
+      "build": true
+    },
+    "source_zh/team/index.rst": {
+      "build": true
+    },
+    "source_zh/version_history/index.rst": {
+      "build": true
+    },
+    "source/advanced_development/configuration_files.md": {
+      "build": true
+    },
+    "source/advanced_development/data_mapping_exceptions.md": {
+      "build": true
+    },
+    "source/advanced_development/evaluator_manager.md": {
+      "build": true
+    },
+    "source/advanced_development/index.rst": {
+      "build": true
+    },
+    "source/advanced_development/plugin_derivation_choices.md": {
+      "build": true
+    },
+    "source/advanced_development/profiler.md": {
+      "build": true
+    },
+    "source/advanced_development/robust_estimators.md": {
+      "build": true
+    },
+    "source/advanced_development/serialization.md": {
+      "build": true
+    },
+    "source/appendices/appendix_a_types.md": {
+      "build": true
+    },
+    "source/appendices/appendix_b_utils.md": {
+      "build": true
+    },
+    "source/appendices/appendix_e_logging.md": {
+      "build": true
+    },
+    "source/appendices/index.rst": {
+      "build": true
+    },
+    "source/basic_development/behavior_plugins.md": {
+      "build": true
+    },
+    "source/basic_development/data_plugins.md": {
+      "build": true
+    },
+    "source/basic_development/data_types.md": {
+      "build": true
+    },
+    "source/basic_development/gui_extensions.md": {
+      "build": true
+    },
+    "source/basic_development/index.rst": {
+      "build": true
+    },
+    "source/basic_development/method_example.md": {
+      "build": true
+    },
+    "source/basic_development/method_plugins.md": {
+      "build": true
+    },
+    "source/basic_development/plugin_guide.md": {
+      "build": true
+    },
+    "source/basic_development/plugin_list.md": {
+      "build": true
+    },
+    "source/basic_development/plugin_test_lab.md": {
+      "build": true
+    },
+    "source/basic_development/prior_and_gt.md": {
+      "build": true
+    },
+    "source/basic_development/workflow_library.md": {
+      "build": true
+    },
+    "source/benchmark_comparison/index.rst": {
+      "build": true
+    },
+    "source/benchmark_comparison/installation.md": {
+      "build": true
+    },
+    "source/benchmark_comparison/results.rst": {
+      "build": true
+    },
+    "source/converters/colmap_converter.md": {
+      "build": true
+    },
+    "source/converters/index.rst": {
+      "build": true
+    },
+    "source/converters/opencv_converter.md": {
+      "build": true
+    },
+    "source/converters/opengv_converter.md": {
+      "build": true
+    },
+    "source/converters/openmvg_converter.md": {
+      "build": true
+    },
+    "source/coords_and_poses/conventions/colmap.md": {
+      "build": true
+    },
+    "source/coords_and_poses/conventions/graphoptim.md": {
+      "build": true
+    },
+    "source/coords_and_poses/conventions/index.md": {
+      "build": true
+    },
+    "source/coords_and_poses/conventions/opencv.md": {
+      "build": true
+    },
+    "source/coords_and_poses/conventions/opengv.md": {
+      "build": true
+    },
+    "source/coords_and_poses/conventions/openmvg.md": {
+      "build": true
+    },
+    "source/coords_and_poses/conventions/posdk.md": {
+      "build": true
+    },
+    "source/coords_and_poses/datasets/1dsfm.md": {
+      "build": true
+    },
+    "source/coords_and_poses/datasets/eth3d.md": {
+      "build": true
+    },
+    "source/coords_and_poses/datasets/index.md": {
+      "build": true
+    },
+    "source/coords_and_poses/datasets/strecha.md": {
+      "build": true
+    },
+    "source/coords_and_poses/evaluation/global_poses.md": {
+      "build": true
+    },
+    "source/coords_and_poses/evaluation/global_translations.md": {
+      "build": true
+    },
+    "source/coords_and_poses/evaluation/index.md": {
+      "build": true
+    },
+    "source/coords_and_poses/evaluation/relative_poses.md": {
+      "build": true
+    },
+    "source/coords_and_poses/index.rst": {
+      "build": true
+    },
+    "source/copyright_tracking.rst": {
+      "build": true
+    },
+    "source/faq/general.md": {
+      "build": true
+    },
+    "source/faq/index.rst": {
+      "build": true
+    },
+    "source/index.rst": {
+      "build": true
+    },
+    "source/installation/cli_gui_guide.md": {
+      "build": true
+    },
+    "source/installation/gui_installation.md": {
+      "build": true
+    },
+    "source/installation/index.rst": {
+      "build": true
+    },
+    "source/installation/installation.md": {
+      "build": true
+    },
+    "source/installation/po_core_build_environment.md": {
+      "build": true
+    },
+    "source/installation/using_precompiled.md": {
+      "build": true
+    },
+    "source/introduction.rst": {
+      "build": true
+    },
+    "source/introduction/user_guide.md": {
+      "build": true
+    },
+    "source/team/index.rst": {
+      "build": true
+    },
+    "source/version_history/index.rst": {
+      "build": true
+    }
+  }
+}

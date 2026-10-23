@@ -1,0 +1,34 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Montreal_Notre_Dame",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 474,
+  "registered_views": 474,
+  "points": 160861,
+  "accuracy": {},
+  "timing": {
+    "backend": 84.848,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.6599553412340787,
+    "median": 0.5260172721880697,
+    "observations": 826263,
+    "points": 160861,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Montreal_Notre_Dame/posdk/points.ply",
+    "g2o": "public/onedsfm/Montreal_Notre_Dame/posdk/poses.g2o",
+    "metadata": "public/onedsfm/Montreal_Notre_Dame/posdk/result.json",
+    "reprojection": "public/onedsfm/Montreal_Notre_Dame/posdk/reprojection.json"
+  }
+}

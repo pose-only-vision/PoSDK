@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1146" role="img">
+<title>1DSfM / coverage / all measured configurations</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<g fill="#183247" font-family="sans-serif" font-size="13">
+<rect x="20" y="12" width="9" height="9" fill="#2176e7"/>
+<text x="35.00" y="22.00" >PoMVG P3P + PA2 / batch LiGT (n=4)</text>
+<rect x="470" y="12" width="9" height="9" fill="#e19729"/>
+<text x="485.00" y="22.00" >GLOMAP · native 1DSfM (n=14)</text>
+<rect x="20" y="33" width="9" height="9" fill="#25a593"/>
+<text x="35.00" y="43.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="470" y="33" width="9" height="9" fill="#8663bd"/>
+<text x="485.00" y="43.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="20" y="54" width="9" height="9" fill="#af617d"/>
+<text x="35.00" y="64.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="470" y="54" width="9" height="9" fill="#bd941c"/>
+<text x="485.00" y="64.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="20" y="75" width="9" height="9" fill="#d36736"/>
+<text x="35.00" y="85.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="470" y="75" width="9" height="9" fill="#2176e7"/>
+<text x="485.00" y="85.00" >OpenMVG Stellar · native 1DSfM (n=9)</text>
+<rect x="20" y="96" width="9" height="9" fill="#e19729"/>
+<text x="35.00" y="106.00" >PoMVG · Git 09d8356f / CURRENT v11 · LiGT–P3P/PA2 分流 / Split (n=2)</text>
+<path d="M200.00,141 V1101" stroke="#e2e9ef"/>
+<text x="200.00" y="1121.00" fill="#65758b" text-anchor="middle">0</text>
+<path d="M367.50,141 V1101" stroke="#e2e9ef"/>
+<text x="367.50" y="1121.00" fill="#65758b" text-anchor="middle">25</text>
+<path d="M535.00,141 V1101" stroke="#e2e9ef"/>
+<text x="535.00" y="1121.00" fill="#65758b" text-anchor="middle">50</text>
+<path d="M702.50,141 V1101" stroke="#e2e9ef"/>
+<text x="702.50" y="1121.00" fill="#65758b" text-anchor="middle">75</text>
+<path d="M870.00,141 V1101" stroke="#e2e9ef"/>
+<text x="870.00" y="1121.00" fill="#65758b" text-anchor="middle">100</text>
+<text x="188.00" y="177.00" text-anchor="end" fill="#65758b">Alamo</text>
+<rect x="200" y="146.00" width="593.06" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Alamo" data-value="88.5167464115"><title>PoMVG P3P + PA2 / batch LiGT / Alamo: 88.5%</title></rect>
+<rect x="200" y="152.00" width="634.74" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Alamo" data-value="94.7368421053"><title>GLOMAP · native 1DSfM / Alamo: 94.7%</title></rect>
+<rect x="200" y="188.00" width="523.60" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Alamo" data-value="78.1499202552"><title>OpenMVG Stellar · native 1DSfM / Alamo: 78.1%</title></rect>
+<text x="188.00" y="241.00" text-anchor="end" fill="#65758b">Ellis Island</text>
+<rect x="200" y="210.00" width="629.31" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Ellis_Island" data-value="93.9271255061"><title>PoMVG P3P + PA2 / batch LiGT / Ellis_Island: 93.9%</title></rect>
+<rect x="200" y="216.00" width="653.72" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Ellis_Island" data-value="97.5708502024"><title>GLOMAP · native 1DSfM / Ellis_Island: 97.6%</title></rect>
+<rect x="200" y="222.00" width="653.72" height="4.5" fill="#25a593" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:glomap_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="97.5708502024"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 97.6%</title></rect>
+<rect x="200" y="228.00" width="21.70" height="4.5" fill="#8663bd" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_incremental_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="3.23886639676"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 3.24%</title></rect>
+<rect x="200" y="234.00" width="572.35" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_global_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="85.4251012146"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 85.4%</title></rect>
+<rect x="200" y="240.00" width="618.46" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_stellar_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="92.3076923077"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 92.3%</title></rect>
+<rect x="200" y="246.00" width="591.34" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:colmap_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="88.2591093117"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 88.3%</title></rect>
+<rect x="200" y="252.00" width="604.90" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Ellis_Island" data-value="90.2834008097"><title>OpenMVG Stellar · native 1DSfM / Ellis_Island: 90.3%</title></rect>
+<text x="188.00" y="305.00" text-anchor="end" fill="#65758b">Gendarmenmarkt</text>
+<rect x="200" y="274.00" width="611.31" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Gendarmenmarkt" data-value="91.2398921833"><title>PoMVG P3P + PA2 / batch LiGT / Gendarmenmarkt: 91.2%</title></rect>
+<rect x="200" y="280.00" width="636.59" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Gendarmenmarkt" data-value="95.0134770889"><title>GLOMAP · native 1DSfM / Gendarmenmarkt: 95%</title></rect>
+<rect x="200" y="286.00" width="636.59" height="4.5" fill="#25a593" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:glomap_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="95.0134770889"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 95%</title></rect>
+<rect x="200" y="292.00" width="594.15" height="4.5" fill="#8663bd" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_incremental_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="88.679245283"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 88.7%</title></rect>
+<rect x="200" y="298.00" width="475.86" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_global_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="71.0242587601"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 71%</title></rect>
+<rect x="200" y="304.00" width="619.43" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_stellar_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="92.4528301887"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 92.5%</title></rect>
+<rect x="200" y="310.00" width="392.79" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:colmap_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="58.6253369272"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 58.6%</title></rect>
+<rect x="200" y="316.00" width="520.11" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Gendarmenmarkt" data-value="77.628032345"><title>OpenMVG Stellar · native 1DSfM / Gendarmenmarkt: 77.6%</title></rect>
+<text x="188.00" y="369.00" text-anchor="end" fill="#65758b">Madrid Metropolis</text>
+<rect x="200" y="338.00" width="588.38" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Madrid_Metropolis" data-value="87.8172588832"><title>PoMVG P3P + PA2 / batch LiGT / Madrid_Metropolis: 87.8%</title></rect>
+<rect x="200" y="344.00" width="634.29" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Madrid_Metropolis" data-value="94.6700507614"><title>GLOMAP · native 1DSfM / Madrid_Metropolis: 94.7%</title></rect>
+<rect x="200" y="350.00" width="634.29" height="4.5" fill="#25a593" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:glomap_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="94.6700507614"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 94.7%</title></rect>
+<rect x="200" y="356.00" width="535.66" height="4.5" fill="#8663bd" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_incremental_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="79.9492385787"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 79.9%</title></rect>
+<rect x="200" y="362.00" width="511.85" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_global_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="76.3959390863"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 76.4%</title></rect>
+<rect x="200" y="368.00" width="588.38" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_stellar_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="87.8172588832"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 87.8%</title></rect>
+<rect x="200" y="374.00" width="248.27" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:colmap_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="37.0558375635"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 37.1%</title></rect>
+<rect x="200" y="380.00" width="562.87" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Madrid_Metropolis" data-value="84.0101522843"><title>OpenMVG Stellar · native 1DSfM / Madrid_Metropolis: 84%</title></rect>
+<text x="188.00" y="433.00" text-anchor="end" fill="#65758b">Piazza del Popolo</text>
+<rect x="200" y="408.00" width="630.25" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Piazza_del_Popolo" data-value="94.0677966102"><title>GLOMAP · native 1DSfM / Piazza_del_Popolo: 94.1%</title></rect>
+<rect x="200" y="414.00" width="630.25" height="4.5" fill="#25a593" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:glomap_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="94.0677966102"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 94.1%</title></rect>
+<rect x="200" y="420.00" width="594.29" height="4.5" fill="#8663bd" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_incremental_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="88.7005649718"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 88.7%</title></rect>
+<rect x="200" y="426.00" width="528.05" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_global_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="78.813559322"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 78.8%</title></rect>
+<rect x="200" y="432.00" width="607.54" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_stellar_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="90.6779661017"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 90.7%</title></rect>
+<rect x="200" y="438.00" width="471.27" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:colmap_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="70.3389830508"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 70.3%</title></rect>
+<rect x="200" y="444.00" width="596.19" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Piazza_del_Popolo" data-value="88.9830508475"><title>OpenMVG Stellar · native 1DSfM / Piazza_del_Popolo: 89%</title></rect>
+<text x="188.00" y="497.00" text-anchor="end" fill="#65758b">NYC Library</text>
+<rect x="200" y="472.00" width="625.45" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="NYC_Library" data-value="93.3510638298"><title>GLOMAP · native 1DSfM / NYC_Library: 93.4%</title></rect>
+<rect x="200" y="508.00" width="566.65" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="NYC_Library" data-value="84.5744680851"><title>OpenMVG Stellar · native 1DSfM / NYC_Library: 84.6%</title></rect>
+<text x="188.00" y="561.00" text-anchor="end" fill="#65758b">Union Square</text>
+<rect x="200" y="536.00" width="658.47" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Union_Square" data-value="98.2795698925"><title>GLOMAP · native 1DSfM / Union_Square: 98.3%</title></rect>
+<rect x="200" y="572.00" width="354.45" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Union_Square" data-value="52.9032258065"><title>OpenMVG Stellar · native 1DSfM / Union_Square: 52.9%</title></rect>
+<text x="188.00" y="625.00" text-anchor="end" fill="#65758b">Yorkminster</text>
+<rect x="200" y="600.00" width="634.89" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Yorkminster" data-value="94.7598253275"><title>GLOMAP · native 1DSfM / Yorkminster: 94.8%</title></rect>
+<text x="188.00" y="689.00" text-anchor="end" fill="#65758b">Montreal Notre Dame</text>
+<rect x="200" y="664.00" width="651.62" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Montreal_Notre_Dame" data-value="97.2573839662"><title>GLOMAP · native 1DSfM / Montreal_Notre_Dame: 97.3%</title></rect>
+<text x="188.00" y="753.00" text-anchor="end" fill="#65758b">Tower of London</text>
+<rect x="200" y="728.00" width="640.98" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Tower_of_London" data-value="95.6692913386"><title>GLOMAP · native 1DSfM / Tower_of_London: 95.7%</title></rect>
+<text x="188.00" y="817.00" text-anchor="end" fill="#65758b">Roman Forum</text>
+<rect x="200" y="792.00" width="644.00" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Roman_Forum" data-value="96.1199294533"><title>GLOMAP · native 1DSfM / Roman_Forum: 96.1%</title></rect>
+<text x="188.00" y="881.00" text-anchor="end" fill="#65758b">Notre Dame</text>
+<rect x="200" y="856.00" width="670.00" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Notre_Dame" data-value="100"><title>GLOMAP · native 1DSfM / Notre_Dame: 100%</title></rect>
+<text x="188.00" y="945.00" text-anchor="end" fill="#65758b">Vienna Cathedral</text>
+<rect x="200" y="920.00" width="647.37" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Vienna_Cathedral" data-value="96.6230936819"><title>GLOMAP · native 1DSfM / Vienna_Cathedral: 96.6%</title></rect>
+<text x="188.00" y="1009.00" text-anchor="end" fill="#65758b">Piccadilly</text>
+<rect x="200" y="984.00" width="635.81" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Piccadilly" data-value="94.8963317384"><title>GLOMAP · native 1DSfM / Piccadilly: 94.9%</title></rect>
+<rect x="200" y="1020.00" width="405.79" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Piccadilly" data-value="60.5661881978"><title>OpenMVG Stellar · native 1DSfM / Piccadilly: 60.6%</title></rect>
+<rect x="200" y="1026.00" width="579.44" height="4.5" fill="#e19729" data-config="posdk-restored-split-20261012:posdk_restored_split" data-scene="Piccadilly" data-value="86.4832535885"><title>PoMVG · Git 09d8356f / CURRENT v11 · LiGT–P3P/PA2 分流 / Split / Piccadilly: 86.5%</title></rect>
+<text x="188.00" y="1073.00" text-anchor="end" fill="#65758b">Trafalgar</text>
+<rect x="200" y="1084.00" width="383.77" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Trafalgar" data-value="57.2795877048"><title>OpenMVG Stellar · native 1DSfM / Trafalgar: 57.3%</title></rect>
+<rect x="200" y="1090.00" width="588.12" height="4.5" fill="#e19729" data-config="posdk-restored-split-20261012:posdk_restored_split" data-scene="Trafalgar" data-value="87.7783913124"><title>PoMVG · Git 09d8356f / CURRENT v11 · LiGT–P3P/PA2 分流 / Split / Trafalgar: 87.8%</title></rect>
+<text x="535.00" y="1140.00" fill="#65758b" text-anchor="middle">Recovered / input views (%)</text>
+</g></svg>

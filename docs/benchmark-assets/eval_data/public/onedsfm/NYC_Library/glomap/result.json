@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "NYC_Library",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 376,
+  "registered_views": 351,
+  "points": 44568,
+  "accuracy": {},
+  "timing": {
+    "backend": 53.09988708398305,
+    "frontend": 5.229257417144254,
+    "pipeline": 59.31554525112733
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.9316337328385166,
+    "median": 0.6032891136739649,
+    "observations": 309668,
+    "points": 44568,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/NYC_Library/glomap/points.ply",
+    "g2o": "public/onedsfm/NYC_Library/glomap/poses.g2o",
+    "metadata": "public/onedsfm/NYC_Library/glomap/result.json",
+    "reprojection": "public/onedsfm/NYC_Library/glomap/reprojection.json"
+  }
+}

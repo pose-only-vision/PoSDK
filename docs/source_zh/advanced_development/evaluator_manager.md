@@ -1,6 +1,6 @@
 # EvaluatorManager 精度评估器
 
-`EvaluatorManager` 是 PoSDK 中用于收集、管理和导出各种精度评估指标的静态工具类。它不直接执行评估计算，而是提供一个中心化的系统来处理由各个数据插件 (`DataIO` 派生类) 提交的评估结果，并导出为标准化的CSV表格格式。
+`EvaluatorManager` 是 PoMVG 中用于收集、管理和导出各种精度评估指标的静态工具类。它不直接执行评估计算，而是提供一个中心化的系统来处理由各个数据插件 (`DataIO` 派生类) 提交的评估结果，并导出为标准化的CSV表格格式。
 
 ## 核心功能
 
@@ -27,7 +27,7 @@ class MyDataPlugin : public DataIO
 {
 public:
     // 实现Evaluate函数进行精度评估
-    bool Evaluate(DataPtr gt_data_ptr) override
+    EvaluatorStatus Evaluate(DataPtr gt_data_ptr) override
     {
         EvaluatorStatus eval_status;
         eval_status.SetEvalType("MyDataType");  // 设置评估类型
@@ -41,9 +41,8 @@ public:
             eval_status.SubmitNoteMsg("test_case", "case_" + std::to_string(i));
         }
 
-        // 设置评估状态
-        SetEvaluatorStatus(eval_status);
-        return true;
+        eval_status.is_successful = true;
+        return eval_status;
     }
 };
 ```
@@ -115,7 +114,11 @@ void AddResult(const std::string &metric_name, double value);
 void AddResult(const std::string &metric_name, double value,
                const std::string &note_type, const std::string &note_value);
 
-// 方式3：添加结果和多个备注
+// 方式3：用两个字符串组成的初始化列表添加单个备注
+void AddResult(const std::string &metric_name, double value,
+               const std::initializer_list<std::string> &note_pair);
+
+// 方式4：添加结果和多个备注
 void AddResult(const std::string &metric_name, double value,
                const std::unordered_map<std::string, std::string> &notes);
 ```
@@ -145,6 +148,18 @@ bool ValidateNoteData() const;
 1. 每种备注类型的数量必须等于 `eval_results.size()`（一对一对应）
 2. 或者该类型的备注数量为1（全局共享）
 3. 或者该类型的向量为空（该类型不提供备注）
+
+`MethodPresetProfiler::ProcessEvaluationResults()` 在写入 `EvaluatorManager` 之前会调用 `ValidateNoteData()`。校验失败时，该次结果不会进入全局评估器。
+
+##### 结果读取
+
+```cpp
+std::vector<std::string> GetAllNoteTypes() const;
+std::vector<double> GetResults(const std::string &var_name) const;
+double GetFirstResult(const std::string &var_name, double default_value = 0.0) const;
+bool HasResult(const std::string &var_name) const;
+void Clear();
+```
 
 ### 第3步：EvaluatorManager CSV导出
 
@@ -181,18 +196,27 @@ EvaluatorManager::ExportAllRawValuesToCSV(
 
 EvaluatorManager支持多种CSV导出格式，每种格式对应不同的使用场景。以下详细说明各种表格样式和参数对应关系。
 
-### CSV表头参数对应关系
+### 字段与数据来源
 
-| CSV表头 | 数据来源 | 示例值 | 说明 |
-|---------|----------|---------|------|
-| **Algorithm** | `Method::GetType()` | `globalsfm_pipeline` | 算法名称，由方法插件的GetType()函数返回 |
-| **EvalCommit** | `ProfileCommit`配置项 | `GlobalSfM Pipeline Demo` | 评估场景标识，在ini文件中设置 |
-| **Metric** | `AddResult(metric_name, ...)` | `rotation_error` | 评估指标名称，在DataIO::Evaluate()中定义 |
-| **EvalType** | `SetEvalType(eval_type)` | `RelativePoses` | 评估数据类型，对应数据结构类型 |
-| **Value** | `AddResult(..., value)` | `0.001523` | 具体的评估数值 |
-| **Mean/Median/Min/Max/StdDev** | 统计计算结果 | `0.001450` | 对多个Value值的统计分析 |
-| **Count** | 数据点数量 | `10` | 参与统计的Value数量 |
-| **备注列** | `SubmitNoteMsg(note_type, ...)` | `view(0,1)` | 可选的多类型备注信息 |
+`EvalType` 和 `Metric` 是评估器的索引，出现在导出函数参数和部分文件名中，不是下面几张表的固定列。
+
+| 字段 | 数据来源 | 示例值 | 出现位置 |
+|------|----------|--------|----------|
+| **Algorithm** | `SetEvaluatorAlgorithm()`；未设置时为 `GetType()` | `globalsfm_pipeline` | 各 CSV 的 Algorithm 列 |
+| **EvalCommit** | ini 中的 `ProfileCommit`；为空时使用 `default_commit` | `GlobalSfM Pipeline Demo` | 统计表、原始值表 |
+| **Metric** | `AddResult(metric_name, ...)` | `rotation_error` | 导出参数、详细统计表、原始值文件名 |
+| **EvalType** | `SetEvalType(eval_type)` | `RelativePoses` | 导出参数、对比表文件名 |
+| **Value** | `AddResult(..., value)` | `0.001523` | 原始值表 |
+| **Mean/Median/Min/Max/StdDev** | `EvaluationData::GetStatistics()` | `0.001450` | 统计摘要表、详细统计表 |
+| **Count** | 同一 `EvalCommit` 下的数值个数 | `10` | `Statistics::count`，以及详细统计表 |
+| **备注列** | `SubmitNoteMsg(note_type, ...)` | `view(0,1)` | 原始值表中按请求导出的列 |
+
+`ProfileCommit` 为空或未设置时，显示用 commit 为 `default_commit`。若环境变量 `POSDK_EVAL_CONTEXT` 非空，它会追加到显示用 commit 后面。存在 GT 来源或连接标识时，写入 `EvaluatorManager` 的内部 commit 还会追加 `gt_source` 和 `gt_connection`，避免多路 GT 被合并；显示用原文保存在 `display_eval_commit` 备注中。
+
+> **Workflow 注意：** Evaluator Results 按 `Algorithm + EvalCommit` 合并结果。
+> 如果同一个 workflow 中存在多个相同 method 实例，并且多个实例都连接了
+> GT/evaluation，请在 Configuration 中给每个实例填写不同的 `ProfileCommit`。
+> 否则这些结果可能互相覆盖。PoMVG GUI 会在 Run 前检测此类冲突并提示。
 
 ### 参数配置示例
 
@@ -229,33 +253,36 @@ eval_status.SubmitNoteMsg("runtime", "125ms");         // → runtime列
 **生成函数**: `ExportMetricAllStatsToCSV("RelativePoses", "rotation_error", "output.csv")`
 
 ```text
-Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev,Count
-globalsfm_pipeline,GlobalSfM Pipeline Demo,0.001523,0.001450,0.000234,0.003456,0.000567,10
-method_opencv,OpenCV Essential Matrix,0.002134,0.001987,0.000456,0.004567,0.000789,10
-method_opengv,OpenGV Five Point,0.001234,0.001189,0.000123,0.002345,0.000445,10
+Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev
+globalsfm_pipeline,GlobalSfM Pipeline Demo,0.001523,0.001450,0.000234,0.003456,0.000567
+method_opencv,OpenCV Essential Matrix,0.002134,0.001987,0.000456,0.004567,0.000789
+method_opengv,OpenGV Five Point,0.001234,0.001189,0.000123,0.002345,0.000445
 ```
 
 **说明**:
-- 每行代表一个算法在特定场景下的统计结果
-- 包含均值、中位数、最值、标准差等完整统计信息
-- 适用于算法性能对比分析
+- 每个算法、每个 `EvalCommit` 占一行
+- 列是均值、中位数、最小值、最大值和标准差
+- 这张表没有 `Count` 列。样本数在 `ExportDetailedStatsToCSV()` 和 `GetStatistics()` 中
+
+当所有 `EvalCommit` 都能解析成同一个 `prefix_number` 前缀时，同一函数改用智能格式，见样式 4。可选参数 `footnote` 非空时，写在表格末尾，以 `# ` 开头。
 
 #### 样式2：算法对比表 (`ExportAlgorithmComparisonToCSV`)
 
-**用途**: 多算法在不同场景下的单一统计值对比
+**用途**: 多个算法在同一指标上的单一统计值对比
 **生成函数**: `ExportAlgorithmComparisonToCSV("RelativePoses", "rotation_error", "comparison.csv", "mean")`
 
+`stat_type` 可以是 `mean`、`median`、`min`、`max`、`std_dev`，默认 `mean`。无法识别的取值按 `mean` 写出。
+
+没有数值型 `EvalCommit` 时，每个原始 commit 单独成列：
+
 ```text
-Algorithm,noise_0.01,noise_0.05,noise_0.10,points_100,points_200
-globalsfm_pipeline,0.001523,0.005234,0.012456,0.001234,0.000987
-method_opencv,0.002134,0.006789,0.015678,0.001789,0.001234
-method_opengv,0.001234,0.004567,0.010123,0.001023,0.000856
+Algorithm,demo_a,demo_b,demo_c
+globalsfm_pipeline,0.001523,0.005234,0.012456
+method_opencv,0.002134,0.006789,0.015678
+method_opengv,0.001234,0.004567,0.010123
 ```
 
-**说明**:
-- 列名为不同的EvalCommit场景
-- 表格值为指定统计类型的数值（如mean）
-- 便于直观对比不同算法在各种条件下的性能
+只要存在可解析成 `prefix_number` 的 commit，表头改为各个前缀。同一前缀下的多个 commit 只保留一个值：指标名包含 `error` 或 `loss` 时取得更小的值，其余指标取得更大的值。因此 `noise_0.01` 与 `noise_0.05` 不会同时成为两列。
 
 #### 样式3：原始数据表 (`ExportAllRawValuesToCSV`)
 
@@ -289,9 +316,10 @@ globalsfm_pipeline,0.10,0.012456,0.011234,0.003456,0.023456,0.005678
 ```
 
 **说明**:
-- "Noise"列包含解析出的数值部分
-- X轴坐标更加清晰，便于数据可视化
-- 自动识别"prefix_number"格式的EvalCommit
+- 仅当全部 `EvalCommit` 都含数值，且前缀相同时使用这一格式
+- 前缀成为列名，该列写入解析出的数值
+- 前缀不一致，或存在无法解析的 commit 时，退回样式 1
+- 数值列使用固定的 15 位小数，统计列仍受 `SetCSVPrecision()` 控制
 
 ### 多类型备注的CSV输出
 
@@ -319,19 +347,20 @@ globalsfm_pipeline,GlobalSfM Pipeline Demo,0.001523,view(0,1),125ms,156,castle-P
 
 ### 批量导出结果
 
-`ExportAllMetricsToCSV("RelativePoses", "output/")`会生成多个文件：
+`ExportAllMetricsToCSV("RelativePoses", "output/")` 为每个指标、每种统计量各写一个对比表。统计量固定为 `mean`、`median`、`max`、`min`、`std_dev`。它不写统计摘要表，也不写原始值表。
 
 ```
 output/
-├── RelativePoses_rotation_error_mean_comparison.csv
-├── RelativePoses_rotation_error_median_comparison.csv
-├── RelativePoses_rotation_error_ALL_STATS.csv
-├── RelativePoses_translation_error_mean_comparison.csv
-├── RelativePoses_translation_error_median_comparison.csv
-├── RelativePoses_translation_error_ALL_STATS.csv
-├── rotation_error_all_evaluated_values.csv
-└── translation_error_all_evaluated_values.csv
++-- RelativePoses_rotation_error_mean_comparison.csv
++-- RelativePoses_rotation_error_median_comparison.csv
++-- RelativePoses_rotation_error_max_comparison.csv
++-- RelativePoses_rotation_error_min_comparison.csv
++-- RelativePoses_rotation_error_std_dev_comparison.csv
++-- RelativePoses_translation_error_mean_comparison.csv
+-- RelativePoses_translation_error_std_dev_comparison.csv
 ```
+
+统计摘要表由 `ExportMetricAllStatsToCSV()` 写到调用者给出的路径。原始值表由 `ExportAllRawValuesToCSV()` 写成 `{metric}_all_evaluated_values.csv`。
 
 ### 实际使用示例
 
@@ -351,7 +380,7 @@ for (size_t i = 0; i < pose_pairs.size(); ++i) {
     eval_status.SubmitNoteMsg("view_pair", "view(" + std::to_string(i) + "," + std::to_string(i+1) + ")");
 }
 
-// 3. 系统自动调用（在MethodPreset中）
+// 3. 系统自动调用（MethodPresetProfiler::ProcessEvaluationResults）
 EvaluatorManager::AddEvaluationResultsFromStatus(
     "RelativePoses",           // EvalType
     "globalsfm_pipeline",      // Algorithm (from GetType())
@@ -428,15 +457,17 @@ static bool AddEvaluationResult(
 static bool ExportMetricAllStatsToCSV(
     const std::string &eval_type,              // 评估类型
     const std::string &metric_name,            // 指标名称
-    const std::filesystem::path &output_path   // 输出文件路径
+    const std::filesystem::path &output_path,  // 输出文件路径
+    const std::string &footnote = ""           // 可选脚注，写在表末
 );
 ```
 
-**输出格式**:
+传统格式如下。全部 commit 共享同一数值前缀时，`EvalCommit` 列换成该前缀，列值是解析出的数值。
+
 ```text
-Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev,Count
-method_example,noise_0.01,0.001523,0.001450,0.000234,0.003456,0.000567,10
-method_example,noise_0.05,0.005234,0.004987,0.001234,0.012345,0.002134,10
+Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev
+method_example,demo_a,0.001523,0.001450,0.000234,0.003456,0.000567
+method_example,demo_b,0.005234,0.004987,0.001234,0.012345,0.002134
 ```
 
 #### `ExportAllMetricsToCSV()`
@@ -483,7 +514,7 @@ static bool ExportAlgorithmComparisonToCSV(
     const std::string &eval_type,              // 评估类型
     const std::string &metric_name,            // 指标名称
     const std::filesystem::path &output_path,  // 输出文件路径
-    const std::string &stat_type = "mean"      // 统计类型
+    const std::string &stat_type = "mean"      // mean/median/min/max/std_dev
 );
 ```
 
@@ -495,7 +526,7 @@ static bool ExportAlgorithmComparisonToCSV(
 
 ```cpp
 // 1. 在DataIO插件中实现Evaluate函数
-bool MyRelativePosePlugin::Evaluate(DataPtr gt_data_ptr)
+EvaluatorStatus MyRelativePosePlugin::Evaluate(DataPtr gt_data_ptr)
 {
     auto gt_poses = GetDataPtr<RelativePoses>(gt_data_ptr, "data_relative_poses");
 
@@ -516,8 +547,8 @@ bool MyRelativePosePlugin::Evaluate(DataPtr gt_data_ptr)
         eval_status.SubmitNoteMsg("runtime", std::to_string(runtimes[i]) + "ms");
     }
 
-    SetEvaluatorStatus(eval_status);
-    return true;
+    eval_status.is_successful = true;
+    return eval_status;
 }
 
 // 2. 在测试代码中运行方法并导出结果
@@ -573,11 +604,202 @@ EvaluatorManager::ExportAlgorithmComparisonToCSV(
 
 2. **备注数据验证**: 使用 `ValidateNoteData()` 确保备注数据与评估结果数量匹配
 
-3. **算法名称获取**: 在 `MethodPreset` 中，算法名称通过 `GetType()` 自动获取
+3. **算法名称获取**: `ProcessEvaluationResults()` 使用 `GetEvaluatorAlgorithm()`。返回值为空时改用 `GetType()`
 
-4. **配置文件设置**: 在方法的ini配置文件中需要设置 `ProfileCommit` 参数作为评估场景标识
+4. **配置文件设置**: `ProfileCommit` 作为评估场景标识。未设置或为空时使用 `default_commit`。评估默认关闭，需要在 ini 中设置 `enable_evaluator=true`
 
 5. **CSV文件命名**: 导出的CSV文件会根据评估类型和指标名称自动命名，避免文件覆盖
+
+6. **Evaluate() 返回类型**: `DataIO::Evaluate()` 返回 `EvaluatorStatus`（不是 `bool`），由 `MethodPresetProfiler::CallEvaluator()` 负责处理评估结果
+
+---
+
+## CSV 精度控制
+
+#### `SetCSVPrecision()`
+
+设置 CSV 导出数值精度。
+
+```cpp
+static void SetCSVPrecision(int precision);
+```
+
+**参数**:
+- `precision`: 小数位数，会被限制在 0 到 15。默认 6。绝对值小于 `1e-precision` 的数值写成 `0`
+
+#### `GetCSVPrecision()`
+
+获取当前 CSV 导出数值精度。
+
+```cpp
+static int GetCSVPrecision();
+```
+
+#### `ResetCSVPrecision()`
+
+重置 CSV 精度为默认值（6）。
+
+```cpp
+static void ResetCSVPrecision();
+```
+
+---
+
+## 查询函数
+
+#### `GetStatistics()`
+
+获取指定指标的统计信息。
+
+```cpp
+static EvaluationData::Statistics GetStatistics(
+    const std::string &eval_type,
+    const std::string &algorithm_name,
+    const std::string &metric_name,
+    const std::string &eval_commit
+);
+```
+
+返回的 `Statistics` 结构体包含：`mean`, `median`, `max`, `min`, `std_dev`, `count`。
+
+#### `GetAllAlgorithms()`
+
+获取指定类型下的所有算法名称。
+
+```cpp
+static std::vector<std::string> GetAllAlgorithms(const std::string &eval_type);
+```
+
+#### `GetAllMetrics()`
+
+获取指定类型和算法下的所有指标名称。
+
+```cpp
+static std::vector<std::string> GetAllMetrics(
+    const std::string &eval_type,
+    const std::string &algorithm_name
+);
+```
+
+#### `GetAllEvalCommits()`
+
+获取指定指标下的所有评估提交名称。
+
+```cpp
+static std::vector<std::string> GetAllEvalCommits(
+    const std::string &eval_type,
+    const std::string &algorithm_name,
+    const std::string &metric_name
+);
+```
+
+#### `GetAllEvaluationTypes()`
+
+获取当前所有评估类型列表。
+
+```cpp
+static std::vector<std::string> GetAllEvaluationTypes();
+```
+
+---
+
+## 详细统计导出
+
+#### `ExportDetailedStatsToCSV()`
+
+输出详细统计结果到 CSV 文件。
+
+```cpp
+static bool ExportDetailedStatsToCSV(
+    const std::string &eval_type,
+    const std::string &algorithm_name,
+    const std::filesystem::path &output_path
+);
+```
+
+存在数值型 `EvalCommit` 时表头为：
+
+```text
+Metric,EvalCommit,EvalPrefix,EvalValue,Count,Mean,Median,Min,Max,StdDev
+```
+
+否则表头为：
+
+```text
+Metric,EvalCommit,Count,Mean,Median,Min,Max,StdDev
+```
+
+---
+
+## 打印与报告
+
+#### `PrintEvaluationReport()`
+
+打印指定类型的评估报告。
+
+```cpp
+static void PrintEvaluationReport(const std::string &eval_type);
+```
+
+#### `PrintAlgorithmComparison()`
+
+打印算法对比报告。
+
+```cpp
+static void PrintAlgorithmComparison(const std::string &eval_type, const std::string &metric_name);
+```
+
+#### `PrintAllEvaluationReports()`
+
+打印所有类型的评估报告。
+
+```cpp
+static void PrintAllEvaluationReports();
+```
+
+#### `PrintLatestEvaluationResults()`
+
+打印指定算法在特定评估类型中的最新评估结果。
+
+```cpp
+static void PrintLatestEvaluationResults(
+    const std::string &eval_type,
+    const std::string &algorithm_name,
+    const std::string &note_types = ""    // 要显示的note类型，用"|"分隔
+);
+```
+
+**备注类型参数**:
+- `""` (默认): 不显示备注
+- `"type1|type2"`: 显示指定类型备注
+
+---
+
+## 清空函数
+
+#### `ClearEvaluator()`
+
+清空指定类型的评估内容。
+
+```cpp
+static bool ClearEvaluator(const std::string &eval_type);
+```
+
+#### `ClearAlgorithm()`
+
+清空指定算法的评估内容。
+
+```cpp
+static bool ClearAlgorithm(const std::string &eval_type, const std::string &algorithm_name);
+```
+
+#### `ClearAllEvaluators()`
+
+清空所有评估内容。
+
+```cpp
+static void ClearAllEvaluators();
+```
 
 ---
 

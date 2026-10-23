@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Gendarmenmarkt",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 742,
+  "registered_views": 658,
+  "points": 104069,
+  "accuracy": {},
+  "timing": {
+    "backend": 473.83699687500484,
+    "frontend": 7.5217900411225855,
+    "pipeline": 484.73489029100165
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.8790651288973274,
+    "median": 0.6675282605885371,
+    "observations": 416845,
+    "points": 104069,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 2
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Gendarmenmarkt/openmvg_incremental/points.ply",
+    "g2o": "public/onedsfm/Gendarmenmarkt/openmvg_incremental/poses.g2o",
+    "metadata": "public/onedsfm/Gendarmenmarkt/openmvg_incremental/result.json",
+    "reprojection": "public/onedsfm/Gendarmenmarkt/openmvg_incremental/reprojection.json"
+  }
+}

@@ -1,7 +1,7 @@
 # OpenCV Data Converter
 (opencv-converter)=
 
-The OpenCV data converter provides data type conversion between PoSDK and OpenCV, supporting bidirectional conversion of feature points, descriptors, matches, and camera models.
+The OpenCV data converter provides data type conversion between PoMVG and OpenCV, supporting bidirectional conversion of feature points, descriptors, matches, and camera models.
 
 ---
 
@@ -30,7 +30,7 @@ Level 3: FeaturesInfo ↔ CV Features (multi-image batch conversion)
 ### `CVKeyPoints2FeaturePoints`
 (cv-keypoints-to-featurepoints)=
 
-Batch convert OpenCV keypoints to PoSDK FeaturePoints
+Batch convert OpenCV keypoints to PoMVG FeaturePoints
 
 **Function Signature**:
 ```cpp
@@ -43,7 +43,7 @@ static bool CVKeyPoints2FeaturePoints(
 | Parameter        | Type                               | Description                                 |
 | ---------------- | ---------------------------------- | ------------------------------------------- |
 | `keypoints`      | `const std::vector<cv::KeyPoint>&` | [Input] OpenCV keypoint collection          |
-| `feature_points` | `FeaturePoints&`                   | [Output] PoSDK feature points (SOA storage) |
+| `feature_points` | `FeaturePoints&`                   | [Output] PoMVG feature points (SOA storage) |
 
 **Return Value**: `bool` - Whether conversion succeeded
 
@@ -73,7 +73,7 @@ if (success) {
 ### `FeaturePoints2CVKeyPoints`
 (featurepoints-to-cv-keypoints)=
 
-Batch convert PoSDK FeaturePoints to OpenCV keypoints
+Batch convert PoMVG FeaturePoints to OpenCV keypoints
 
 **Function Signature**:
 ```cpp
@@ -85,7 +85,7 @@ static bool FeaturePoints2CVKeyPoints(
 **Parameter Description**:
 | Parameter        | Type                         | Description                                |
 | ---------------- | ---------------------------- | ------------------------------------------ |
-| `feature_points` | `const FeaturePoints&`       | [Input] PoSDK feature points (SOA storage) |
+| `feature_points` | `const FeaturePoints&`       | [Input] PoMVG feature points (SOA storage) |
 | `keypoints`      | `std::vector<cv::KeyPoint>&` | [Output] OpenCV keypoint collection        |
 
 **Return Value**: `bool` - Whether conversion succeeded
@@ -111,36 +111,36 @@ matcher->match(descriptors1, descriptors2, matches);
 ## Descriptor Conversion
 (opencv-descriptor-conversion)=
 
-### `CVDescriptors2DescsSOA`
-(cv-descriptors-to-descs-soa)=
+### `CVDescriptors2Descriptors`
+(cv-descriptors-to-descriptors)=
 
-Batch convert OpenCV descriptors to DescriptorsSOA
+Batch convert OpenCV descriptors to PoMVG Descriptors
 
 **Function Signature**:
 ```cpp
-static bool CVDescriptors2DescsSOA(
+static bool CVDescriptors2Descriptors(
     const cv::Mat &descriptors_cv,
-    DescsSOA &descriptors_soa_out,
+    Descriptors &descriptors_out,
     const std::string &detector_type = "SIFT");
 ```
 
 **Parameter Description**:
-| Parameter             | Type                 | Description                            |
-| --------------------- | -------------------- | -------------------------------------- |
-| `descriptors_cv`      | `const cv::Mat&`     | [Input] OpenCV descriptor matrix (N×D) |
-| `descriptors_soa_out` | `DescsSOA&`          | [Output] DescriptorsSOA (SOA format)   |
-| `detector_type`       | `const std::string&` | [Input] Detector type (SIFT/ORB/etc.)  |
+| Parameter          | Type                 | Description                            |
+| ------------------ | -------------------- | -------------------------------------- |
+| `descriptors_cv`   | `const cv::Mat&`     | [Input] OpenCV descriptor matrix (N×D) |
+| `descriptors_out`  | `Descriptors&`       | [Output] PoMVG Descriptors             |
+| `detector_type`    | `const std::string&` | [Input] Detector type (SIFT/ORB/etc.)  |
 
 **Return Value**: `bool` - Whether conversion succeeded
 
 **Supported Descriptor Types**:
-| Detector | OpenCV Type | Dimension | PoSDK Storage |
+| Detector | OpenCV Type | Dimension | PoMVG Storage |
 | -------- | ----------- | --------- | ------------- |
-| SIFT     | `CV_32F`    | 128       | `float` SOA   |
-| SURF     | `CV_32F`    | 64/128    | `float` SOA   |
-| ORB      | `CV_8U`     | 32        | `uint8_t` SOA |
-| BRISK    | `CV_8U`     | 64        | `uint8_t` SOA |
-| AKAZE    | `CV_8U`     | 61        | `uint8_t` SOA |
+| SIFT     | `CV_32F`    | 128       | `float`       |
+| SURF     | `CV_32F`    | 64/128    | `float`       |
+| ORB      | `CV_8U`     | 32        | `float`       |
+| BRISK    | `CV_8U`     | 64        | `float`       |
+| AKAZE    | `CV_8U`     | 61        | `float`       |
 
 **Usage Example**:
 ```cpp
@@ -149,30 +149,27 @@ cv::Ptr<cv::SIFT> detector = cv::SIFT::create();
 cv::Mat descriptors_cv;
 detector->compute(image, keypoints, descriptors_cv);
 
-// Convert to PoSDK SOA format
-types::DescsSOA descriptors_soa;
-bool success = OpenCVConverter::CVDescriptors2DescsSOA(
-    descriptors_cv, descriptors_soa, "SIFT");
+// Convert to PoSDK format
+types::Descriptors descriptors;
+bool success = OpenCVConverter::CVDescriptors2Descriptors(
+    descriptors_cv, descriptors, "SIFT");
 
 if (success) {
-    // SOA format access
-    size_t num = descriptors_soa.GetSize();
-    size_t dim = descriptors_soa.GetDim();
-    const float* data = descriptors_soa.GetDataPtr();
-    
-    // data[i * dim + j] accesses j-th dimension of i-th descriptor
+    size_t num = descriptors.size();
+    size_t dim = descriptors.dim();
+    const float* data = descriptors.data();
 }
 ```
 
-### `DescsSOA2CVDescriptors`
-(descs-soa-to-cv-descriptors)=
+### `Descriptors2CVDescriptors`
+(descriptors-to-cv-descriptors)=
 
-Batch convert DescriptorsSOA to OpenCV descriptors
+Batch convert PoMVG Descriptors to OpenCV descriptors
 
 **Function Signature**:
 ```cpp
-static bool DescsSOA2CVDescriptors(
-    const DescsSOA &descriptors_soa,
+static bool Descriptors2CVDescriptors(
+    const Descriptors &descriptors,
     cv::Mat &descriptors_cv_out,
     const std::string &detector_type = "SIFT");
 ```
@@ -180,7 +177,7 @@ static bool DescsSOA2CVDescriptors(
 **Parameter Description**:
 | Parameter            | Type                 | Description                         |
 | -------------------- | -------------------- | ----------------------------------- |
-| `descriptors_soa`    | `const DescsSOA&`    | [Input] DescriptorsSOA (SOA format) |
+| `descriptors`        | `const Descriptors&` | [Input] PoMVG Descriptors           |
 | `descriptors_cv_out` | `cv::Mat&`           | [Output] OpenCV descriptor matrix   |
 | `detector_type`      | `const std::string&` | [Input] Detector type               |
 
@@ -188,27 +185,19 @@ static bool DescsSOA2CVDescriptors(
 
 **Usage Example**:
 ```cpp
-// PoSDK SOA descriptors
-types::DescsSOA descriptors_soa = GetDescriptorsSOA();
+// PoSDK descriptors
+types::Descriptors descriptors = GetDescriptors();
 
 // Convert to OpenCV format (for matching)
 cv::Mat descriptors_cv;
-bool success = OpenCVConverter::DescsSOA2CVDescriptors(
-    descriptors_soa, descriptors_cv, "SIFT");
+bool success = OpenCVConverter::Descriptors2CVDescriptors(
+    descriptors, descriptors_cv, "SIFT");
 
 // OpenCV matching
 cv::BFMatcher matcher(cv::NORM_L2);
 std::vector<cv::DMatch> matches;
 matcher.match(descriptors_cv, descriptors_other, matches);
 ```
-
-### Legacy AOS Descriptor Conversion (Backward Compatibility)
-
-#### `CVDescriptors2Descs`
-Batch convert OpenCV descriptors to PoSDK Descs (AOS format)
-
-#### `Descs2CVDescriptors`
-Batch convert PoSDK Descs to OpenCV descriptors (AOS format)
 
 ---
 
@@ -261,7 +250,7 @@ static bool CVFeatures2ImageFeatureInfoWithDesc(
     const std::vector<cv::KeyPoint> &keypoints,
     const cv::Mat &descriptors_cv,
     ImageFeatureInfo &image_features,
-    Descs &descriptors_out,
+    Descriptors &descriptors_out,
     const std::string &image_path = "",
     const std::string &detector_type = "SIFT");
 ```
@@ -276,7 +265,7 @@ detector->detectAndCompute(image, cv::noArray(), keypoints, descriptors);
 
 // 2. Convert to PoSDK format
 types::ImageFeatureInfo image_features;
-types::Descs descs;
+types::Descriptors descs;
 OpenCVConverter::CVFeatures2ImageFeatureInfoWithDesc(
     keypoints, descriptors, image_features, descs,
     "image001.jpg", "SIFT");
@@ -306,7 +295,7 @@ Batch convert ImageFeatureInfo to OpenCV features (with descriptors)
 ```cpp
 static bool ImageFeatureInfo2CVFeaturesWithDesc(
     const ImageFeatureInfo &image_features,
-    const Descs &descriptors,
+    const Descriptors &descriptors,
     std::vector<cv::KeyPoint> &keypoints,
     cv::Mat &descriptors_out,
     const std::string &detector_type = "SIFT");
@@ -342,7 +331,7 @@ static bool CVFeatures2FeaturesInfoWithDesc(
     const std::vector<cv::KeyPoint> &keypoints,
     const cv::Mat &descriptors,
     FeaturesInfoPtr &features_info_ptr,
-    Descs &descriptors_out,
+    Descriptors &descriptors_out,
     const std::string &image_path,
     const std::string &detector_type = "SIFT");
 ```
@@ -351,19 +340,19 @@ static bool CVFeatures2FeaturesInfoWithDesc(
 ```cpp
 // Process multiple images
 types::FeaturesInfoPtr features_info = std::make_shared<types::FeaturesInfo>();
-types::Descs all_descriptors;
+types::Descriptors all_descriptors;
 
 for (const auto& img_path : image_paths) {
     // Load image
     cv::Mat image = cv::imread(img_path);
-    
+
     // Extract features
     std::vector<cv::KeyPoint> keypoints;
     cv::Mat descriptors;
     detector->detectAndCompute(image, cv::noArray(), keypoints, descriptors);
-    
+
     // Add to FeaturesInfo
-    types::Descs descs;
+    types::Descriptors descs;
     OpenCVConverter::CVFeatures2FeaturesInfoWithDesc(
         keypoints, descriptors, features_info, descs,
         img_path, "SIFT");
@@ -380,7 +369,7 @@ for (const auto& img_path : image_paths) {
 
 ### `CVDMatch2IdMatch`
 
-Convert OpenCV DMatch to PoSDK IdMatch (single match)
+Convert OpenCV DMatch to PoMVG IdMatch (single match)
 
 **Function Signature**:
 ```cpp
@@ -390,7 +379,7 @@ static void CVDMatch2IdMatch(const cv::DMatch &cv_match, IdMatch &match);
 ### `CVDMatch2IdMatches`
 (cv-dmatch-to-id-matches)=
 
-Convert OpenCV DMatch to PoSDK IdMatches (batch conversion)
+Convert OpenCV DMatch to PoMVG IdMatches (batch conversion)
 
 **Function Signature**:
 ```cpp
@@ -412,7 +401,7 @@ OpenCVConverter::CVDMatch2IdMatches(cv_matches, id_matches);
 
 ### `CVDMatch2Matches`
 
-Convert OpenCV DMatch to PoSDK Matches (with view pair)
+Convert OpenCV DMatch to PoMVG Matches (with view pair)
 
 **Function Signature**:
 ```cpp
@@ -424,12 +413,12 @@ static bool CVDMatch2Matches(const std::vector<cv::DMatch> &cv_matches,
 
 ### `IdMatch2CVDMatch`
 
-Convert PoSDK IdMatch to OpenCV DMatch (single match)
+Convert PoMVG IdMatch to OpenCV DMatch (single match)
 
 ### `IdMatches2CVPoints`
 (id-matches-to-cv-points)=
 
-Convert PoSDK IdMatches to OpenCV point pairs
+Convert PoMVG IdMatches to OpenCV point pairs
 
 **Function Signature**:
 ```cpp
@@ -468,7 +457,7 @@ cv::Mat E = cv::findEssentialMat(points1, points2, focal_length,
 
 ### `MatchesDataPtr2CVPoints`
 
-Convert PoSDK match DataPtr to OpenCV point pairs
+Convert PoMVG match DataPtr to OpenCV point pairs
 
 **Function Signature**:
 ```cpp
@@ -489,7 +478,7 @@ static bool MatchesDataPtr2CVPoints(
 ### `CVCalibration2CameraModel`
 (cv-calibration-to-camera-model)=
 
-Convert OpenCV camera calibration to PoSDK CameraModel
+Convert OpenCV camera calibration to PoMVG CameraModel
 
 **Function Signature**:
 ```cpp
@@ -507,7 +496,7 @@ static bool CVCalibration2CameraModel(
 | `camera_matrix`   | `const cv::Mat&`  | [Input] OpenCV intrinsic matrix (3×3)  |
 | `dist_coeffs`     | `const cv::Mat&`  | [Input] OpenCV distortion coefficients |
 | `image_size`      | `const cv::Size&` | [Input] Image size                     |
-| `camera_model`    | `CameraModel&`    | [Output] PoSDK camera model            |
+| `camera_model`    | `CameraModel&`    | [Output] PoMVG camera model            |
 | `distortion_type` | `DistortionType`  | [Input] Distortion type                |
 
 **Usage Example**:
@@ -531,7 +520,7 @@ Vector2d normalized = camera_model.PixelToNormalized(pixel);
 ### `CameraModel2CVCalibration`
 (camera-model-to-cv-calibration)=
 
-Convert PoSDK CameraModel to OpenCV camera calibration
+Convert PoMVG CameraModel to OpenCV camera calibration
 
 **Function Signature**:
 ```cpp
@@ -554,8 +543,6 @@ OpenCVConverter::CameraModel2CVCalibration(
 cv::undistort(image_distorted, image_undistorted, 
               camera_matrix, dist_coeffs);
 ```
-
----
 
 ---
 
@@ -591,7 +578,7 @@ if (!camera) {
 
 ## Complete Workflow Example
 
-### OpenCV Feature Extraction + PoSDK Processing
+### OpenCV Feature Extraction + PoMVG Processing
 ```cpp
 #include <opencv2/features2d.hpp>
 #include "converter_opencv.hpp"
@@ -612,7 +599,7 @@ LOG_INFO_ZH << "Detected " << keypoints.size() << " feature points";
 
 // 2. Convert to PoSDK format
 types::ImageFeatureInfo image_features;
-types::Descs descs;
+types::Descriptors descs;
 OpenCVConverter::CVFeatures2ImageFeatureInfoWithDesc(
     keypoints, descriptors, image_features, descs,
     "image.jpg", "SIFT");

@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Vienna_Cathedral",
+  "arm": "openmvg_global",
+  "label": "OpenMVG Global",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 918,
+  "registered_views": 725,
+  "points": 101292,
+  "accuracy": {},
+  "timing": {
+    "backend": 478.4720684578642,
+    "frontend": 71.47765266685747,
+    "pipeline": 558.7391027086414
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.9419549240265598,
+    "median": 0.7254130006291624,
+    "observations": 1024846,
+    "points": 101292,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Vienna_Cathedral/openmvg_global/points.ply",
+    "g2o": "public/onedsfm/Vienna_Cathedral/openmvg_global/poses.g2o",
+    "metadata": "public/onedsfm/Vienna_Cathedral/openmvg_global/result.json",
+    "reprojection": "public/onedsfm/Vienna_Cathedral/openmvg_global/reprojection.json"
+  }
+}

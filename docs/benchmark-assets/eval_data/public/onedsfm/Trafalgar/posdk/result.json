@@ -1,0 +1,34 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Trafalgar",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 5433,
+  "registered_views": 5412,
+  "points": 415902,
+  "accuracy": {},
+  "timing": {
+    "backend": 990.442,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.6663470811132173,
+    "median": 0.5122480104411935,
+    "observations": 2207811,
+    "points": 415902,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Trafalgar/posdk/points.ply",
+    "g2o": "public/onedsfm/Trafalgar/posdk/poses.g2o",
+    "metadata": "public/onedsfm/Trafalgar/posdk/result.json",
+    "reprojection": "public/onedsfm/Trafalgar/posdk/reprojection.json"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Vienna_Cathedral",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 918,
+  "registered_views": 888,
+  "points": 177446,
+  "accuracy": {},
+  "timing": {
+    "backend": 386.91961008287035,
+    "frontend": 32.60377266583964,
+    "pipeline": 423.42675208183937
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.9527679972777847,
+    "median": 0.6491033356327899,
+    "observations": 1525997,
+    "points": 177446,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Vienna_Cathedral/glomap/points.ply",
+    "g2o": "public/onedsfm/Vienna_Cathedral/glomap/poses.g2o",
+    "metadata": "public/onedsfm/Vienna_Cathedral/glomap/result.json",
+    "reprojection": "public/onedsfm/Vienna_Cathedral/glomap/reprojection.json"
+  }
+}

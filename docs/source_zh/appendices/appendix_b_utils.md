@@ -182,3 +182,147 @@
 
 - **String2IndexT (已废弃)**: 此函数已从 `types.hpp` 中移除，相关功能由 `MethodPreset::GetOptionAsIndexT()` 替代。
 
+## 工厂高级函数
+
+以下函数在 `FactoryBehavior`、`FactoryMethod`、`FactoryData` 三个工厂类中均可用（除特别说明外），定义在 `<po_core/factory.hpp>` 中。
+
+### ManagePlugins
+- 功能: 手动管理插件目录，支持动态重新指定插件加载路径。
+- 签名: `static void ManagePlugins(const std::string &plugin_path, bool append = false)`
+- 参数:
+  - `plugin_path`: const std::string& - 新的插件目录路径。
+  - `append`: bool - 为 `true` 时追加到现有插件映射，不清空已加载的插件；为 `false` 时清空现有映射后重新加载。默认为 `false`。
+- 返回值: 无。
+- 适用类: `FactoryBehavior`、`FactoryMethod`、`FactoryData`。
+- 使用示例:
+  ```cpp
+  // 清空并重新加载指定目录的插件
+  FactoryMethod::ManagePlugins("/path/to/new/plugins");
+
+  // 追加加载额外的插件目录（保留已有插件）
+  FactoryMethod::ManagePlugins("/path/to/extra/plugins", true);
+
+  // 对数据工厂和行为工厂同样适用
+  FactoryData::ManagePlugins("/path/to/data/plugins");
+  FactoryBehavior::ManagePlugins("/path/to/behavior/plugins", true);
+  ```
+
+### RemovePlugins
+- 功能: 移除指定路径下已加载的插件。
+- 签名: `static int RemovePlugins(const std::string &plugin_path)`
+- 参数:
+  - `plugin_path`: const std::string& - 要移除的插件目录路径。
+- 返回值: `int` - 成功移除的插件数量。
+- 适用类: `FactoryBehavior`、`FactoryMethod`、`FactoryData`。
+- 使用示例:
+  ```cpp
+  int removed_count = FactoryMethod::RemovePlugins("/path/to/old/plugins");
+  // removed_count 为实际移除的插件数量
+  ```
+
+### GetRegisteredPaths
+- 功能: 获取当前已注册的所有插件路径列表。
+- 签名: `static std::vector<std::string> GetRegisteredPaths()`
+- 参数: 无。
+- 返回值: `std::vector<std::string>` - 已注册的插件目录路径列表。
+- 适用类: `FactoryBehavior`、`FactoryMethod`、`FactoryData`。
+- 使用示例:
+  ```cpp
+  auto paths = FactoryMethod::GetRegisteredPaths();
+  for (const auto &path : paths) {
+      std::cout << "Registered plugin path: " << path << std::endl;
+  }
+  ```
+
+### FactoryMethod::Create\<TSample\>（模板化创建接口）
+- 功能: 基于模板参数创建方法实例，用于需要指定样本数据类型的方法（如 `RANSACEstimator`、`GNCIRLSEstimator` 等）。
+- 签名: `template <typename TSample> static Interface::MethodPtr Create(const std::string &type)`
+- 模板参数:
+  - `TSample`: 样本数据类型（如 `std::vector<Eigen::Vector2d>`）。
+- 参数:
+  - `type`: const std::string& - 方法类型名称。
+- 返回值: `Interface::MethodPtr` - 创建的方法指针，失败返回 `nullptr`。
+- 适用类: 仅 `FactoryMethod`。
+- 注意: 使用此接口需要包含 `factory_template_impl.hpp` 头文件。
+- 使用示例:
+  ```cpp
+  #include <po_core/factory_template_impl.hpp>
+
+  // 创建带模板参数的 RANSAC 估计器
+  auto ransac = FactoryMethod::Create<std::vector<Eigen::Vector2d>>("ransac_estimator");
+  if (ransac) {
+      ransac->SetRequiredData(input_data);
+      auto result = ransac->Build();
+  }
+  ```
+
+## 全局工具函数
+
+以下是 `PoSDK` 命名空间下的全局工具函数。
+
+### DisplayAllPluginVersions
+- 功能: 显示所有已注册插件的版本信息。
+- 头文件: `<po_core/factory.hpp>`
+- 签名: `void PoSDK::DisplayAllPluginVersions()`
+- 参数: 无。
+- 返回值: 无。
+- 使用示例:
+  ```cpp
+  #include <po_core/factory.hpp>
+
+  int main() {
+      // 加载插件
+      FactoryMethod factory("/path/to/plugins");
+
+      // 显示所有插件版本信息
+      PoSDK::DisplayAllPluginVersions();
+      return 0;
+  }
+  ```
+
+### DisplayCopyrightSummary
+- 功能: 显示所有已收集的版权信息列表和依赖关系图。适合在程序结束时调用，汇总展示运行过程中使用的所有组件的版权信息。
+- 头文件: `<po_core/method_utils.hpp>`
+- 签名: `void PoSDK::Interface::DisplayCopyrightSummary()`
+- 参数: 无。
+- 返回值: 无。
+- 使用示例:
+  ```cpp
+  #include <po_core/method_utils.hpp>
+
+  int main() {
+      // ... 执行你的算法 ...
+
+      // 程序结束前显示版权信息汇总
+      PoSDK::Interface::DisplayCopyrightSummary();
+      return 0;
+  }
+  ```
+
+### CreateAndConfigureSubMethod
+- 功能: 创建并配置子方法，自动从父方法继承参数配置和 Profiler 标签。这是一个通用工具函数，简化了在复合方法中创建和配置子方法的流程。
+- 头文件: `<po_core/method_utils.hpp>`
+- 签名: `Interface::MethodPresetProfilerPtr PoSDK::Interface::CreateAndConfigureSubMethod(const std::string &method_type, Interface::MethodPresetProfiler *parent_method = nullptr)`
+- 参数:
+  - `method_type`: const std::string& - 要创建的方法类型名称。
+  - `parent_method`: Interface::MethodPresetProfiler* - 父方法实例指针，用于参数和 Profiler 标签继承。默认为 `nullptr`（不继承）。
+- 返回值: `Interface::MethodPresetProfilerPtr` - 创建并配置好的方法实例。如果创建失败或类型转换失败，返回 `nullptr`。
+- 工作流程:
+  1. 通过 `FactoryMethod::Create()` 创建指定类型的方法实例。
+  2. 将实例转换为 `MethodPresetProfiler` 类型。
+  3. 如果提供了父方法，自动继承其参数配置（通过 `PassingMethodOptions`）和 Profiler 标签。
+- 使用示例:
+  ```cpp
+  #include <po_core/method_utils.hpp>
+
+  // 在某个父方法的 Build() 中创建子方法
+  auto sub_method = PoSDK::Interface::CreateAndConfigureSubMethod("method_LiGT", this);
+  if (sub_method) {
+      sub_method->SetRequiredData(tracks_data);
+      auto result = sub_method->Build();
+  }
+
+  // 不继承父方法参数的独立创建
+  auto standalone = PoSDK::Interface::CreateAndConfigureSubMethod("method_rotation_averaging");
+  ```
+

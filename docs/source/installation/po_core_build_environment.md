@@ -4,7 +4,7 @@ This document describes PoCore core library automated workflow compilation envir
 
 ## Overview
 
-po_core is PoSDK's core library, built and released through automated workflows on different platforms. This document lists:
+po_core is PoMVG's core library, built and released through automated workflows on different platforms. This document lists:
 
 - po_core supported build platforms
 - Build tool version requirements

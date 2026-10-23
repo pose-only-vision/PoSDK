@@ -1,10 +1,10 @@
-# PoSDK Accuracy Evaluation System
+# PoMVG Accuracy Evaluation System
 
-PoSDK provides a complete accuracy evaluation system for measuring the estimation accuracy of relative poses, global poses, and global translations. This chapter details the mathematical principles, implementation details, and usage methods of various evaluation methods.
+PoMVG provides a complete accuracy evaluation system for measuring the estimation accuracy of relative poses, global poses, and global translations. This chapter details the mathematical principles, implementation details, and usage methods of various evaluation methods.
 
 ## Evaluation System Overview
 
-PoSDK's accuracy evaluation system includes the following three main components:
+PoMVG's accuracy evaluation system includes the following three main components:
 
 ### 1. [Relative Pose Evaluation](relative_poses.md)
 - **Evaluation Object**: Relative pose $(R_{ij}, \mathbf{t}_{ij})$ between two camera views
@@ -38,7 +38,7 @@ All evaluations follow a unified process:
 ### Rotation Error Calculation
 For rotation matrices $R_{gt}$ (ground truth) and $R_{est}$ (estimated), rotation error is defined as:
 
-$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{gt}^T R_{est}) - 1}{2}\right) \times \frac{180°}{\pi}$$
+$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{gt}^T R_{est}) - 1}{2}\right) \times \frac{180^\circ}{\pi}$$
 
 ### Position Error Calculation
 For position vectors $\mathbf{p}_{gt}$ (ground truth) and $\mathbf{p}_{est}$ (estimated), position error is defined as:
@@ -46,7 +46,7 @@ For position vectors $\mathbf{p}_{gt}$ (ground truth) and $\mathbf{p}_{est}$ (es
 $$\text{Position Error} = ||\mathbf{p}_{gt} - \mathbf{p}_{est}||_2$$
 
 ### Similarity Transform Alignment
-To eliminate the effects of scale, rotation, and translation, PoSDK uses a 7-degree-of-freedom similarity transform for alignment:
+To eliminate the effects of scale, rotation, and translation, PoMVG uses a 7-degree-of-freedom similarity transform for alignment:
 
 $$\mathbf{p}_{aligned} = s \cdot R_{align} \cdot \mathbf{p}_{est} + \mathbf{t}_{align}$$
 
@@ -80,7 +80,7 @@ if (eval_result.is_successful) {
 ## Notes
 
 1. **Coordinate System Consistency**: Ensure ground truth and estimated values use the same coordinate system convention
-2. **Pose Format**: PoSDK defaults to `PoseFormat::RwTw` format, and format conversion is performed automatically before evaluation
+2. **Pose Format**: PoMVG defaults to `PoseFormat::RwTw` format, and format conversion is performed automatically before evaluation
 3. **Data Correspondence**: Evaluation automatically matches corresponding camera views, unmatched views will be ignored
 4. **Numerical Stability**: All calculations include numerical stability checks, outliers will be recorded and handled
 

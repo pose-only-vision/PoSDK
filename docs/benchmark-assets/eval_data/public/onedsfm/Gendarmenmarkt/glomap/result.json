@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Gendarmenmarkt",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 742,
+  "registered_views": 705,
+  "points": 48964,
+  "accuracy": {},
+  "timing": {
+    "backend": 113.74213262507692,
+    "frontend": 3.7792939161881804,
+    "pipeline": 118.07919887313619
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 1.1198254316184808,
+    "median": 0.6646578023686067,
+    "observations": 290596,
+    "points": 48964,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Gendarmenmarkt/glomap/points.ply",
+    "g2o": "public/onedsfm/Gendarmenmarkt/glomap/poses.g2o",
+    "metadata": "public/onedsfm/Gendarmenmarkt/glomap/result.json",
+    "reprojection": "public/onedsfm/Gendarmenmarkt/glomap/reprojection.json"
+  }
+}

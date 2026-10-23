@@ -30,7 +30,7 @@ For method plugins inheriting from `MethodPreset` or its derived classes (such a
     ```cpp
     // Declaration in plugin constructor
     required_package_["data_tracks"] = nullptr;
-    required_package_["data_camera_model"] = nullptr;
+    required_package_["data_camera_models"] = nullptr;
     
     // When calling
     auto data_package = std::make_shared<DataPackage>();
@@ -98,7 +98,7 @@ For method plugins inheriting from `MethodPreset` or its derived classes (such a
 
 ## Exception Handling
 
-- **Strategy**: PoSDK core library tends to use return values (`nullptr` or `false`) to indicate errors + cerr to display error messages, rather than throwing exceptions `throw()` that terminate the program, to avoid exception handling complexity across plugin boundaries.
+- **Strategy**: PoMVG core library tends to use return values (`nullptr` or `false`) to indicate errors + cerr to display error messages, rather than throwing exceptions `throw()` that terminate the program, to avoid exception handling complexity across plugin boundaries.
 - **Future**: Consider assigning log and error levels and IDs to Methods for easier user debugging
 - **Plugin Development Recommendations**:
   - Inside plugins, can use C++ standard exception handling (`try-catch`) to catch and handle internal errors.

@@ -1,0 +1,10 @@
+{
+  "status": "available",
+  "mean": 0.9061241256406312,
+  "median": 0.5419849761644756,
+  "observations": 617416,
+  "points": 86459,
+  "unit": "px",
+  "aggregation": "per_observation_euclidean",
+  "nonpositive_depth_observations": 0
+}

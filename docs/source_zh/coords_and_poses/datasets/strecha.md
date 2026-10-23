@@ -32,8 +32,8 @@ $$P_i = R^i_w (P_w - \mathbf{t}^i_w)$$
 
 这等效于使用增广矩阵 $[R^i_w | -R^i_w \mathbf{t}^i_w]$ 进行变换。
 
-因此，通过Strecha真值文件读取，将加载到PoSDK `RwTw` 格式。
+因此，通过Strecha真值文件读取，将加载到PoMVG `RwTw` 格式。
 
 ## 相对相机位姿
 
-与 posdk 的约定一致（见 [posdk.md](../conventions/posdk.md)），Strecha 数据集的相对位姿也是以 `RwTw` 格式存储的。
+与 PoMVG 的约定一致（见 [posdk.md](../conventions/posdk.md)），Strecha 数据集的相对位姿也是以 `RwTw` 格式存储的。

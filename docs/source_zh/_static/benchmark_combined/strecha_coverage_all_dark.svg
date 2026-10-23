@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 606" role="img">
+<title>Strecha / coverage / all measured configurations</title>
+<rect width="100%" height="100%" fill="#152735"/>
+<g fill="#d9e6f3" font-family="sans-serif" font-size="13">
+<rect x="20" y="12" width="9" height="9" fill="#2176e7"/>
+<text x="35.00" y="22.00" >PoMVG P3P + PA2 / batch LiGT (n=6)</text>
+<rect x="470" y="12" width="9" height="9" fill="#e19729"/>
+<text x="485.00" y="22.00" >GLOMAP (n=6)</text>
+<rect x="20" y="33" width="9" height="9" fill="#25a593"/>
+<text x="35.00" y="43.00" >OpenMVG Incremental (n=6)</text>
+<rect x="470" y="33" width="9" height="9" fill="#8663bd"/>
+<text x="485.00" y="43.00" >OpenMVG Global (n=6)</text>
+<rect x="20" y="54" width="9" height="9" fill="#af617d"/>
+<text x="35.00" y="64.00" >ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics (n=6)</text>
+<rect x="470" y="54" width="9" height="9" fill="#bd941c"/>
+<text x="485.00" y="64.00" >ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics (n=6)</text>
+<rect x="20" y="75" width="9" height="9" fill="#d36736"/>
+<text x="35.00" y="85.00" >ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics (n=6)</text>
+<rect x="470" y="75" width="9" height="9" fill="#2176e7"/>
+<text x="485.00" y="85.00" >ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics (n=6)</text>
+<rect x="20" y="96" width="9" height="9" fill="#e19729"/>
+<text x="35.00" y="106.00" >ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics (n=6)</text>
+<rect x="470" y="96" width="9" height="9" fill="#25a593"/>
+<text x="485.00" y="106.00" >PoMVG B affine + full graph / P3P ≥10 G3 · 2026-10-14 (n=6)</text>
+<path d="M200.00,141 V561" stroke="#344757"/>
+<text x="200.00" y="581.00" fill="#9daec1" text-anchor="middle">0</text>
+<path d="M367.50,141 V561" stroke="#344757"/>
+<text x="367.50" y="581.00" fill="#9daec1" text-anchor="middle">25</text>
+<path d="M535.00,141 V561" stroke="#344757"/>
+<text x="535.00" y="581.00" fill="#9daec1" text-anchor="middle">50</text>
+<path d="M702.50,141 V561" stroke="#344757"/>
+<text x="702.50" y="581.00" fill="#9daec1" text-anchor="middle">75</text>
+<path d="M870.00,141 V561" stroke="#344757"/>
+<text x="870.00" y="581.00" fill="#9daec1" text-anchor="middle">100</text>
+<text x="188.00" y="180.00" text-anchor="end" fill="#9daec1">Herz-Jesus-P8</text>
+<rect x="200" y="146.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Herz-Jesus-P8" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / Herz-Jesus-P8: 100%</title></rect>
+<rect x="200" y="152.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="Herz-Jesus-P8" data-value="100"><title>GLOMAP / Herz-Jesus-P8: 100%</title></rect>
+<rect x="200" y="158.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="Herz-Jesus-P8" data-value="100"><title>OpenMVG Incremental / Herz-Jesus-P8: 100%</title></rect>
+<rect x="200" y="164.00" width="670.00" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="Herz-Jesus-P8" data-value="100"><title>OpenMVG Global / Herz-Jesus-P8: 100%</title></rect>
+<rect x="200" y="170.00" width="670.00" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:glomap_fixed_images_20261014_a3" data-scene="Herz-Jesus-P8" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P8: 100%</title></rect>
+<rect x="200" y="176.00" width="670.00" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_incremental_fixed_images_20261014_a3" data-scene="Herz-Jesus-P8" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P8: 100%</title></rect>
+<rect x="200" y="182.00" width="670.00" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_global_fixed_images_20261014_a3" data-scene="Herz-Jesus-P8" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P8: 100%</title></rect>
+<rect x="200" y="188.00" width="670.00" height="4.5" fill="#2176e7" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_stellar_fixed_images_20261014_a3" data-scene="Herz-Jesus-P8" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P8: 100%</title></rect>
+<rect x="200" y="194.00" width="670.00" height="4.5" fill="#e19729" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:colmap_fixed_images_20261014_a3" data-scene="Herz-Jesus-P8" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P8: 100%</title></rect>
+<rect x="200" y="200.00" width="670.00" height="4.5" fill="#25a593" data-config="posdk_batch_affine_count10_20261014:posdk_batch_affine_count10_20261014" data-scene="Herz-Jesus-P8" data-value="100"><title>PoMVG B affine + full graph / P3P ≥10 G3 · 2026-10-14 / Herz-Jesus-P8: 100%</title></rect>
+<text x="188.00" y="250.00" text-anchor="end" fill="#9daec1">castle-P19</text>
+<rect x="200" y="216.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="castle-P19" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / castle-P19: 100%</title></rect>
+<rect x="200" y="222.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="castle-P19" data-value="100"><title>GLOMAP / castle-P19: 100%</title></rect>
+<rect x="200" y="228.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="castle-P19" data-value="100"><title>OpenMVG Incremental / castle-P19: 100%</title></rect>
+<rect x="200" y="234.00" width="670.00" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="castle-P19" data-value="100"><title>OpenMVG Global / castle-P19: 100%</title></rect>
+<rect x="200" y="240.00" width="670.00" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:glomap_fixed_images_20261014_a3" data-scene="castle-P19" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P19: 100%</title></rect>
+<rect x="200" y="246.00" width="670.00" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_incremental_fixed_images_20261014_a3" data-scene="castle-P19" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P19: 100%</title></rect>
+<rect x="200" y="252.00" width="670.00" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_global_fixed_images_20261014_a3" data-scene="castle-P19" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P19: 100%</title></rect>
+<rect x="200" y="258.00" width="670.00" height="4.5" fill="#2176e7" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_stellar_fixed_images_20261014_a3" data-scene="castle-P19" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P19: 100%</title></rect>
+<rect x="200" y="264.00" width="670.00" height="4.5" fill="#e19729" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:colmap_fixed_images_20261014_a3" data-scene="castle-P19" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P19: 100%</title></rect>
+<rect x="200" y="270.00" width="670.00" height="4.5" fill="#25a593" data-config="posdk_batch_affine_count10_20261014:posdk_batch_affine_count10_20261014" data-scene="castle-P19" data-value="100"><title>PoMVG B affine + full graph / P3P ≥10 G3 · 2026-10-14 / castle-P19: 100%</title></rect>
+<text x="188.00" y="320.00" text-anchor="end" fill="#9daec1">castle-P30</text>
+<rect x="200" y="286.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="castle-P30" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / castle-P30: 100%</title></rect>
+<rect x="200" y="292.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="castle-P30" data-value="100"><title>GLOMAP / castle-P30: 100%</title></rect>
+<rect x="200" y="298.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="castle-P30" data-value="100"><title>OpenMVG Incremental / castle-P30: 100%</title></rect>
+<rect x="200" y="304.00" width="670.00" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="castle-P30" data-value="100"><title>OpenMVG Global / castle-P30: 100%</title></rect>
+<rect x="200" y="310.00" width="670.00" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:glomap_fixed_images_20261014_a3" data-scene="castle-P30" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P30: 100%</title></rect>
+<rect x="200" y="316.00" width="670.00" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_incremental_fixed_images_20261014_a3" data-scene="castle-P30" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P30: 100%</title></rect>
+<rect x="200" y="322.00" width="670.00" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_global_fixed_images_20261014_a3" data-scene="castle-P30" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P30: 100%</title></rect>
+<rect x="200" y="328.00" width="670.00" height="4.5" fill="#2176e7" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_stellar_fixed_images_20261014_a3" data-scene="castle-P30" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P30: 100%</title></rect>
+<rect x="200" y="334.00" width="670.00" height="4.5" fill="#e19729" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:colmap_fixed_images_20261014_a3" data-scene="castle-P30" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / castle-P30: 100%</title></rect>
+<rect x="200" y="340.00" width="670.00" height="4.5" fill="#25a593" data-config="posdk_batch_affine_count10_20261014:posdk_batch_affine_count10_20261014" data-scene="castle-P30" data-value="100"><title>PoMVG B affine + full graph / P3P ≥10 G3 · 2026-10-14 / castle-P30: 100%</title></rect>
+<text x="188.00" y="390.00" text-anchor="end" fill="#9daec1">entry-P10</text>
+<rect x="200" y="356.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="entry-P10" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / entry-P10: 100%</title></rect>
+<rect x="200" y="362.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="entry-P10" data-value="100"><title>GLOMAP / entry-P10: 100%</title></rect>
+<rect x="200" y="368.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="entry-P10" data-value="100"><title>OpenMVG Incremental / entry-P10: 100%</title></rect>
+<rect x="200" y="374.00" width="670.00" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="entry-P10" data-value="100"><title>OpenMVG Global / entry-P10: 100%</title></rect>
+<rect x="200" y="380.00" width="670.00" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:glomap_fixed_images_20261014_a3" data-scene="entry-P10" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / entry-P10: 100%</title></rect>
+<rect x="200" y="386.00" width="670.00" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_incremental_fixed_images_20261014_a3" data-scene="entry-P10" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / entry-P10: 100%</title></rect>
+<rect x="200" y="392.00" width="670.00" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_global_fixed_images_20261014_a3" data-scene="entry-P10" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / entry-P10: 100%</title></rect>
+<rect x="200" y="398.00" width="670.00" height="4.5" fill="#2176e7" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_stellar_fixed_images_20261014_a3" data-scene="entry-P10" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / entry-P10: 100%</title></rect>
+<rect x="200" y="404.00" width="670.00" height="4.5" fill="#e19729" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:colmap_fixed_images_20261014_a3" data-scene="entry-P10" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / entry-P10: 100%</title></rect>
+<rect x="200" y="410.00" width="670.00" height="4.5" fill="#25a593" data-config="posdk_batch_affine_count10_20261014:posdk_batch_affine_count10_20261014" data-scene="entry-P10" data-value="100"><title>PoMVG B affine + full graph / P3P ≥10 G3 · 2026-10-14 / entry-P10: 100%</title></rect>
+<text x="188.00" y="460.00" text-anchor="end" fill="#9daec1">fountain-P11</text>
+<rect x="200" y="426.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="fountain-P11" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / fountain-P11: 100%</title></rect>
+<rect x="200" y="432.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="fountain-P11" data-value="100"><title>GLOMAP / fountain-P11: 100%</title></rect>
+<rect x="200" y="438.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="fountain-P11" data-value="100"><title>OpenMVG Incremental / fountain-P11: 100%</title></rect>
+<rect x="200" y="444.00" width="670.00" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="fountain-P11" data-value="100"><title>OpenMVG Global / fountain-P11: 100%</title></rect>
+<rect x="200" y="450.00" width="670.00" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:glomap_fixed_images_20261014_a3" data-scene="fountain-P11" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / fountain-P11: 100%</title></rect>
+<rect x="200" y="456.00" width="670.00" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_incremental_fixed_images_20261014_a3" data-scene="fountain-P11" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / fountain-P11: 100%</title></rect>
+<rect x="200" y="462.00" width="670.00" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_global_fixed_images_20261014_a3" data-scene="fountain-P11" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / fountain-P11: 100%</title></rect>
+<rect x="200" y="468.00" width="670.00" height="4.5" fill="#2176e7" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_stellar_fixed_images_20261014_a3" data-scene="fountain-P11" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / fountain-P11: 100%</title></rect>
+<rect x="200" y="474.00" width="670.00" height="4.5" fill="#e19729" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:colmap_fixed_images_20261014_a3" data-scene="fountain-P11" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / fountain-P11: 100%</title></rect>
+<rect x="200" y="480.00" width="670.00" height="4.5" fill="#25a593" data-config="posdk_batch_affine_count10_20261014:posdk_batch_affine_count10_20261014" data-scene="fountain-P11" data-value="100"><title>PoMVG B affine + full graph / P3P ≥10 G3 · 2026-10-14 / fountain-P11: 100%</title></rect>
+<text x="188.00" y="530.00" text-anchor="end" fill="#9daec1">Herz-Jesus-P25</text>
+<rect x="200" y="496.00" width="670.00" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Herz-Jesus-P25" data-value="100"><title>PoMVG P3P + PA2 / batch LiGT / Herz-Jesus-P25: 100%</title></rect>
+<rect x="200" y="502.00" width="670.00" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="Herz-Jesus-P25" data-value="100"><title>GLOMAP / Herz-Jesus-P25: 100%</title></rect>
+<rect x="200" y="508.00" width="670.00" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="Herz-Jesus-P25" data-value="100"><title>OpenMVG Incremental / Herz-Jesus-P25: 100%</title></rect>
+<rect x="200" y="514.00" width="670.00" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="Herz-Jesus-P25" data-value="100"><title>OpenMVG Global / Herz-Jesus-P25: 100%</title></rect>
+<rect x="200" y="520.00" width="670.00" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:glomap_fixed_images_20261014_a3" data-scene="Herz-Jesus-P25" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P25: 100%</title></rect>
+<rect x="200" y="526.00" width="670.00" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_incremental_fixed_images_20261014_a3" data-scene="Herz-Jesus-P25" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P25: 100%</title></rect>
+<rect x="200" y="532.00" width="670.00" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_global_fixed_images_20261014_a3" data-scene="Herz-Jesus-P25" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P25: 100%</title></rect>
+<rect x="200" y="538.00" width="670.00" height="4.5" fill="#2176e7" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:openmvg_stellar_fixed_images_20261014_a3" data-scene="Herz-Jesus-P25" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P25: 100%</title></rect>
+<rect x="200" y="544.00" width="670.00" height="4.5" fill="#e19729" data-config="native-five-platform-fixed-intrinsics-ethstrecha-20261014-a3:colmap_fixed_images_20261014_a3" data-scene="Herz-Jesus-P25" data-value="100"><title>ETH3D／Strecha · 五个平台原图流程＋固定内参 / five fresh native image pipelines, fixed intrinsics / Herz-Jesus-P25: 100%</title></rect>
+<rect x="200" y="550.00" width="670.00" height="4.5" fill="#25a593" data-config="posdk_batch_affine_count10_20261014:posdk_batch_affine_count10_20261014" data-scene="Herz-Jesus-P25" data-value="100"><title>PoMVG B affine + full graph / P3P ≥10 G3 · 2026-10-14 / Herz-Jesus-P25: 100%</title></rect>
+<text x="535.00" y="600.00" fill="#9daec1" text-anchor="middle">Recovered / input views (%)</text>
+</g></svg>

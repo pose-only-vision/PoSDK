@@ -1,10 +1,10 @@
-# PoSDK 精度评估体系
+# PoMVG 精度评估体系
 
-PoSDK 提供了完整的精度评估体系，用于衡量相对位姿、全局位姿和全局位移的估计精度。本章节详细介绍各种评估方法的数学原理、实现细节和使用方式。
+PoMVG 提供了完整的精度评估体系，用于衡量相对位姿、全局位姿和全局位移的估计精度。本章节详细介绍各种评估方法的数学原理、实现细节和使用方式。
 
 ## 评估体系概览
 
-PoSDK 的精度评估体系包含以下三个主要组件：
+PoMVG 的精度评估体系包含以下三个主要组件：
 
 ### 1. [相对位姿评估](relative_poses.md)
 - **评估对象**: 两个相机视图之间的相对位姿 $(R_{ij}, \mathbf{t}_{ij})$
@@ -38,7 +38,7 @@ PoSDK 的精度评估体系包含以下三个主要组件：
 ### 旋转误差计算
 对于旋转矩阵 $R_{gt}$ (真值) 和 $R_{est}$ (估计值)，旋转误差定义为：
 
-$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{gt}^T R_{est}) - 1}{2}\right) \times \frac{180°}{\pi}$$
+$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{gt}^T R_{est}) - 1}{2}\right) \times \frac{180^\circ}{\pi}$$
 
 ### 位置误差计算  
 对于位置向量 $\mathbf{p}_{gt}$ (真值) 和 $\mathbf{p}_{est}$ (估计值)，位置误差定义为：
@@ -46,7 +46,7 @@ $$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{gt}^T R_{est}) - 1}
 $$\text{Position Error} = ||\mathbf{p}_{gt} - \mathbf{p}_{est}||_2$$
 
 ### 相似变换对齐
-为了消除尺度、旋转和平移的影响，PoSDK 使用7自由度相似变换进行对齐：
+为了消除尺度、旋转和平移的影响，PoMVG 使用7自由度相似变换进行对齐：
 
 $$\mathbf{p}_{aligned} = s \cdot R_{align} \cdot \mathbf{p}_{est} + \mathbf{t}_{align}$$
 
@@ -80,7 +80,7 @@ if (eval_result.is_successful) {
 ## 注意事项
 
 1. **坐标系一致性**: 确保真值和估计值使用相同的坐标系约定
-2. **位姿格式**: PoSDK 默认使用 `PoseFormat::RwTw` 格式，评估前会自动进行格式转换
+2. **位姿格式**: PoMVG 默认使用 `PoseFormat::RwTw` 格式，评估前会自动进行格式转换
 3. **数据对应关系**: 评估时会自动匹配对应的相机视图，未匹配的视图将被忽略
 4. **数值稳定性**: 所有计算都包含数值稳定性检查，异常值会被记录并处理
 

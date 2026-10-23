@@ -1,0 +1,22 @@
+{
+  "dataset": "eth3d",
+  "scene": "facade",
+  "platform": "PoMVG",
+  "points": 196117,
+  "ply_sha256": "250b2fa60c33948abf61a1d33b07675d8d5daf8f7c3da4893423a16e0f31cdaa",
+  "original_video_sha256": "7f2fed5e7106e9c183354455fbe01d2c834d3afad0691d603eb7b6d87780d1be",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 707,
+    "fps": 30.0,
+    "duration_seconds": 23.566667
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 707,
+    "fps": 30.0,
+    "duration_seconds": 23.566667
+  }
+}

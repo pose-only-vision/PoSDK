@@ -1,6 +1,6 @@
 # 使用预编译的 po_core_lib
 
-本章节将介绍如何在项目中导入和使用预编译的PoSDK po_core_lib 库。
+本章节将介绍如何在项目中导入和使用预编译的PoMVG po_core_lib 库。
 
 ## 核心库结构
 
@@ -13,16 +13,51 @@ po_core_lib/
 ├── include/                  # 头文件目录
 │   ├── po_core.hpp          # 主入口头文件
 │   └── po_core/             # 核心库头文件
-│       ├── version.hpp      # 版本信息
-│       ├── interfaces.hpp   # 核心接口定义
-│       ├── types.hpp        # 核心类型定义
-│       ├── factory.hpp      # 工厂类接口
-│       ├── pb_dataio.hpp    # Protocol Buffer数据IO
-│       ├── evaluator.hpp    # 评估系统
-│       ├── method_utils.hpp # 方法工具函数
-│       ├── types/           # 类型模块化文件
-│       ├── logger/          # 日志系统头文件
-│       └── profiler/        # 性能分析器头文件
+│       ├── version.hpp                    # 版本信息
+│       ├── interfaces.hpp                 # 核心接口定义
+│       ├── interfaces_preset.hpp          # 预设方法接口（MethodPreset等）
+│       ├── interfaces_preset_profiler.hpp # 带性能分析的预设方法接口
+│       ├── interfaces_robust_estimator.hpp # 鲁棒估计器接口
+│       ├── types.hpp                      # 核心类型定义统一入口
+│       ├── factory.hpp                    # 工厂类接口
+│       ├── factory_types_fwd.hpp          # 工厂系统前向声明和类型定义
+│       ├── data_package.hpp               # 数据包管理（多数据组合传递）
+│       ├── pb_dataio.hpp                  # Protocol Buffer数据IO
+│       ├── file_io.hpp                    # 文件IO工具（BAL/SfM数据读写）
+│       ├── g2o_io.hpp                     # G2O格式文件读写
+│       ├── evaluator.hpp                  # 评估系统
+│       ├── method_utils.hpp               # 方法工具函数
+│       ├── relative_residuals.hpp         # 相对位姿残差计算
+│       ├── inifile.hpp                    # INI配置文件解析
+│       ├── posdk_register.hpp             # 插件注册与动态加载
+│       ├── executable_path.hpp            # 跨平台可执行文件路径工具
+│       ├── output_directory_manager.hpp   # 全局输出目录管理
+│       ├── po_logger.hpp                  # 日志系统统一入口
+│       ├── high_performance_logger.hpp    # 高性能同步日志核心
+│       ├── log_stream.hpp                 # 流式日志构建器
+│       ├── bilingual_log_macros.hpp       # 双语日志宏定义
+│       ├── language_environment.hpp       # 语言环境管理
+│       ├── ProfilerInfo.hpp               # 性能分析信息结构
+│       ├── ProfilerManager.hpp            # 性能分析管理器
+│       ├── robust/                        # 鲁棒估计数据模块
+│       │   ├── data_sample.hpp            # 采样策略与数据采样
+│       │   └── data_cost.hpp              # 代价值数据类
+│       └── types/                         # 类型模块化文件
+│           ├── base.hpp                   # 基础类型定义
+│           ├── camera_model.hpp           # 相机模型类型
+│           ├── features.hpp               # 特征类型统一入口
+│           ├── global_poses.hpp           # 全局位姿类型
+│           ├── image.hpp                  # 图像数据类型
+│           ├── matches.hpp                # 特征匹配类型
+│           ├── relative_poses.hpp         # 相对位姿类型
+│           ├── similarity_transform.hpp   # 相似变换类型
+│           ├── tracks.hpp                 # 特征轨迹类型
+│           ├── world_3dpoints.hpp         # 三维点云类型
+│           └── features/                  # 特征子模块
+│               ├── descriptors.hpp        # 特征描述子
+│               ├── feature_base.hpp       # 特征基类
+│               ├── features_info.hpp      # 特征信息
+│               └── image_feature_info.hpp # 图像特征信息
 └── lib/                      # 库文件目录
     ├── libpo_core.so/.dylib/.dll          # PoSDK核心库
     ├── libpomvg_proto.so/.dylib/.dll      # 核心依赖库
@@ -42,7 +77,7 @@ po_core_lib/
 po_core_lib 提供以下核心库文件：
 
 ```{note}
-**libpo_core** 是 PoSDK 的主库，聚合了所有核心功能。其他库（libpomvg_proto、libpomvg_file_io、libpomvg_factory）是核心依赖库，由 libpo_core 自动链接。用户只需链接 `PoSDK::po_core` 和 `PoSDK::pomvg_proto` 即可使用完整功能。
+**libpo_core** 是 PoMVG 的主库，聚合了所有核心功能。其他库（libpomvg_proto、libpomvg_file_io、libpomvg_factory）是核心依赖库，由 libpo_core 自动链接。用户只需链接 `PoSDK::po_core` 和 `PoSDK::pomvg_proto` 即可使用完整功能。
 ```
 
 ### 头文件（include/）
@@ -50,16 +85,45 @@ po_core_lib 提供以下核心库文件：
 头文件目录包含以下核心模块：
 
 - **po_core.hpp**: 主入口头文件，包含所有必要的子头文件
-- **po_core/**: PoSDK核心接口头文件
-  - `interfaces.hpp`: 核心接口定义（DataIO、Method、Behavior等）
-  - `types.hpp`: 核心数据类型统一入口
-  - `factory.hpp`: 工厂类接口（FactoryData、FactoryMethod、FactoryBehavior）
-  - `pb_dataio.hpp`: Protocol Buffer数据IO基类
-  - `evaluator.hpp`: 评估系统接口
-  - `method_utils.hpp`: 方法工具函数（CreateAndConfigureSubMethod等）
-  - `types/`: 模块化类型定义子目录
-  - `logger/`: 日志系统头文件
-  - `profiler/`: 性能分析器头文件
+- **po_core/**: PoMVG核心接口头文件
+  - 接口与方法：
+    - `interfaces.hpp`: 核心接口定义（DataIO、Method、Behavior等）
+    - `interfaces_preset.hpp`: 预设方法接口（MethodPreset等，提供配置文件、真值数据等扩展接口）
+    - `interfaces_preset_profiler.hpp`: 带性能分析功能的预设方法接口（MethodPresetProfiler）
+    - `interfaces_robust_estimator.hpp`: 鲁棒估计器接口（RANSAC等鲁棒估计框架）
+    - `method_utils.hpp`: 方法工具函数（CreateAndConfigureSubMethod等）
+  - 类型与数据：
+    - `types.hpp`: 核心数据类型统一入口
+    - `data_package.hpp`: 数据包管理（多数据组合传递，支持类型安全的数据存取）
+    - `relative_residuals.hpp`: 相对位姿残差计算（共面残差、Sampson残差等）
+    - `types/`: 模块化类型定义子目录（base、camera_model、features、matches、poses等）
+    - `robust/`: 鲁棒估计数据模块
+      - `data_sample.hpp`: 采样策略与数据采样（均匀随机、球面均匀、分层、自适应）
+      - `data_cost.hpp`: 代价值数据类（存储模型评估的代价值）
+  - 工厂与注册：
+    - `factory.hpp`: 工厂类接口（FactoryData、FactoryMethod、FactoryBehavior）
+    - `factory_types_fwd.hpp`: 工厂系统前向声明和类型定义
+    - `posdk_register.hpp`: 插件注册与动态库加载
+  - 文件IO：
+    - `pb_dataio.hpp`: Protocol Buffer数据IO基类
+    - `file_io.hpp`: 文件IO工具（BAL/SfM数据格式读写、数据类型转换）
+    - `g2o_io.hpp`: G2O格式文件读写（位姿图、特征轨迹等）
+    - `inifile.hpp`: INI配置文件解析（基于Boost.PropertyTree）
+  - 评估系统：
+    - `evaluator.hpp`: 评估系统接口
+  - 日志系统：
+    - `po_logger.hpp`: 日志系统统一入口（包含所有日志功能的单一头文件）
+    - `high_performance_logger.hpp`: 高性能同步日志核心（多线程安全、文件与控制台输出）
+    - `log_stream.hpp`: 流式日志构建器（支持链式调用）
+    - `bilingual_log_macros.hpp`: 双语日志宏定义（根据语言环境自动切换中英文）
+    - `language_environment.hpp`: 全局语言环境管理（中英文切换）
+  - 性能分析：
+    - `ProfilerInfo.hpp`: 性能分析信息结构（时间、内存等统计数据）
+    - `ProfilerManager.hpp`: 高性能全局性能分析管理器（无锁设计，支持高并发）
+  - 工具类：
+    - `executable_path.hpp`: 跨平台可执行文件路径工具
+    - `output_directory_manager.hpp`: 全局输出目录管理器（工作流输出路径集中管理）
+    - `version.hpp`: 版本信息
 
 
 
@@ -69,9 +133,9 @@ po_core_lib 提供以下核心库文件：
 
 ```{note}
 **关于目录结构**：
-如果你从源码构建 PoSDK 开发框架，构建后会生成包含完整功能的 `output` 目录。预编译的 `po_core_lib` 是 `output` 的精简版本，仅包含核心库和头文件。
+如果你从源码构建 PoMVG 开发框架，构建后会生成包含完整功能的 `output` 目录。预编译的 `po_core_lib` 是 `output` 的精简版本，仅包含核心库和头文件。
 
-详细的 PoSDK 开发框架构建后目录结构说明，请参考 [构建后的目录结构](installation.md#posdk-build-output-structure)。
+详细的 PoMVG 开发框架构建后目录结构说明，请参考 [构建后的目录结构](installation.md#posdk-build-output-structure)。
 ```
 
 ### 方式1：集成模式
@@ -172,7 +236,7 @@ int main() {
 ```
 
 ```{note}
-PoSDK的Method接口提供多种执行方式：
+PoMVG的Method接口提供多种执行方式：
 - `Build(DataPtr input)`: 基本执行接口，所有Method都必须实现
 - MethodPreset派生类提供额外接口：
   - `SetConfigPath()`: 设置配置文件路径

@@ -1,0 +1,7 @@
+arm,label,planned,succeeded,failed,pending,registered_views,input_views,points
+posdk,PoMVG,34,34,0,0,16127,16213,3515433
+glomap,GLOMAP,34,34,0,0,15691,16213,1735401
+colmap,COLMAP,34,34,0,0,10722,16213,1945666
+openmvg_incremental,OpenMVG Incremental,34,33,1,0,9302,10780,3849480
+openmvg_global,OpenMVG Global,34,34,0,0,12119,16213,1367927
+openmvg_stellar,OpenMVG Stellar,34,34,0,0,14687,16213,6178890

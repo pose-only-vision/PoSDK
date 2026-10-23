@@ -1,0 +1,73 @@
+{
+  "schema": "posdk.benchmark-summary.v2",
+  "date": "2026-10-16",
+  "coverage": "final output views",
+  "rows": [
+    {
+      "arm": "posdk",
+      "label": "PoMVG",
+      "planned": 34,
+      "succeeded": 34,
+      "failed": 0,
+      "pending": 0,
+      "registered_views": 16127,
+      "input_views": 16213,
+      "points": 3515433
+    },
+    {
+      "arm": "glomap",
+      "label": "GLOMAP",
+      "planned": 34,
+      "succeeded": 34,
+      "failed": 0,
+      "pending": 0,
+      "registered_views": 15691,
+      "input_views": 16213,
+      "points": 1735401
+    },
+    {
+      "arm": "colmap",
+      "label": "COLMAP",
+      "planned": 34,
+      "succeeded": 34,
+      "failed": 0,
+      "pending": 0,
+      "registered_views": 10722,
+      "input_views": 16213,
+      "points": 1945666
+    },
+    {
+      "arm": "openmvg_incremental",
+      "label": "OpenMVG Incremental",
+      "planned": 34,
+      "succeeded": 33,
+      "failed": 1,
+      "pending": 0,
+      "registered_views": 9302,
+      "input_views": 10780,
+      "points": 3849480
+    },
+    {
+      "arm": "openmvg_global",
+      "label": "OpenMVG Global",
+      "planned": 34,
+      "succeeded": 34,
+      "failed": 0,
+      "pending": 0,
+      "registered_views": 12119,
+      "input_views": 16213,
+      "points": 1367927
+    },
+    {
+      "arm": "openmvg_stellar",
+      "label": "OpenMVG Stellar",
+      "planned": 34,
+      "succeeded": 34,
+      "failed": 0,
+      "pending": 0,
+      "registered_views": 14687,
+      "input_views": 16213,
+      "points": 6178890
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Piccadilly",
+  "arm": "openmvg_stellar",
+  "label": "OpenMVG Stellar",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 2508,
+  "registered_views": 2214,
+  "points": 464772,
+  "accuracy": {},
+  "timing": {
+    "backend": 368.3174274167977,
+    "frontend": 65.84336908301339,
+    "pipeline": 456.85027795867063
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 55510814592.11241,
+    "median": 9.963986184886679,
+    "observations": 2238399,
+    "points": 464772,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Piccadilly/openmvg_stellar/points.ply",
+    "g2o": "public/onedsfm/Piccadilly/openmvg_stellar/poses.g2o",
+    "metadata": "public/onedsfm/Piccadilly/openmvg_stellar/result.json",
+    "reprojection": "public/onedsfm/Piccadilly/openmvg_stellar/reprojection.json"
+  }
+}

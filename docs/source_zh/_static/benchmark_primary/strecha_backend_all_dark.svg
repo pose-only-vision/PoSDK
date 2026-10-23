@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 375" role="img">
+<title>Strecha / backend / all measured configurations</title>
+<rect width="100%" height="100%" fill="#152735"/>
+<g fill="#d9e6f3" font-family="sans-serif" font-size="13">
+<rect x="20" y="12" width="9" height="9" fill="#2176e7"/>
+<text x="35.00" y="22.00" >PoMVG P3P + PA2 / batch LiGT (n=6)</text>
+<rect x="470" y="12" width="9" height="9" fill="#e19729"/>
+<text x="485.00" y="22.00" >GLOMAP (n=6)</text>
+<rect x="20" y="33" width="9" height="9" fill="#25a593"/>
+<text x="35.00" y="43.00" >OpenMVG Incremental (n=6)</text>
+<rect x="470" y="33" width="9" height="9" fill="#8663bd"/>
+<text x="485.00" y="43.00" >OpenMVG Global (n=6)</text>
+<path d="M200.00,78 V330" stroke="#344757"/>
+<text x="200.00" y="350.00" fill="#9daec1" text-anchor="middle">1</text>
+<path d="M535.00,78 V330" stroke="#344757"/>
+<text x="535.00" y="350.00" fill="#9daec1" text-anchor="middle">10</text>
+<path d="M870.00,78 V330" stroke="#344757"/>
+<text x="870.00" y="350.00" fill="#9daec1" text-anchor="middle">100</text>
+<text x="188.00" y="103.00" text-anchor="end" fill="#9daec1">Herz-Jesus-P8</text>
+<rect x="200" y="87.00" width="194.88" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Herz-Jesus-P8" data-value="3.817"><title>PoMVG P3P + PA2 / batch LiGT / Herz-Jesus-P8: 3.82 s</title></rect>
+<rect x="200" y="93.00" width="295.63" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="Herz-Jesus-P8" data-value="7.629"><title>GLOMAP / Herz-Jesus-P8: 7.63 s</title></rect>
+<rect x="200" y="99.00" width="197.79" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="Herz-Jesus-P8" data-value="3.89419641602"><title>OpenMVG Incremental / Herz-Jesus-P8: 3.89 s</title></rect>
+<rect x="200" y="105.00" width="42.21" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="Herz-Jesus-P8" data-value="1.33661124995"><title>OpenMVG Global / Herz-Jesus-P8: 1.34 s</title></rect>
+<text x="188.00" y="145.00" text-anchor="end" fill="#9daec1">castle-P19</text>
+<rect x="200" y="129.00" width="253.83" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="castle-P19" data-value="5.724"><title>PoMVG P3P + PA2 / batch LiGT / castle-P19: 5.72 s</title></rect>
+<rect x="200" y="135.00" width="347.68" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="castle-P19" data-value="10.911"><title>GLOMAP / castle-P19: 10.9 s</title></rect>
+<rect x="200" y="141.00" width="250.72" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="castle-P19" data-value="5.6028640829"><title>OpenMVG Incremental / castle-P19: 5.6 s</title></rect>
+<rect x="200" y="147.00" width="84.39" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="castle-P19" data-value="1.78616583394"><title>OpenMVG Global / castle-P19: 1.79 s</title></rect>
+<text x="188.00" y="187.00" text-anchor="end" fill="#9daec1">castle-P30</text>
+<rect x="200" y="171.00" width="368.81" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="castle-P30" data-value="12.616"><title>PoMVG P3P + PA2 / batch LiGT / castle-P30: 12.6 s</title></rect>
+<rect x="200" y="177.00" width="446.06" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="castle-P30" data-value="21.455"><title>GLOMAP / castle-P30: 21.5 s</title></rect>
+<rect x="200" y="183.00" width="402.53" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="castle-P30" data-value="15.906403458"><title>OpenMVG Incremental / castle-P30: 15.9 s</title></rect>
+<rect x="200" y="189.00" width="241.39" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="castle-P30" data-value="5.25497304206"><title>OpenMVG Global / castle-P30: 5.25 s</title></rect>
+<text x="188.00" y="229.00" text-anchor="end" fill="#9daec1">entry-P10</text>
+<rect x="200" y="213.00" width="131.73" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="entry-P10" data-value="2.473"><title>PoMVG P3P + PA2 / batch LiGT / entry-P10: 2.47 s</title></rect>
+<rect x="200" y="219.00" width="264.65" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="entry-P10" data-value="6.166"><title>GLOMAP / entry-P10: 6.17 s</title></rect>
+<rect x="200" y="225.00" width="196.17" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="entry-P10" data-value="3.85106883268"><title>OpenMVG Incremental / entry-P10: 3.85 s</title></rect>
+<rect x="200" y="231.00" width="53.19" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="entry-P10" data-value="1.44142004079"><title>OpenMVG Global / entry-P10: 1.44 s</title></rect>
+<text x="188.00" y="271.00" text-anchor="end" fill="#9daec1">fountain-P11</text>
+<rect x="200" y="255.00" width="199.34" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="fountain-P11" data-value="3.936"><title>PoMVG P3P + PA2 / batch LiGT / fountain-P11: 3.94 s</title></rect>
+<rect x="200" y="261.00" width="372.01" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="fountain-P11" data-value="12.897"><title>GLOMAP / fountain-P11: 12.9 s</title></rect>
+<rect x="200" y="267.00" width="332.14" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="fountain-P11" data-value="9.80507679214"><title>OpenMVG Incremental / fountain-P11: 9.81 s</title></rect>
+<rect x="200" y="273.00" width="188.50" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="fountain-P11" data-value="3.65343362628"><title>OpenMVG Global / fountain-P11: 3.65 s</title></rect>
+<text x="188.00" y="313.00" text-anchor="end" fill="#9daec1">Herz-Jesus-P25</text>
+<rect x="200" y="297.00" width="339.48" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Herz-Jesus-P25" data-value="10.313"><title>PoMVG P3P + PA2 / batch LiGT / Herz-Jesus-P25: 10.3 s</title></rect>
+<rect x="200" y="303.00" width="488.23" height="4.5" fill="#e19729" data-config="primary:glomap" data-scene="Herz-Jesus-P25" data-value="28.669"><title>GLOMAP / Herz-Jesus-P25: 28.7 s</title></rect>
+<rect x="200" y="309.00" width="430.44" height="4.5" fill="#25a593" data-config="primary:openmvg_incremental" data-scene="Herz-Jesus-P25" data-value="19.270678208"><title>OpenMVG Incremental / Herz-Jesus-P25: 19.3 s</title></rect>
+<rect x="200" y="315.00" width="248.71" height="4.5" fill="#8663bd" data-config="primary:openmvg_global" data-scene="Herz-Jesus-P25" data-value="5.526085875"><title>OpenMVG Global / Herz-Jesus-P25: 5.53 s</title></rect>
+<text x="535.00" y="369.00" fill="#9daec1" text-anchor="middle">Backend seconds (log scale)</text>
+</g></svg>

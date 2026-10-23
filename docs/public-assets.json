@@ -1,0 +1,7 @@
+{
+  "schema": "pomvg.public-doc-assets.v1",
+  "repository": "pose-only-vision/PoSDK",
+  "branch": "docs-assets-v2.1.1",
+  "revision": "5bc1404f098b7d89376ea7cd7a6885407d21cda8",
+  "manifest_sha256": "d7b33f582d8dde54cd9b0c6a4d55f909833c9cb4819ced40eaa4d2fb65b0caa3"
+}

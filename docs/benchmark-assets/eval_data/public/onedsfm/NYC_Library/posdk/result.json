@@ -1,0 +1,34 @@
+{
+  "dataset": "onedsfm",
+  "scene": "NYC_Library",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 376,
+  "registered_views": 375,
+  "points": 75163,
+  "accuracy": {},
+  "timing": {
+    "backend": 33.46,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.586548026733568,
+    "median": 0.4782907421011494,
+    "observations": 343240,
+    "points": 75163,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/NYC_Library/posdk/points.ply",
+    "g2o": "public/onedsfm/NYC_Library/posdk/poses.g2o",
+    "metadata": "public/onedsfm/NYC_Library/posdk/result.json",
+    "reprojection": "public/onedsfm/NYC_Library/posdk/reprojection.json"
+  }
+}

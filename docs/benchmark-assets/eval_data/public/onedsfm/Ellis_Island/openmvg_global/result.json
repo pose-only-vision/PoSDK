@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Ellis_Island",
+  "arm": "openmvg_global",
+  "label": "OpenMVG Global",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 247,
+  "registered_views": 211,
+  "points": 13923,
+  "accuracy": {},
+  "timing": {
+    "backend": 63.468974374001846,
+    "frontend": 3.868055540835485,
+    "pipeline": 68.04479033173993
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 1.004790512824338,
+    "median": 0.7764071578793991,
+    "observations": 116099,
+    "points": 13923,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Ellis_Island/openmvg_global/points.ply",
+    "g2o": "public/onedsfm/Ellis_Island/openmvg_global/poses.g2o",
+    "metadata": "public/onedsfm/Ellis_Island/openmvg_global/result.json",
+    "reprojection": "public/onedsfm/Ellis_Island/openmvg_global/reprojection.json"
+  }
+}

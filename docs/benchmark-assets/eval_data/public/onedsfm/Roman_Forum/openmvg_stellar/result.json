@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Roman_Forum",
+  "arm": "openmvg_stellar",
+  "label": "OpenMVG Stellar",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 1134,
+  "registered_views": 1035,
+  "points": 449323,
+  "accuracy": {},
+  "timing": {
+    "backend": 210.20748854079284,
+    "frontend": 33.43473537568934,
+    "pipeline": 274.04393424955197
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 279243.06409103837,
+    "median": 4.7909386809204015,
+    "observations": 1901387,
+    "points": 449323,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Roman_Forum/openmvg_stellar/points.ply",
+    "g2o": "public/onedsfm/Roman_Forum/openmvg_stellar/poses.g2o",
+    "metadata": "public/onedsfm/Roman_Forum/openmvg_stellar/result.json",
+    "reprojection": "public/onedsfm/Roman_Forum/openmvg_stellar/reprojection.json"
+  }
+}

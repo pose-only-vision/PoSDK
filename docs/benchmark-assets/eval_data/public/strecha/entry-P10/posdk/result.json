@@ -1,0 +1,115 @@
+{
+  "dataset": "strecha",
+  "scene": "entry-P10",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 10,
+  "registered_views": 10,
+  "points": 21719,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "rotation_deg": {
+        "count": 10,
+        "min": 0.00918167824886434,
+        "max": 0.04039508563854753,
+        "mean": 0.022446993892574246,
+        "median": 0.021038443107311296,
+        "std_dev": 0.009042983049311785
+      },
+      "center": {
+        "count": 10,
+        "min": 0.0030978841252994895,
+        "max": 0.01219382297567233,
+        "mean": 0.006016715212354286,
+        "median": 0.005164352738678246,
+        "std_dev": 0.0028643122902216227
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "center_view_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "rotation_deg": {
+        "count": 10,
+        "min": 0.00918167824886434,
+        "max": 0.04039508563854753,
+        "mean": 0.022446993892574246,
+        "median": 0.021038443107311296,
+        "std_dev": 0.009042983049311785
+      },
+      "center": {
+        "count": 10,
+        "min": 0.0030978841252994895,
+        "max": 0.01219382297567233,
+        "mean": 0.006016715212354286,
+        "median": 0.005164352738678246,
+        "std_dev": 0.0028643122902216227
+      }
+    }
+  },
+  "timing": {
+    "backend": 3.617,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "downloads": {
+    "ply": "public/strecha/entry-P10/posdk/points.ply",
+    "g2o": "public/strecha/entry-P10/posdk/poses.g2o",
+    "metadata": "public/strecha/entry-P10/posdk/result.json",
+    "accuracy": "public/strecha/entry-P10/posdk/evaluation.json"
+  }
+}

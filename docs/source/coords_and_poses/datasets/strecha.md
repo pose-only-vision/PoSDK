@@ -32,8 +32,8 @@ $$P_i = R^i_w (P_w - \mathbf{t}^i_w)$$
 
 This is equivalent to using the augmented matrix $[R^i_w | -R^i_w \mathbf{t}^i_w]$ for transformation.
 
-Therefore, reading from Strecha ground truth files will load into PoSDK `RwTw` format.
+Therefore, reading from Strecha ground truth files will load into PoMVG `RwTw` format.
 
 ## Relative Camera Pose
 
-Consistent with posdk conventions (see [posdk.md](../conventions/posdk.md)), the Strecha dataset's relative poses are also stored in `RwTw` format.
+Consistent with PoMVG conventions (see [posdk.md](../conventions/posdk.md)), the Strecha dataset's relative poses are also stored in `RwTw` format.

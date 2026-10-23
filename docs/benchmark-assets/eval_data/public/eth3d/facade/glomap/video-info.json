@@ -1,0 +1,22 @@
+{
+  "dataset": "eth3d",
+  "scene": "facade",
+  "platform": "GLOMAP",
+  "points": 63216,
+  "ply_sha256": "bcb6396262d575dafbe836070896e5785c98a235ed3a5fb1c94318c366184430",
+  "original_video_sha256": "d73eb3f6d3c294c16c587f5fa1568524578723dcfbe07c9603153cd5899ca8a8",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 707,
+    "fps": 30.0,
+    "duration_seconds": 23.566667
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 707,
+    "fps": 30.0,
+    "duration_seconds": 23.566667
+  }
+}

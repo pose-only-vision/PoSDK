@@ -1,0 +1,22 @@
+{
+  "dataset": "eth3d",
+  "scene": "delivery_area",
+  "platform": "GLOMAP",
+  "points": 30371,
+  "ply_sha256": "24fc77e7ae51fd5dfc4143e61eda9c387883c3bcff66c133cf9ee506ec7df6c8",
+  "original_video_sha256": "e10b04c7182a135ffb2fe917919b460786546c7f5def5a6da606fa9ac236eb8f",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 589,
+    "fps": 30.0,
+    "duration_seconds": 19.633333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 589,
+    "fps": 30.0,
+    "duration_seconds": 19.633333
+  }
+}

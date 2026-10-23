@@ -10,7 +10,7 @@
     -   **用途**: 需要将数据通过 Protobuf 进行序列化/反序列化（保存到文件或网络传输）的场景。
     -   **优点**: 自动处理文件 I/O；提供宏简化 Protobuf 字段映射。
     -   **缺点**: 引入 Protobuf 依赖；需要定义 `.proto` 文件并配置 CMake 生成代码。
-    -   **关键实现**: 用户需要重载 `CreateProtoMessage`, `ToProto`, `FromProto`。推荐使用如下辅助宏（详情见 `interfaces_preset.hpp` 中）来简化实现：
+    -   **关键实现**: 用户需要重载 `CreateProtoMessage`, `ToProto`, `FromProto`。推荐使用如下辅助宏（详情见 `pb_dataio.hpp` 中）来简化实现：
     ```text
         -   `PROTO_SET_BASIC` / `PROTO_GET_BASIC`: 基础类型 (int, float, bool, string)。
         -   `PROTO_SET_VECTOR2F/D` / `PROTO_GET_VECTOR2F/D`: Eigen::Vector2f/d。
@@ -23,7 +23,7 @@
 -   **`Interface::DataMap<T>`**:
     -   **模板参数 `T`**: 任意可默认构造的类型。
     -   **用途**: 快速包装 **单个** 数据对象（如 `RelativePose`, `GlobalPoses`, `std::vector`, `std::map`, 自定义结构体等）为 `DataPtr`，方便在方法间传递或作为方法返回值，避免为简单数据结构创建完整的数据插件。
-    -   **优点**: 方便将现有数据集成到 PoSDK 框架，不用专门声明和编译新的 Data 数据类。
+    -   **优点**: 方便将现有数据集成到 PoMVG 框架，不用专门声明和编译新的 Data 数据类。
     -   **缺点**: 本身不直接支持序列化 (`PbDataIO`)，如果需要持久化，需要包含它的插件（如 `DataPackage`）或外部逻辑来处理。
     -   **访问**: 使用 `GetDataPtr<T>(data_map_ptr)` 获取内部数据的指针。
     -   **深拷贝 (`CopyData`)**:
@@ -58,7 +58,7 @@
     -   **用途**: 专用于鲁棒估计器 (如 RANSAC, GNC-IRLS) 的样本数据管理。支持零拷贝（共享内存）的随机子集和索引子集生成。
     -   **优点**: 高效的子集采样，避免大数据拷贝；提供 STL 兼容接口 (`begin`, `end`, `operator[]`, `size` 等)，方便访问样本数据（包括子集）。
     -   **缺点**: 主要设计用于鲁棒估计流程，通用性不如 `DataMap` 或标准 `DataIO`。
-    -   **关键接口**:详细请见 `interfaces_robust_estimator.hpp` 中 `DataSample` 的定义
+    -   **关键接口**:详细请见 `<po_core/robust/data_sample.hpp>` 中 `DataSample` 的定义
     ```cpp
         GetPopulationPtr(): 获取总体样本数据指针
         GetPopulationSize(): 获取总体样本数据大小
@@ -124,10 +124,10 @@
         -   它使用当前方法插件的 `GetType()` 作为 `algorithm_name`。
         -   它使用方法配置中的 `ProfileCommit` (如果存在) 或 "default_commit" 作为 `eval_commit`。
         -   遍历 `eval_status.eval_results`，对每一个指标，调用 `EvaluatorManager::AddEvaluationResult(eval_type, algorithm_name, eval_commit, metric_name, value)` 将结果添加到全局评估器中。
-- **`Interface::RobustEstimator<TSample>`**:
+- **`Interface::RobustEstimator`**:
   - **用途**: 实现基于 RANSAC 或 GNC-IRLS 等鲁棒估计算法。
   - **优点**: 提供标准化的鲁棒估计流程；将模型估计和代价评估解耦。
-  - **缺点**: 仅适用于特定类型的鲁棒估计问题；需要配合 `DataSample<TSample>` 输入。
+  - **缺点**: 仅适用于特定类型的鲁棒估计问题；需要配合 `DataSample<T>` 输入。
 
 <!-- 
 ## 行为插件 (Behavior Plugin)

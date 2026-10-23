@@ -1,0 +1,22 @@
+{
+  "dataset": "eth3d",
+  "scene": "terrains",
+  "platform": "GLOMAP",
+  "points": 17216,
+  "ply_sha256": "391775d0063ef4d1ed4cc3e146835079500df2315a155e0d30d85fd6cf9f96cb",
+  "original_video_sha256": "c0928fadce7e8aab482a45393ffa2200292a2716d3b49151c279464739beebd9",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 1556,
+    "fps": 30.0,
+    "duration_seconds": 51.866667
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 1556,
+    "fps": 30.0,
+    "duration_seconds": 51.866667
+  }
+}

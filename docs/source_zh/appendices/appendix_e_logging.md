@@ -1,6 +1,6 @@
 # 日志管理 (Logging)
 
-PoSDK 提供高性能双语日志系统，支持中文和英文日志输出，具备线程安全、同步输出、文件输出等功能。
+PoMVG 提供高性能双语日志系统，支持中文和英文日志输出，具备线程安全、同步输出、文件输出等功能。
 
 ## 日志级别
 
@@ -196,13 +196,13 @@ LOG_INFO_ZH << "这条日志不显示文件位置";
 ### 获取已处理日志数量
 
 ```cpp
-size_t count = GET_LOG_PROCESSED_COUNT();
+uint64_t count = GET_LOG_PROCESSED_COUNT();
 ```
 
 ### 获取丢弃日志数量
 
 ```cpp
-size_t dropped = GET_LOG_DROPPED_COUNT();  // 同步模式下始终为0
+uint64_t dropped = GET_LOG_DROPPED_COUNT();  // 同步模式下始终为0
 ```
 
 ### 强制刷新所有缓冲区
@@ -213,11 +213,50 @@ FLUSH_ALL_LOGS()
 
 ## 语言环境设置
 
-通过 `LanguageEnvironment` 类设置全局语言环境：
+通过 `LanguageEnvironment` 类管理全局语言环境。该类定义在 `<po_core/language_environment.hpp>` 中，位于 `PoSDK::Interface` 命名空间下。
+
+### SetChinese / SetEnglish
+
+设置全局语言环境为中文或英文：
 
 ```cpp
 PoSDK::Interface::LanguageEnvironment::SetChinese();   // 设置中文环境
-PoSDK::Interface::LanguageEnvironment::SetEnglish();  // 设置英文环境
+PoSDK::Interface::LanguageEnvironment::SetEnglish();   // 设置英文环境
+```
+
+### SetLanguage
+
+通过字符串设置语言环境，支持 `"ZH"`、`"zh"`、`"CN"`、`"cn"` 表示中文，`"EN"`、`"en"` 表示英文。无效输入保持当前设置不变。
+
+```cpp
+PoSDK::Interface::LanguageEnvironment::SetLanguage("ZH");  // 设置中文环境
+PoSDK::Interface::LanguageEnvironment::SetLanguage("EN");  // 设置英文环境
+```
+
+### IsChineseLanguage / IsEnglishLanguage
+
+查询当前语言环境：
+
+```cpp
+bool is_zh = PoSDK::Interface::LanguageEnvironment::IsChineseLanguage();  // 当前是否为中文环境
+bool is_en = PoSDK::Interface::LanguageEnvironment::IsEnglishLanguage();  // 当前是否为英文环境
+```
+
+### GetCurrentLanguageString
+
+获取当前语言的字符串表示，返回 `"ZH"` 或 `"EN"`：
+
+```cpp
+std::string lang = PoSDK::Interface::LanguageEnvironment::GetCurrentLanguageString();
+```
+
+### GetText
+
+根据当前语言环境自动选择对应文本：
+
+```cpp
+std::string msg = PoSDK::Interface::LanguageEnvironment::GetText("中文文本", "English text");
+// 中文环境下返回 "中文文本"，英文环境下返回 "English text"
 ```
 
 语言环境影响 `BILINGUAL_LOG_XXX(ZH/EN)` 宏的输出过滤，但不影响 `BILINGUAL_LOG_ALWAYS_XXX` 宏。
@@ -270,24 +309,71 @@ int main() {
     ENABLE_LOG_FILE("logs/app.log");
     ENABLE_SOURCE_LOC();
     SET_LOG_LEVEL(INFO);
-    
+
     // 设置语言环境
     PoSDK::Interface::LanguageEnvironment::SetChinese();
-    
+
     // 使用日志
     LOG_INFO_ZH << "应用程序启动";
     LOG_INFO_EN << "Application started";
-    
+
     // 条件日志
     bool debug_mode = true;
     BILINGUAL_LOG_DEBUG_IF(ZH, debug_mode) << "调试模式已启用";
-    
+
     // 总是输出的关键日志
     LOG_INFO_ALL << "系统状态正常";
-    
+
     // 查看统计信息
     std::cout << "已处理日志: " << GET_LOG_PROCESSED_COUNT() << std::endl;
-    
+
     return 0;
 }
+```
+
+## 便利配置函数
+
+`<po_core/po_logger.hpp>` 中提供了以下全局便利函数，位于 `PoSDK` 命名空间下，用于快速配置日志系统。
+
+### ConfigureLogging
+
+快速配置日志级别和语言环境：
+
+- 签名: `void PoSDK::ConfigureLogging(Logger::LogLevel level = Logger::LogLevel::INFO, const std::string &language = "ZH")`
+- 参数:
+  - `level`: 日志级别，默认为 `INFO`。
+  - `language`: 语言环境字符串（`"ZH"` 或 `"EN"`），默认为 `"ZH"`。
+
+```cpp
+PoSDK::ConfigureLogging(PoSDK::Logger::LogLevel::WARNING, "EN");
+```
+
+### ConfigureLoggingWithFile
+
+快速配置日志级别、语言环境并启用文件输出：
+
+- 签名: `bool PoSDK::ConfigureLoggingWithFile(const std::string &log_file_path, Logger::LogLevel level = Logger::LogLevel::INFO, const std::string &language = "ZH")`
+- 参数:
+  - `log_file_path`: 日志文件路径。
+  - `level`: 日志级别，默认为 `INFO`。
+  - `language`: 语言环境字符串，默认为 `"ZH"`。
+- 返回值: `bool` - 文件输出是否启用成功。
+
+```cpp
+PoSDK::ConfigureLoggingWithFile("logs/myapp.log", PoSDK::Logger::LogLevel::DEBUG, "ZH");
+```
+
+### EnableTimestampLogFile
+
+启用带自动时间戳命名的日志文件，文件名格式为 `{base_path}_{YYYYMMDD_HHMMSS}{extension}`：
+
+- 签名: `bool PoSDK::EnableTimestampLogFile(const std::string &base_path = "logs/posdk_log", const std::string &extension = ".txt")`
+- 参数:
+  - `base_path`: 日志文件基础路径，默认为 `"logs/posdk_log"`。
+  - `extension`: 文件扩展名，默认为 `".txt"`。
+- 返回值: `bool` - 文件输出是否启用成功。
+
+```cpp
+PoSDK::EnableTimestampLogFile("logs/session");
+// 生成类似: logs/session_20260319_143025.txt
 ```

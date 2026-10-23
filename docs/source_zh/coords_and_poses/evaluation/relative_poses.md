@@ -1,6 +1,6 @@
 # 相对位姿评估 (RelativePoses Evaluation)
 
-相对位姿评估用于衡量两个相机视图之间相对位姿估计的精度。在PoSDK中，相对位姿由旋转矩阵 $R_{ij}$ 和平移向量 $\mathbf{t}_{ij}$ 定义。
+相对位姿评估用于衡量两个相机视图之间相对位姿估计的精度。在PoMVG中，相对位姿由旋转矩阵 $R_{ij}$ 和平移向量 $\mathbf{t}_{ij}$ 定义。
 
 ## 数学定义
 
@@ -20,7 +20,7 @@ $$\mathbf{x}_j \sim R_{ij} \cdot \mathbf{x}_i + \mathbf{t}_{ij}$$
 
 对于真值旋转 $R_{ij}^{gt}$ 和估计旋转 $R_{ij}^{est}$，旋转误差计算为：
 
-$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{ij}^{gt\,T} R_{ij}^{est}) - 1}{2}\right) \times \frac{180°}{\pi}$$
+$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{ij}^{gt\,T} R_{ij}^{est}) - 1}{2}\right) \times \frac{180^\circ}{\pi}$$
 
 **物理意义**: 两个旋转矩阵之间的最小旋转角度，单位为度。
 
@@ -28,7 +28,7 @@ $$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{ij}^{gt\,T} R_{ij}^
 
 对于真值平移 $\mathbf{t}_{ij}^{gt}$ 和估计平移 $\mathbf{t}_{ij}^{est}$，平移角度误差计算为：
 
-$$\text{Translation Error} = \arccos\left(\frac{\mathbf{t}_{ij}^{gt\,T} \mathbf{t}_{ij}^{est}}{||\mathbf{t}_{ij}^{gt}|| \cdot ||\mathbf{t}_{ij}^{est}||}\right) \times \frac{180°}{\pi}$$
+$$\text{Translation Error} = \arccos\left(\frac{\mathbf{t}_{ij}^{gt\,T} \mathbf{t}_{ij}^{est}}{||\mathbf{t}_{ij}^{gt}|| \cdot ||\mathbf{t}_{ij}^{est}||}\right) \times \frac{180^\circ}{\pi}$$
 
 **物理意义**: 两个平移方向之间的夹角，单位为度。注意这里评估的是方向而非尺度，因为双视图几何中平移的尺度是任意的。
 
@@ -216,6 +216,6 @@ const double MAX_TRANSLATION_ERROR = 180.0;  // 度
 ---
 
 **相关参考**:
-- [PoSDK 位姿约定](../conventions/posdk.md)
+- [PoMVG 位姿约定](../conventions/posdk.md)
 - [全局位姿评估](global_poses.md)
 - [评估体系概览](index.md)

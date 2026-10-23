@@ -30,7 +30,7 @@
     ```cpp
     // 插件构造函数中声明
     required_package_["data_tracks"] = nullptr;
-    required_package_["data_camera_model"] = nullptr;
+    required_package_["data_camera_models"] = nullptr;
     
     // 调用时
     auto data_package = std::make_shared<DataPackage>();
@@ -98,10 +98,10 @@
 
 ## 异常处理
 
-- **策略**: PoSDK 核心库倾向于使用返回值 (`nullptr` 或 `false`) 表示错误 + cerr显示错误信息，而不是抛出异常 `throw()` 导致程序终止，以避免跨插件边界的异常处理复杂性。
+- **策略**: PoMVG 核心库倾向于使用返回值 (`nullptr` 或 `false`) 表示错误 + cerr显示错误信息，而不是抛出异常 `throw()` 导致程序终止，以避免跨插件边界的异常处理复杂性。
 - **后续**：考虑给Method制定log和error等级与id，方便用户调试
 - **插件开发建议**:
   - 在插件内部可以使用 C++ 标准异常处理 (`try-catch`) 来捕获和处理内部错误。
   - 在覆盖的接口方法（如 `Run`, `Build`, `Save`, `Load`）中，应捕获所有内部异常，并转换为 `nullptr` 或 `false` 返回值。
   - 使用 `std::cerr` 输出详细的错误信息，帮助用户定位问题。
-  - 检查从工厂函数 (`FactoryData::Create`, `FactoryMethod::Create`) 或 `GetDataPtr` 返回的指针是否为 `nullptr`。 
+  - 检查从工厂函数 (`FactoryData::Create`, `FactoryMethod::Create`) 或 `GetDataPtr` 返回的指针是否为 `nullptr`。

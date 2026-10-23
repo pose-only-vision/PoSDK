@@ -1,6 +1,6 @@
 # EvaluatorManager Accuracy Evaluator
 
-`EvaluatorManager` is a static utility class in PoSDK used for collecting, managing, and exporting various accuracy evaluation metrics. It does not directly perform evaluation calculations, but provides a centralized system to process evaluation results submitted by various data plugins (`DataIO` derived classes) and export them as standardized CSV table formats.
+`EvaluatorManager` is a static utility class in PoMVG used for collecting, managing, and exporting various accuracy evaluation metrics. It does not directly perform evaluation calculations, but provides a centralized system to process evaluation results submitted by various data plugins (`DataIO` derived classes) and export them as standardized CSV table formats.
 
 ## Core Functions
 
@@ -27,7 +27,7 @@ class MyDataPlugin : public DataIO
 {
 public:
     // Implement Evaluate function for accuracy evaluation
-    bool Evaluate(DataPtr gt_data_ptr) override
+    EvaluatorStatus Evaluate(DataPtr gt_data_ptr) override
     {
         EvaluatorStatus eval_status;
         eval_status.SetEvalType("MyDataType");  // Set evaluation type
@@ -41,9 +41,8 @@ public:
             eval_status.SubmitNoteMsg("test_case", "case_" + std::to_string(i));
         }
 
-        // Set evaluation status
-        SetEvaluatorStatus(eval_status);
-        return true;
+        eval_status.is_successful = true;
+        return eval_status;
     }
 };
 ```
@@ -115,7 +114,11 @@ void AddResult(const std::string &metric_name, double value);
 void AddResult(const std::string &metric_name, double value,
                const std::string &note_type, const std::string &note_value);
 
-// Method 3: Add result with multiple notes
+// Method 3: Add one note from a two-string initializer list
+void AddResult(const std::string &metric_name, double value,
+               const std::initializer_list<std::string> &note_pair);
+
+// Method 4: Add result with multiple notes
 void AddResult(const std::string &metric_name, double value,
                const std::unordered_map<std::string, std::string> &notes);
 ```
@@ -145,6 +148,18 @@ Validation rules:
 1. Count of each note type must equal `eval_results.size()` (one-to-one correspondence)
 2. Or the note count of that type is 1 (globally shared)
 3. Or the vector of that type is empty (that type does not provide notes)
+
+`MethodPresetProfiler::ProcessEvaluationResults()` calls `ValidateNoteData()` before writing into `EvaluatorManager`. A failed check keeps that result out of the global evaluator.
+
+##### Reading Results
+
+```cpp
+std::vector<std::string> GetAllNoteTypes() const;
+std::vector<double> GetResults(const std::string &var_name) const;
+double GetFirstResult(const std::string &var_name, double default_value = 0.0) const;
+bool HasResult(const std::string &var_name) const;
+void Clear();
+```
 
 ### Step 3: EvaluatorManager CSV Export
 
@@ -181,18 +196,28 @@ EvaluatorManager::ExportAllRawValuesToCSV(
 
 EvaluatorManager supports multiple CSV export formats, each corresponding to different usage scenarios. The following details various table styles and parameter correspondences.
 
-### CSV Header Parameter Correspondence
+### Fields and Data Sources
 
-| CSV Header                     | Data Source                        | Example Value             | Description                                                    |
-| ------------------------------ | ---------------------------------- | ------------------------- | -------------------------------------------------------------- |
-| **Algorithm**                  | `Method::GetType()`                | `globalsfm_pipeline`      | Algorithm name, returned by method plugin's GetType() function |
-| **EvalCommit**                 | `ProfileCommit` configuration item | `GlobalSfM Pipeline Demo` | Evaluation scenario identifier, set in ini file                |
-| **Metric**                     | `AddResult(metric_name, ...)`      | `rotation_error`          | Evaluation metric name, defined in DataIO::Evaluate()          |
-| **EvalType**                   | `SetEvalType(eval_type)`           | `RelativePoses`           | Evaluation data type, corresponding to data structure type     |
-| **Value**                      | `AddResult(..., value)`            | `0.001523`                | Specific evaluation value                                      |
-| **Mean/Median/Min/Max/StdDev** | Statistical calculation results    | `0.001450`                | Statistical analysis of multiple Value values                  |
-| **Count**                      | Data point count                   | `10`                      | Number of Values participating in statistics                   |
-| **Note Columns**               | `SubmitNoteMsg(note_type, ...)`    | `view(0,1)`               | Optional multi-type note information                           |
+`EvalType` and `Metric` index the evaluator. They appear in export arguments and some file names, and they are not fixed columns of the tables below.
+
+| Field | Data Source | Example Value | Where It Appears |
+| ----- | ----------- | ------------- | ---------------- |
+| **Algorithm** | `SetEvaluatorAlgorithm()`; `GetType()` when unset | `globalsfm_pipeline` | Algorithm column of each CSV |
+| **EvalCommit** | `ProfileCommit` in the ini; `default_commit` when empty | `GlobalSfM Pipeline Demo` | Summary and raw-value tables |
+| **Metric** | `AddResult(metric_name, ...)` | `rotation_error` | Export argument, detailed-stats table, raw-value file name |
+| **EvalType** | `SetEvalType(eval_type)` | `RelativePoses` | Export argument and comparison file name |
+| **Value** | `AddResult(..., value)` | `0.001523` | Raw-value table |
+| **Mean/Median/Min/Max/StdDev** | `EvaluationData::GetStatistics()` | `0.001450` | Summary and detailed-stats tables |
+| **Count** | Number of values under one `EvalCommit` | `10` | `Statistics::count` and the detailed-stats table |
+| **Note Columns** | `SubmitNoteMsg(note_type, ...)` | `view(0,1)` | Columns requested in the raw-value table |
+
+An empty or missing `ProfileCommit` becomes the display commit `default_commit`. A non-empty `POSDK_EVAL_CONTEXT` environment variable is appended to that display commit. When a GT source or connection id is present, the internal commit stored in `EvaluatorManager` also appends `gt_source` and `gt_connection`, so multiple GT inputs are not merged. The display text is kept in the `display_eval_commit` note.
+
+> **Workflow note:** Evaluator Results merge entries by `Algorithm + EvalCommit`.
+> If a workflow contains multiple instances of the same method and more than one
+> instance is connected to GT/evaluation, give each instance a distinct
+> `ProfileCommit` in Configuration. Otherwise their results may overwrite each
+> other. PoMVG GUI checks this before Run and warns when a conflict is detected.
 
 ### Parameter Configuration Example
 
@@ -229,33 +254,36 @@ eval_status.SubmitNoteMsg("runtime", "125ms");         // → runtime column
 **Generation Function**: `ExportMetricAllStatsToCSV("RelativePoses", "rotation_error", "output.csv")`
 
 ```text
-Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev,Count
-globalsfm_pipeline,GlobalSfM Pipeline Demo,0.001523,0.001450,0.000234,0.003456,0.000567,10
-method_opencv,OpenCV Essential Matrix,0.002134,0.001987,0.000456,0.004567,0.000789,10
-method_opengv,OpenGV Five Point,0.001234,0.001189,0.000123,0.002345,0.000445,10
+Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev
+globalsfm_pipeline,GlobalSfM Pipeline Demo,0.001523,0.001450,0.000234,0.003456,0.000567
+method_opencv,OpenCV Essential Matrix,0.002134,0.001987,0.000456,0.004567,0.000789
+method_opengv,OpenGV Five Point,0.001234,0.001189,0.000123,0.002345,0.000445
 ```
 
 **Description**:
-- Each row represents statistical results of one algorithm under specific scenario
-- Includes complete statistical information such as mean, median, min/max, standard deviation
-- Suitable for algorithm performance comparison analysis
+- One row is one algorithm and one `EvalCommit`
+- Columns are mean, median, minimum, maximum, and standard deviation
+- This table has no `Count` column. The sample count is available from `ExportDetailedStatsToCSV()` and `GetStatistics()`
+
+When every `EvalCommit` parses as the same `prefix_number` prefix, this function uses the smart format in Style 4. A non-empty `footnote` is written after the table and starts with `# `.
 
 #### Style 2: Algorithm Comparison Table (`ExportAlgorithmComparisonToCSV`)
 
-**Purpose**: Single statistical value comparison of multiple algorithms under different scenarios
+**Purpose**: Compare one statistic of one metric across algorithms
 **Generation Function**: `ExportAlgorithmComparisonToCSV("RelativePoses", "rotation_error", "comparison.csv", "mean")`
 
+`stat_type` may be `mean`, `median`, `min`, `max`, or `std_dev`. The default is `mean`. An unrecognized value is written as `mean`.
+
+When no `EvalCommit` contains a numeric value, each original commit is its own column:
+
 ```text
-Algorithm,noise_0.01,noise_0.05,noise_0.10,points_100,points_200
-globalsfm_pipeline,0.001523,0.005234,0.012456,0.001234,0.000987
-method_opencv,0.002134,0.006789,0.015678,0.001789,0.001234
-method_opengv,0.001234,0.004567,0.010123,0.001023,0.000856
+Algorithm,demo_a,demo_b,demo_c
+globalsfm_pipeline,0.001523,0.005234,0.012456
+method_opencv,0.002134,0.006789,0.015678
+method_opengv,0.001234,0.004567,0.010123
 ```
 
-**Description**:
-- Column names are different EvalCommit scenarios
-- Table values are values of specified statistical type (e.g., mean)
-- Facilitates intuitive comparison of different algorithms' performance under various conditions
+If any commit parses as `prefix_number`, the header uses those prefixes. Several commits that share a prefix contribute one value: the smaller value when the metric name contains `error` or `loss`, and the larger value otherwise. `noise_0.01` and `noise_0.05` therefore do not become two columns.
 
 #### Style 3: Raw Data Table (`ExportAllRawValuesToCSV`)
 
@@ -289,9 +317,10 @@ globalsfm_pipeline,0.10,0.012456,0.011234,0.003456,0.023456,0.005678
 ```
 
 **Description**:
-- "Noise" column contains parsed numeric part
-- X-axis coordinates are clearer, facilitating data visualization
-- Automatically recognizes "prefix_number" format EvalCommit
+- Used only when every `EvalCommit` has a numeric value and the same prefix
+- The prefix becomes the column name, and the column stores the parsed number
+- Mixed prefixes, or a commit that cannot be parsed, fall back to Style 1
+- The numeric column uses a fixed 15 decimal places. Statistic columns still follow `SetCSVPrecision()`
 
 ### Multi-type Note CSV Output
 
@@ -319,19 +348,20 @@ globalsfm_pipeline,GlobalSfM Pipeline Demo,0.001523,view(0,1),125ms,156,castle-P
 
 ### Batch Export Results
 
-`ExportAllMetricsToCSV("RelativePoses", "output/")` generates multiple files:
+`ExportAllMetricsToCSV("RelativePoses", "output/")` writes one comparison table for each metric and each statistic. The statistics are `mean`, `median`, `max`, `min`, and `std_dev`. It does not write the summary table or the raw-value table.
 
 ```
 output/
 ├── RelativePoses_rotation_error_mean_comparison.csv
 ├── RelativePoses_rotation_error_median_comparison.csv
-├── RelativePoses_rotation_error_ALL_STATS.csv
+├── RelativePoses_rotation_error_max_comparison.csv
+├── RelativePoses_rotation_error_min_comparison.csv
+├── RelativePoses_rotation_error_std_dev_comparison.csv
 ├── RelativePoses_translation_error_mean_comparison.csv
-├── RelativePoses_translation_error_median_comparison.csv
-├── RelativePoses_translation_error_ALL_STATS.csv
-├── rotation_error_all_evaluated_values.csv
-└── translation_error_all_evaluated_values.csv
+└── RelativePoses_translation_error_std_dev_comparison.csv
 ```
+
+`ExportMetricAllStatsToCSV()` writes the summary table to the path given by the caller. `ExportAllRawValuesToCSV()` writes `{metric}_all_evaluated_values.csv`.
 
 ### Actual Usage Example
 
@@ -351,7 +381,7 @@ for (size_t i = 0; i < pose_pairs.size(); ++i) {
     eval_status.SubmitNoteMsg("view_pair", "view(" + std::to_string(i) + "," + std::to_string(i+1) + ")");
 }
 
-// 3. System automatically calls (in MethodPreset)
+// 3. Called by MethodPresetProfiler::ProcessEvaluationResults
 EvaluatorManager::AddEvaluationResultsFromStatus(
     "RelativePoses",           // EvalType
     "globalsfm_pipeline",      // Algorithm (from GetType())
@@ -428,15 +458,17 @@ Export complete statistical summary table for specified metric
 static bool ExportMetricAllStatsToCSV(
     const std::string &eval_type,              // Evaluation type
     const std::string &metric_name,            // Metric name
-    const std::filesystem::path &output_path   // Output file path
+    const std::filesystem::path &output_path,  // Output file path
+    const std::string &footnote = ""           // Optional footnote after the table
 );
 ```
 
-**Output Format**:
+The traditional format is shown below. When every commit shares one numeric prefix, the `EvalCommit` column is replaced by that prefix and stores the parsed number.
+
 ```text
-Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev,Count
-method_example,noise_0.01,0.001523,0.001450,0.000234,0.003456,0.000567,10
-method_example,noise_0.05,0.005234,0.004987,0.001234,0.012345,0.002134,10
+Algorithm,EvalCommit,Mean,Median,Min,Max,StdDev
+method_example,demo_a,0.001523,0.001450,0.000234,0.003456,0.000567
+method_example,demo_b,0.005234,0.004987,0.001234,0.012345,0.002134
 ```
 
 #### `ExportAllMetricsToCSV()`
@@ -483,7 +515,7 @@ static bool ExportAlgorithmComparisonToCSV(
     const std::string &eval_type,              // Evaluation type
     const std::string &metric_name,            // Metric name
     const std::filesystem::path &output_path,  // Output file path
-    const std::string &stat_type = "mean"      // Statistical type
+    const std::string &stat_type = "mean"      // mean/median/min/max/std_dev
 );
 ```
 
@@ -495,7 +527,7 @@ static bool ExportAlgorithmComparisonToCSV(
 
 ```cpp
 // 1. Implement Evaluate function in DataIO plugin
-bool MyRelativePosePlugin::Evaluate(DataPtr gt_data_ptr)
+EvaluatorStatus MyRelativePosePlugin::Evaluate(DataPtr gt_data_ptr)
 {
     auto gt_poses = GetDataPtr<RelativePoses>(gt_data_ptr, "data_relative_poses");
 
@@ -516,8 +548,8 @@ bool MyRelativePosePlugin::Evaluate(DataPtr gt_data_ptr)
         eval_status.SubmitNoteMsg("runtime", std::to_string(runtimes[i]) + "ms");
     }
 
-    SetEvaluatorStatus(eval_status);
-    return true;
+    eval_status.is_successful = true;
+    return eval_status;
 }
 
 // 2. Run method and export results in test code
@@ -573,11 +605,202 @@ EvaluatorManager::ExportAlgorithmComparisonToCSV(
 
 2. **Note Data Validation**: Use `ValidateNoteData()` to ensure note data matches evaluation result count
 
-3. **Algorithm Name Retrieval**: In `MethodPreset`, algorithm name is automatically obtained via `GetType()`
+3. **Algorithm Name Retrieval**: `ProcessEvaluationResults()` uses `GetEvaluatorAlgorithm()`. An empty return value falls back to `GetType()`
 
-4. **Configuration File Settings**: Need to set `ProfileCommit` parameter in method's ini configuration file as evaluation scenario identifier
+4. **Configuration File Settings**: `ProfileCommit` is the evaluation scenario id. A missing or empty value becomes `default_commit`. Evaluation is off unless the ini sets `enable_evaluator=true`
 
 5. **CSV File Naming**: Exported CSV files are automatically named based on evaluation type and metric name to avoid file overwriting
+
+6. **Evaluate() Return Type**: `DataIO::Evaluate()` returns `EvaluatorStatus` (not `bool`), `MethodPresetProfiler::CallEvaluator()` is responsible for processing evaluation results
+
+---
+
+## CSV Precision Control
+
+#### `SetCSVPrecision()`
+
+Set CSV export numeric precision.
+
+```cpp
+static void SetCSVPrecision(int precision);
+```
+
+**Parameters**:
+- `precision`: Decimal places, clamped to 0 through 15. The default is 6. A value whose absolute value is below `1e-precision` is written as `0`
+
+#### `GetCSVPrecision()`
+
+Get current CSV export numeric precision.
+
+```cpp
+static int GetCSVPrecision();
+```
+
+#### `ResetCSVPrecision()`
+
+Reset CSV precision to default value (6).
+
+```cpp
+static void ResetCSVPrecision();
+```
+
+---
+
+## Query Functions
+
+#### `GetStatistics()`
+
+Get statistical information for specified metric.
+
+```cpp
+static EvaluationData::Statistics GetStatistics(
+    const std::string &eval_type,
+    const std::string &algorithm_name,
+    const std::string &metric_name,
+    const std::string &eval_commit
+);
+```
+
+The returned `Statistics` struct contains: `mean`, `median`, `max`, `min`, `std_dev`, `count`.
+
+#### `GetAllAlgorithms()`
+
+Get all algorithm names under specified type.
+
+```cpp
+static std::vector<std::string> GetAllAlgorithms(const std::string &eval_type);
+```
+
+#### `GetAllMetrics()`
+
+Get all metric names under specified type and algorithm.
+
+```cpp
+static std::vector<std::string> GetAllMetrics(
+    const std::string &eval_type,
+    const std::string &algorithm_name
+);
+```
+
+#### `GetAllEvalCommits()`
+
+Get all evaluation commit names under specified metric.
+
+```cpp
+static std::vector<std::string> GetAllEvalCommits(
+    const std::string &eval_type,
+    const std::string &algorithm_name,
+    const std::string &metric_name
+);
+```
+
+#### `GetAllEvaluationTypes()`
+
+Get list of all current evaluation types.
+
+```cpp
+static std::vector<std::string> GetAllEvaluationTypes();
+```
+
+---
+
+## Detailed Statistics Export
+
+#### `ExportDetailedStatsToCSV()`
+
+Export detailed statistical results to CSV file.
+
+```cpp
+static bool ExportDetailedStatsToCSV(
+    const std::string &eval_type,
+    const std::string &algorithm_name,
+    const std::filesystem::path &output_path
+);
+```
+
+When any `EvalCommit` has a numeric value, the header is:
+
+```text
+Metric,EvalCommit,EvalPrefix,EvalValue,Count,Mean,Median,Min,Max,StdDev
+```
+
+Otherwise the header is:
+
+```text
+Metric,EvalCommit,Count,Mean,Median,Min,Max,StdDev
+```
+
+---
+
+## Print & Report
+
+#### `PrintEvaluationReport()`
+
+Print evaluation report of specified type.
+
+```cpp
+static void PrintEvaluationReport(const std::string &eval_type);
+```
+
+#### `PrintAlgorithmComparison()`
+
+Print algorithm comparison report.
+
+```cpp
+static void PrintAlgorithmComparison(const std::string &eval_type, const std::string &metric_name);
+```
+
+#### `PrintAllEvaluationReports()`
+
+Print evaluation reports of all types.
+
+```cpp
+static void PrintAllEvaluationReports();
+```
+
+#### `PrintLatestEvaluationResults()`
+
+Print latest evaluation results of specified algorithm in specific evaluation type.
+
+```cpp
+static void PrintLatestEvaluationResults(
+    const std::string &eval_type,
+    const std::string &algorithm_name,
+    const std::string &note_types = ""    // Note types to display, separated by "|"
+);
+```
+
+**Note Type Parameter**:
+- `""` (default): Do not display notes
+- `"type1|type2"`: Display specified type notes
+
+---
+
+## Clear Functions
+
+#### `ClearEvaluator()`
+
+Clear evaluation content of specified type.
+
+```cpp
+static bool ClearEvaluator(const std::string &eval_type);
+```
+
+#### `ClearAlgorithm()`
+
+Clear evaluation content of specified algorithm.
+
+```cpp
+static bool ClearAlgorithm(const std::string &eval_type, const std::string &algorithm_name);
+```
+
+#### `ClearAllEvaluators()`
+
+Clear all evaluation content.
+
+```cpp
+static void ClearAllEvaluators();
+```
 
 ---
 

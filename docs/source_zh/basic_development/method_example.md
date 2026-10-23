@@ -1,12 +1,14 @@
 # 插件开发快速示例
 
-本文档通过简单示例快速介绍如何开发PoSDK插件。详细的接口说明请参考 [数据插件接口详解](data_plugins.md) 和 [方法插件接口详解](method_plugins.md)。
+本文档通过简单示例快速介绍如何开发PoMVG插件。详细的接口说明请参考 [数据插件接口详解](data_plugins.md) 和 [方法插件接口详解](method_plugins.md)。
 
 ---
 
 ## 插件注册系统
 
-所有PoSDK插件都需要通过 `REGISTRATION_PLUGIN` 宏进行注册，该宏定义在 `pomvg_plugin_register.hpp` 中（已包含在 `po_core.hpp` 内）。
+所有PoMVG插件都需要通过 `REGISTRATION_PLUGIN` 宏进行注册，该宏定义在 `posdk_register.hpp` 中（已包含在 `po_core.hpp` 内）。
+
+在 GUI 中使用手工创建的插件时，还需在 `manifest.json` 中声明 `input_types` / `output_types`；没有普通端口时使用 `[]`，详见[插件开发指南](plugin_guide.md)。
 
 ### 注册宏语法
 
@@ -19,7 +21,7 @@ REGISTRATION_PLUGIN(PluginClassName)
 - 插件类型字符串自动从CMake `PLUGIN_NAME` 宏读取
 
 ```{important}
-** 自动实现 `GetType()` 函数**
+**自动实现 `GetType()` 函数**
 
 - 宏会**自动实现** `GetType()` 函数
 - 头文件中只需**声明** `const std::string& GetType() const override;`
@@ -36,7 +38,7 @@ REGISTRATION_PLUGIN(PluginClassName)
 
 ## Method插件开发快速示例
 
-Method插件用于实现具体的算法逻辑。PoSDK提供了三种Method基类供选择：
+Method插件用于实现具体的算法逻辑。PoMVG提供了三种Method基类供选择：
 
 ### 基类选择指南
 
@@ -106,7 +108,7 @@ DataPtr MySimpleMethod::Build(const DataPtr& material_ptr) {
 
 } // namespace MyPlugin
 
-// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// Plugin registration 插件注册 - 自动从CMake读取PLUGIN_NAME
 // 插件类型："my_simple_method"（来自CMake）
 REGISTRATION_PLUGIN(MyPlugin::MySimpleMethod)
 ```
@@ -170,8 +172,6 @@ MyPresetMethod::MyPresetMethod() {
     // 加载配置文件（configs/methods/my_preset_method.ini）
     // method_options_ 会自动从配置文件加载
     InitializeDefaultConfigPath();
-    // 初始化日志目录
-    InitializeLogDir();
 }
 
 //  不需要手动实现 GetType()，宏会自动生成
@@ -204,7 +204,7 @@ DataPtr MyPresetMethod::Run() {
 
 } // namespace MyPlugin
 
-// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// Plugin registration 插件注册 - 自动从CMake读取PLUGIN_NAME
 // 插件类型："my_preset_method"（来自CMake）
 REGISTRATION_PLUGIN(MyPlugin::MyPresetMethod)
 ```
@@ -279,6 +279,7 @@ public:
 **my_profiler_method.cpp**:
 ```cpp
 #include "my_profiler_method.hpp"
+#include <po_core/ProfilerManager.hpp>
 
 namespace MyPlugin {
 
@@ -289,14 +290,13 @@ MyProfilerMethod::MyProfilerMethod() {
     // 加载配置文件（configs/methods/my_profiler_method.ini）
     // method_options_ 会自动从配置文件加载
     InitializeDefaultConfigPath();
-    InitializeLogDir();
 }
 
 //  不需要手动实现 GetType()，宏会自动生成
 
 DataPtr MyProfilerMethod::Run() {
-    // ✅ 性能分析：开始会话（自动使用方法标签）
-    POSDK_START(true);  // 默认只统计时间，节省开销
+    // Plugin registration 性能分析：开始会话（自动使用方法标签）
+    POSDK_START(GetOptionAsBool("enable_profiling", false));  // 默认只统计时间
     
     // 性能分析：步骤1 - 添加阶段检查点
     PROFILER_STAGE("预处理");
@@ -310,7 +310,7 @@ DataPtr MyProfilerMethod::Run() {
     PROFILER_STAGE("后处理");
         // 后处理代码...
     
-    // ✅ 性能分析：结束会话（自动提交数据）
+    // Plugin registration 性能分析：结束会话（自动提交数据）
     PROFILER_END();
 
     return std::make_shared<DataMap<std::string>>("处理完成", "data_map_string");
@@ -318,7 +318,7 @@ DataPtr MyProfilerMethod::Run() {
 
 } // namespace MyPlugin
 
-// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// Plugin registration 插件注册 - 自动从CMake读取PLUGIN_NAME
 // 插件类型："my_profiler_method"（来自CMake）
 REGISTRATION_PLUGIN(MyPlugin::MyProfilerMethod)
 ```
@@ -336,7 +336,7 @@ REGISTRATION_PLUGIN(MyPlugin::MyProfilerMethod)
 [my_profiler_method]
 threshold=0.7
 enable_profiling=true
-enable_evaluation=true
+enable_evaluator=true
 ```
 
 ### 使用方式
@@ -348,12 +348,14 @@ auto data_package = FactoryData::Create("data_package");
 
 auto result = method->Build(data_package);
 
-// 性能统计会自动导出到CSV文件
+// 性能统计可在 GUI 的性能分析窗口查看并导出 CSV。
 ```
 
 ---
 
 ## DataIO插件开发快速示例
+
+下面的 `Save()` / `Load()` 函数体为文件读写占位代码，需要实现后才能保存或读取文件。
 
 DataIO插件用于封装各种数据类型。最简单的方式是继承 `DataIO` 基类。
 
@@ -391,6 +393,9 @@ public:
     //  只需声明，由 REGISTRATION_PLUGIN 宏自动实现
     const std::string& GetType() const override;
     void* GetData() override;
+    DataDetails Details() const override {
+        return {"CustomData", "包含 id、name 和 values 的自定义数据。"};
+    }
 
     // 可选：实现 Save/Load
     bool Save(const std::string& folder = "",
@@ -430,7 +435,7 @@ bool MyDataPlugin::Load(const std::string& filepath,
 
 } // namespace MyPlugin
 
-// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// Plugin registration 插件注册 - 自动从CMake读取PLUGIN_NAME
 // 插件类型："my_custom_data"（来自CMake）
 REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin)
 ```
@@ -450,18 +455,18 @@ if (custom_data) {
 }
 
 // 保存数据
-data->Save("/path/to/folder", "my_data");
+data->Save("/path/to/folder", "my_data", ".dat");
 
 // 加载数据
 auto loaded_data = FactoryData::Create("my_custom_data");
-loaded_data->Load("/path/to/folder/my_data.dat");
+loaded_data->Load("/path/to/folder/my_data.dat", "dat");
 ```
 
 ---
 
 ## 示例4：支持Protobuf序列化的DataIO插件
 
-使用 `PbDataIO` 基类可以轻松实现数据的protobuf序列化和持久化。这是PoSDK推荐的数据插件实现方式，适合需要跨平台存储和版本兼容的场景。
+使用 `PbDataIO` 基类可以轻松实现数据的protobuf序列化和持久化。这是PoMVG推荐的数据插件实现方式，适合需要跨平台存储和版本兼容的场景。
 
 ```{seealso}
 完整的PbDataIO开发指南、序列化宏使用说明和高级功能，请参阅 [序列化存储与读取](../advanced_development/serialization.md)。
@@ -474,9 +479,25 @@ loaded_data->Load("/path/to/folder/my_data.dat");
 # 插件名称在这里定义（唯一定义处）
 add_posdk_plugin(data_example
     PLUGIN_TYPE data
-    SOURCES data_example.cpp
+    SOURCES data_example.cpp proto/my_example.pb.cc
     HEADERS data_example.hpp
 )
+```
+
+先定义 `proto/my_example.proto`，使用 SDK 配套的 `protoc` 生成 `proto/my_example.pb.h` 与 `.cc`；上面的 CMake 会编译生成的 `.cc`。
+
+```protobuf
+syntax = "proto3";
+package proto;
+message ExampleData {
+    int32 id = 1;
+    string name = 2;
+    repeated double values = 3;
+}
+```
+
+```bash
+protoc --proto_path=. --cpp_out=. proto/my_example.proto
 ```
 
 **data_example.hpp**:
@@ -506,6 +527,9 @@ public:
     const std::string& GetType() const override;
     void* GetData() override;
     DataPtr CopyData() const override;
+    DataDetails Details() const override {
+        return {"ExampleDataStruct", "支持 Protobuf 序列化的示例数据。"};
+    }
 
 protected:
     // PbDataIO必须实现的三个protobuf接口
@@ -575,16 +599,17 @@ bool DataExample::FromProto(const google::protobuf::Message& message) {
     }
 
     // 使用宏简化反序列化
-    PROTO_GET_BASIC(*proto_msg, id, data_ptr_->id);
-    PROTO_GET_BASIC(*proto_msg, name, data_ptr_->name);
-    PROTO_GET_ARRAY(*proto_msg, values, data_ptr_->values);
+    const auto& proto_data = *proto_msg;
+    PROTO_GET_BASIC(proto_data, id, data_ptr_->id);
+    PROTO_GET_BASIC(proto_data, name, data_ptr_->name);
+    PROTO_GET_ARRAY(proto_data, values, data_ptr_->values);
 
     return true;
 }
 
 } // namespace MyPlugin
 
-// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// Plugin registration 插件注册 - 自动从CMake读取PLUGIN_NAME
 // 插件类型："data_example"（来自CMake）
 REGISTRATION_PLUGIN(MyPlugin::DataExample)
 ```
@@ -635,7 +660,7 @@ loaded_data->Load("/path/to/folder/my_example.pb");
 ### Method插件开发
 
 1. **必须重载**：
-   - ** `GetType()`**：只需在头文件中**声明**，由`REGISTRATION_PLUGIN`宏自动实现
+   - **`GetType()`**：只需在头文件中**声明**，由`REGISTRATION_PLUGIN`宏自动实现
    - `Build()` 或 `Run()`：实现算法逻辑
 
 2. **基类选择**：
@@ -652,8 +677,9 @@ loaded_data->Load("/path/to/folder/my_example.pb");
 ### DataIO插件开发
 
 1. **必须重载**：
-   - ** `GetType()`**：只需在头文件中**声明**，由`REGISTRATION_PLUGIN`宏自动实现
+   - **`GetType()`**：只需在头文件中**声明**，由`REGISTRATION_PLUGIN`宏自动实现
    - `GetData()`：返回内部数据指针
+   - `Details()`：返回核心类型名与用途说明
 
 2. **可选重载**：
    - `Save()`/`Load()`：数据持久化

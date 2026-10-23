@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="444" viewBox="0 0 1040 444" role="img" aria-labelledby="title desc">
+  <title id="title">PoMVG GUI 版权信息导出流程</title>
+  <desc id="desc">在当前工作区选择导出菜单的版权信息，核对应用内预览的统计、版权归属总览、模块依赖图与模块版权明细，再点击导出 HTML 保存文件。保存的报告可在浏览器中离线查看或打印为 PDF。本图为操作示意，不是界面截图。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M1 1 L7 4.5 L1 8" fill="none" stroke="#176bcc" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif; fill: #17263a; }
+    .title { font-size: 25px; font-weight: 600; }
+    .step { font-size: 21px; font-weight: 600; }
+    .label { font-size: 19px; }
+    .small { font-size: 17px; fill: #53647b; }
+    .accent { fill: #176bcc; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 15px; }
+  </style>
+  <rect width="1040" height="444" rx="14" fill="#f4f7fb"/>
+  <text x="28" y="42" class="title">PoMVG GUI：版权信息导出</text>
+  <text x="28" y="69" class="small">当前工作区 → 应用内预览 → 自包含 HTML 报告</text>
+
+  <text x="28" y="112" class="step">1  选择版权信息</text>
+  <rect x="28" y="132" width="252" height="224" rx="10" fill="#ffffff" stroke="#dce4ef"/>
+  <text x="46" y="163" class="label">顶部工具栏</text>
+  <rect x="46" y="182" width="216" height="40" rx="6" fill="#eaf3ff"/>
+  <text x="61" y="209" class="label accent">导出 → 版权信息</text>
+  <text x="46" y="250" class="small">查看当前工作区的</text>
+  <text x="46" y="275" class="small">模块依赖和版权归属</text>
+  <text x="46" y="326" class="small">不启动或修改工作流</text>
+
+  <path d="M288 242 H312" fill="none" stroke="#176bcc" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="330" y="112" class="step">2  核对报告预览</text>
+  <rect x="330" y="132" width="350" height="224" rx="10" fill="#ffffff" stroke="#dce4ef"/>
+  <text x="348" y="163" class="label">报告预览 · 版权信息</text>
+  <text x="348" y="192" class="small">模块数 / 版权归属数 / 连线数</text>
+  <path d="M348 208 H662" stroke="#dce4ef"/>
+  <text x="348" y="238" class="label">① 版权归属总览</text>
+  <text x="348" y="269" class="label">② 模块依赖图</text>
+  <text x="348" y="300" class="label">③ 模块版权明细</text>
+  <rect x="528" y="312" width="134" height="32" rx="6" fill="#176bcc"/>
+  <text x="595" y="334" text-anchor="middle" style="font-size:17px;fill:#ffffff">导出 HTML</text>
+
+  <path d="M688 242 H712" fill="none" stroke="#176bcc" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="730" y="112" class="step">3  保存并查看</text>
+  <rect x="730" y="132" width="282" height="224" rx="10" fill="#ffffff" stroke="#dce4ef"/>
+  <text x="748" y="163" class="label">选择目录和文件名</text>
+  <rect x="744" y="182" width="254" height="40" rx="6" fill="#eaf3ff"/>
+  <text x="749" y="208" class="mono accent">posdk_copyright_report.html</text>
+  <text x="748" y="250" class="label">浏览器离线查看</text>
+  <text x="748" y="280" class="small">浅色 / 深色外观</text>
+  <text x="748" y="310" class="small">打印 / PDF</text>
+  <text x="748" y="336" class="small">样式与依赖图内嵌</text>
+
+  <path d="M28 378 H1012" stroke="#dce4ef"/>
+  <text x="28" y="406" class="small">工作区报告快照 ≠ 运行时完整调用链；缺失的版权元数据不会自动补齐。</text>
+  <text x="28" y="430" class="small">操作示意，非界面截图；实际报告内容以当前工作区为准。</text>
+</svg>

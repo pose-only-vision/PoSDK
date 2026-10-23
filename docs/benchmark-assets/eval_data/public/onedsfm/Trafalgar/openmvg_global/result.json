@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Trafalgar",
+  "arm": "openmvg_global",
+  "label": "OpenMVG Global",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 5433,
+  "registered_views": 3757,
+  "points": 106128,
+  "accuracy": {},
+  "timing": {
+    "backend": 2793.5507227077615,
+    "frontend": 147.00309008313343,
+    "pipeline": 2950.9598033342045
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.9029814434131727,
+    "median": 0.6845695406864338,
+    "observations": 1130283,
+    "points": 106128,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 9
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Trafalgar/openmvg_global/points.ply",
+    "g2o": "public/onedsfm/Trafalgar/openmvg_global/poses.g2o",
+    "metadata": "public/onedsfm/Trafalgar/openmvg_global/result.json",
+    "reprojection": "public/onedsfm/Trafalgar/openmvg_global/reprojection.json"
+  }
+}

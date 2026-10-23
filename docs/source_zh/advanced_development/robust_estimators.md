@@ -1,6 +1,6 @@
 # 鲁棒估计器框架
 
-PoSDK 提供了一个鲁棒估计器的框架，目前支持 RANSAC 和 GNC-IRLS。
+PoMVG 提供了一个鲁棒估计器的框架，目前支持 RANSAC 和 GNC-IRLS。
 
 ## `DataSample<TSample>` 数据容器
 
@@ -31,29 +31,44 @@ PoSDK 提供了一个鲁棒估计器的框架，目前支持 RANSAC 和 GNC-IRLS
   }
   ```
 
-## `RobustEstimator<TSample>` 基类
+## `RobustEstimator` 基类
 
-- **模板参数 `TSample`**: 定义了估计器处理的样本数据类型（通常是 `BearingPairs` 或类似结构）。
+- **继承**: `RobustEstimator` 继承自 `MethodPresetProfiler`，是一个非模板类。
 - **核心组件**:
   - **模型估计器 (`model_estimator_ptr_`)**: 继承自 `MethodPreset`，负责从一个最小样本集估计模型参数（例如，LiRP 方法估计相对位姿）。其类型通过 `model_estimator_type` 配置选项指定。
   - **代价评估器 (`cost_evaluator_ptr_`)**: 继承自 `MethodPreset`，负责计算每个样本点相对于给定模型的残差（代价）。其类型通过 `cost_evaluator_type` 配置选项指定。
+- **公有接口**:
+  - `RobustEstimator()`: 构造函数。
+  - `void Initialize()`: 初始化估计器，创建内部的模型估计器和代价评估器。
+  - `void SetModelEstimatorOptions(const MethodOptions &options)`: 为内部模型估计器设置参数。
+  - `void SetCostEvaluatorOptions(const MethodOptions &options)`: 为内部代价评估器设置参数。
+  - `DataPtr Build(const DataPtr &material_ptr = nullptr)`: 执行鲁棒估计流程，初始化估计器并调用 `Run`。
+- **受保护接口**:
+  - `DataPtr GetPopulationPtr() const`: 从 `required_package_` 中获取总体样本数据。
+  - `void CheckParameterConsistency()`: 检查模型估计器和代价评估器的参数一致性（如 `identify_mode` 和 `residual_type`）。
+  - `std::shared_ptr<std::vector<size_t>> GetBestInliers() const`: 获取最佳内点索引。
+- **受保护成员变量**:
+  - `std::vector<size_t> best_inliers_`: 存储内点索引。
+  - `MethodPresetPtr model_estimator_ptr_`: 模型估计器指针。
+  - `MethodPresetPtr cost_evaluator_ptr_`: 代价评估器指针。
+  - `MethodsConfig method_configs_`: 存储估计器的参数配置（`model_estimator_type`, `cost_evaluator_type`）。
 - **工作流程**:
   1. 通过 `FactoryMethod::Create` 创建 `RobustEstimator` 实例 (如 `RANSACEstimator` 或 `GNCIRLSEstimator`)。
   2. 设置 `model_estimator_type` 和 `cost_evaluator_type` 选项。
   3. (可选) 通过 `SetModelEstimatorOptions` 和 `SetCostEvaluatorOptions` 为内部的模型估计器和代价评估器设置特定参数。
-  4. 通过 `SetRequiredData` 设置包含 `DataSample<TSample>` 的输入数据。
+  4. 通过 `SetRequiredData` 设置包含 `DataSample` 的输入数据。
   5. 调用 `Build()` 启动鲁棒估计流程。
 - **派生类**:
-  - `RANSACEstimator<TSample>`: 实现标准的 RANSAC 算法。
-  - `GNCIRLSEstimator<TSample>`: 实现 GNC-IRLS 算法，通常更鲁棒但计算量更大。
+  - `RANSACEstimator`: 实现标准的 RANSAC 算法。
+  - `GNCIRLSEstimator`: 实现 GNC-IRLS 算法，通常更鲁棒但计算量更大。
 - **配置**: 通过 `.ini` 文件或 `SetMethodOptions` 配置鲁棒估计器的参数（如迭代次数、置信度、内点阈值）以及内部模型估计器和代价评估器的类型。
 
-## 使用示例 (`test_ransac_lirp.cpp` 简化版)
+## 使用示例
 
 ```cpp
 // 1. 创建 RANSAC 估计器实例
 auto ransac_estimator = std::dynamic_pointer_cast<RobustEstimator>(
-    FactoryMethod::Create("ransac_estimator") // 假设 TSample 是 BearingPairs
+    FactoryMethod::Create("ransac_estimator")
 );
 ASSERT_TRUE(ransac_estimator != nullptr);
 
@@ -83,7 +98,7 @@ auto sample_data = std::make_shared<DataSample<BearingPairs>>(bearing_pairs_data
 DataPackage input_package;
 input_package.AddData("data_sample", sample_data); // RobustEstimator 需要 data_sample
 // 如果 model_estimator 或 cost_evaluator 需要其他数据 (如相机模型)，也需添加到包中
-// input_package.AddData("data_camera_model", camera_model_data);
+// input_package.AddData("data_camera_models", camera_model_data);
 ransac_estimator->SetRequiredData(input_package); // 或者直接传入 Build
 
 // 6. 执行 RANSAC
@@ -94,4 +109,4 @@ if (result) {
     auto pose = GetDataPtr<RelativePose>(result);
     // ... 使用估计的位姿 ...
 }
-``` 
+```

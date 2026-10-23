@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 270" role="img">
+<title>1DSfM / coverage / all measured configurations</title>
+<rect width="100%" height="100%" fill="#152735"/>
+<g fill="#d9e6f3" font-family="sans-serif" font-size="13">
+<rect x="20" y="12" width="9" height="9" fill="#2176e7"/>
+<text x="35.00" y="22.00" >PoMVG P3P + PA2 / batch LiGT (n=4)</text>
+<path d="M200.00,57 V225" stroke="#344757"/>
+<text x="200.00" y="245.00" fill="#9daec1" text-anchor="middle">0</text>
+<path d="M367.50,57 V225" stroke="#344757"/>
+<text x="367.50" y="245.00" fill="#9daec1" text-anchor="middle">25</text>
+<path d="M535.00,57 V225" stroke="#344757"/>
+<text x="535.00" y="245.00" fill="#9daec1" text-anchor="middle">50</text>
+<path d="M702.50,57 V225" stroke="#344757"/>
+<text x="702.50" y="245.00" fill="#9daec1" text-anchor="middle">75</text>
+<path d="M870.00,57 V225" stroke="#344757"/>
+<text x="870.00" y="245.00" fill="#9daec1" text-anchor="middle">100</text>
+<text x="188.00" y="82.00" text-anchor="end" fill="#9daec1">Alamo</text>
+<rect x="200" y="75.00" width="593.06" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Alamo" data-value="88.5167464115"><title>PoMVG P3P + PA2 / batch LiGT / Alamo: 88.5%</title></rect>
+<text x="188.00" y="124.00" text-anchor="end" fill="#9daec1">Ellis Island</text>
+<rect x="200" y="117.00" width="629.31" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Ellis_Island" data-value="93.9271255061"><title>PoMVG P3P + PA2 / batch LiGT / Ellis_Island: 93.9%</title></rect>
+<text x="188.00" y="166.00" text-anchor="end" fill="#9daec1">Gendarmenmarkt</text>
+<rect x="200" y="159.00" width="611.31" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Gendarmenmarkt" data-value="91.2398921833"><title>PoMVG P3P + PA2 / batch LiGT / Gendarmenmarkt: 91.2%</title></rect>
+<text x="188.00" y="208.00" text-anchor="end" fill="#9daec1">Madrid Metropolis</text>
+<rect x="200" y="201.00" width="588.38" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Madrid_Metropolis" data-value="87.8172588832"><title>PoMVG P3P + PA2 / batch LiGT / Madrid_Metropolis: 87.8%</title></rect>
+<text x="535.00" y="264.00" fill="#9daec1" text-anchor="middle">Recovered / input views (%)</text>
+</g></svg>

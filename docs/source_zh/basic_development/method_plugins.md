@@ -10,16 +10,22 @@
 
 ### 数据管理 | Data Management
 
-| 函数                                              | 功能简述                      |
-| ------------------------------------------------- | ----------------------------- |
-| [`SetRequiredData()`](#setrequireddata)           | 设置单个必需输入数据          |
-| [`GetRequiredPackage()`](#getrequiredpackage)     | 获取必需输入数据包引用        |
-| [`GetRequiredDataTypes()`](#getrequireddatatypes) | 获取必需输入数据类型列表      |
-| [`GetRequiredDataPtr<T>()`](#getrequireddataptr)  | 简化获取必需输入数据（推荐⭐） |
-| [`GetOutputPackage()`](#getoutputpackage)         | 获取输出数据包指针            |
-| [`AddOutputDataPtr()`](#addoutputdataptr)         | 添加数据到输出包              |
-| [`GetOutputDataTypes()`](#getoutputdatatypes)     | 获取输出数据类型列表          |
-| [`ClearOutputPackage()`](#clearoutputpackage)     | 清空输出数据包                |
+| 函数                                              | 功能简述                                  |
+| ------------------------------------------------- | ----------------------------------------- |
+| [`SetRequiredData()`](#setrequireddata)           | 设置单个必需输入数据                      |
+| [`GetRequiredPackage()`](#getrequiredpackage)     | 获取必需输入数据包引用                    |
+| [`GetInputTypes()`](#getinputtypes)               | 获取输入数据类型列表（推荐⭐）             |
+| [`GetRequiredDataPtr<T>()`](#getrequireddataptr)  | 简化获取必需输入数据（推荐⭐）             |
+| [`GetInputData()`](#getinputdata)                 | 按名称获取输入数据                        |
+| [`GetInputDataAs<T>()`](#getinputdataas)          | 按名称获取类型化输入数据（推荐⭐）         |
+| [`GetOutputPackage()`](#getoutputpackage)         | 获取输出数据包指针                        |
+| [`AddOutputDataPtr()`](#addoutputdataptr)         | 添加数据到输出包                          |
+| [`GetOutputTypes()`](#getoutputtypes)             | 获取输出数据类型列表（推荐⭐）             |
+| [`CreateOutputData()`](#createoutputdata)         | 按名称创建输出数据                        |
+| [`CreateOutputDataAs<T>()`](#createoutputdataas)  | 按名称创建类型化输出数据（推荐⭐）         |
+| [`ClearOutputPackage()`](#clearoutputpackage)     | 清空输出数据包                            |
+| ~~[`GetRequiredDataTypes()`](#getrequireddatatypes)~~ | ⚠️ 已废弃，请使用 `GetInputTypes()`   |
+| ~~[`GetOutputDataTypes()`](#getoutputdatatypes)~~     | ⚠️ 已废弃，请使用 `GetOutputTypes()`  |
 
 ### 配置管理 | Configuration Management
 
@@ -52,13 +58,19 @@
 | [`SetGTData()`](#setgtdata)           | 设置真值数据 |
 | [`GetGTData()`](#getgtdata)           | 获取真值数据 |
 
-### 性能分析（MethodPresetProfiler）| Profiling
+### 性能分析与评估（MethodPresetProfiler）| Profiling & Evaluation
 
-| 函数                                      | 功能简述         |
-| ----------------------------------------- | ---------------- |
-| [`EnableProfiling()`](#enableprofiling)   | 启用性能分析     |
-| [`DisableProfiling()`](#disableprofiling) | 禁用性能分析     |
-| [`GetProfilerInfo()`](#getprofilerinfo)   | 获取性能分析信息 |
+| 函数                                                          | 功能简述                           |
+| ------------------------------------------------------------- | ---------------------------------- |
+| [`SetProfilerLabel()`](#setprofilerlabel)                     | 设置性能分析标签（字符串）         |
+| [`SetProfilerLabels()`](#setprofilerlabels)                   | 设置结构化性能分析标签（键值对）   |
+| [`GetProfilerLabel()`](#getprofilerlabel)                     | 获取性能分析标签字符串             |
+| [`GetProfilerLabels()`](#getprofilerlabels)                   | 获取结构化性能分析标签             |
+| [`HasStructuredLabels()`](#hasstructuredlabels)               | 检查是否有结构化标签               |
+| [`SetEvaluatorAlgorithm()`](#setevaluatoralgorithm)           | 设置评估器中使用的算法名称         |
+| [`GetEvaluatorAlgorithm()`](#getevaluatoralgorithm)           | 获取评估器中使用的算法名称         |
+| [`ClearEvaluatorAlgorithm()`](#clearevaluatoralgorithm)       | 清空评估器算法设置                 |
+| [`CallEvaluator()`](#callevaluator)                           | 调用评估器进行评估                 |
 
 ```{seealso}
 - [先验信息与真值设置详细说明](prior_and_gt.md)
@@ -72,10 +84,10 @@
 
 ### 必须重载接口
 
-```{important}
-每个方法插件必须实现以下核心接口之一：
+````{important}
+每个方法插件需要声明 `GetType()`，并根据所选基类实现算法入口：
 
-- ** 方法名称**：只需在头文件中**声明**
+- **方法名称**：只需在头文件中**声明**
   ```cpp
   virtual const std::string& GetType() const override;
   // 返回插件的唯一类型字符串标识。
@@ -83,7 +95,7 @@
   // 示例: `"method_sift"`, `"method_matches2tracks"`
   ```
 
-- **算法主入口**：Build和Run函数二选一，推荐使用Run函数
+- **算法主入口**：直接继承 `Method` 时实现 `Build()`；继承 `MethodPreset` 或 `MethodPresetProfiler` 时实现 `Run()`
   ```cpp
   virtual DataPtr Build(const DataPtr& material_ptr = nullptr) override;
   // 用于实现核心算法：
@@ -101,27 +113,29 @@
   ```
 
 
-### 可选重载接口 (针对 `MethodPreset` 及其派生类)
+````
+
+### 先验信息与版权接口
 
 - **设置算法的先验信息：**
 ```cpp
-virtual void SetPriorInfo(const DataPtr& data_ptr, const std::string& type = "");
+void SetPriorInfo(const DataPtr& data_ptr, const std::string& type = "");
 // （1）`MethodPreset` 设置先验信息，用于需要额外指导信息（如初始位姿、权重）的算法。
 // （2）`data_ptr` 是先验信息数据指针，`type` 是先验信息类型字符串。
 
-virtual void ResetPriorInfo();
+void ResetPriorInfo();
 // 重置先验信息（清空所有先验信息）
 ```
 
 ```{seealso}
-关于先验信息、必需输入数据、真值数据的详细说明和使用示例，请参阅 [先验信息与真值设置](prior-and-gt)。
+关于先验信息、必需输入数据、真值数据的详细说明和使用示例，请参阅 [先验信息与真值设置](prior_and_gt.md)。
 ```
 
 ```cpp
 virtual CopyrightData Copyright() const;
 ```
 
-`Copyright()` 是 `Method` 基类提供的虚函数，用于插件开发者声明版权信息。系统会在方法创建时自动调用此函数，由 `CopyrightManager` 收集并管理版权数据，详细见[版权跟踪功能](copyright-tracking)。
+`Copyright()` 是 `Method` 基类提供的虚函数，用于插件开发者声明版权信息。启用版权跟踪后，`MethodPreset::Build()` 的执行流程会通过 `CopyrightManager` 收集并管理版权数据，详细见[版权跟踪功能](../copyright_tracking.rst)。
 
 ## 可选派生方式
 
@@ -135,14 +149,16 @@ virtual CopyrightData Copyright() const;
     - **核心逻辑分离**: 将核心算法实现在 `Run()` 中，`Build()` 负责流程控制。
 - **`Interface::MethodPresetProfiler`** (派生自 `MethodPreset`)
   - 在 `MethodPreset` 基础上增加了**性能分析**功能。
-  - 自动记录执行时间、内存使用，并可导出 CSV 报告。
+  - 在 `Run()` 中启用性能分析宏后记录所选指标（默认仅时间），并可导出 CSV 报告。
   - 可以通过 `enable_profiling` 选项控制是否启用分析。
-- **`Interface::RobustEstimator<TSample>`** (派生自 `MethodPresetProfiler`)
-  - （功能待拓展）
+- **`Interface::RobustEstimator`** (派生自 `MethodPresetProfiler`)
+  - 鲁棒估计器基类，提供模型估计和代价评估框架。
+  - 支持自动初始化模型估计器和代价评估器。
+  - 详见 [鲁棒估计器](../advanced_development/robust_estimators.md)。
 
 ## 示例
 
-下面的示例代码中的 `method_options_` 赋值仅用于演示配置项的存在，实际默认值应在 `GetOptionAs...()` 调用时提供。
+下面的示例通过 `GetOptionAs...()` 提供缺省值，并读取 INI 中的配置。
 
 **CMakeLists.txt**:
 ```cmake
@@ -170,12 +186,11 @@ public:
     const std::string& GetType() const override;
     DataPtr Run() override; // 实现核心逻辑
 
-    // 可选: 如果继承MethodPreset，可以重写GetInputTypes
-    // const std::vector<std::string>& GetInputTypes() const override;
+    // 输入类型通过 required_package_ 声明；GetInputTypes() 不是虚函数。
 
     // 可选: 重载Copyright()函数声明版权信息
     // Optional: Override Copyright() to declare copyright information
-    Interface::CopyrightData Copyright() const override;
+    // Interface::CopyrightData Copyright() const override;
 };
 } // namespace MyPlugin
 
@@ -191,17 +206,8 @@ MyMethod::MyMethod() {
     required_package_["data_tracks"] = nullptr;
     required_package_["data_global_poses"] = nullptr;
 
-    // ⚠️ 注意：以下代码仅用于声明配置项，不能作为有效的默认值
-    // ⚠️ Note: The following code only declares config items, NOT effective default values
-    // 实际默认值应在GetOptionAs...()调用时提供
-    // Actual default values should be provided when calling GetOptionAs...()
-    method_options_["threshold"] = "0.5";          // 仅声明配置项 | Only declares config item
-    method_options_["max_iterations"] = "100";     // 仅声明配置项 | Only declares config item
-
     // 加载默认配置文件 (如果存在) | Load default config file (if exists)
     InitializeDefaultConfigPath();
-    // 初始化日志目录 | Initialize log directory
-    InitializeLogDir();
 }
 
 //  不需要手动实现 GetType()，宏会自动生成
@@ -220,8 +226,8 @@ DataPtr MyMethod::Run() {
     }
 
     // 2. 获取配置参数 | Get configuration parameters
-    // ✅ 正确：在这里通过函数参数提供默认值
-    // ✅ Correct: Provide default values via function parameters here
+    // Plugin registration 正确：在这里通过函数参数提供默认值
+    // Plugin registration Correct: Provide default values via function parameters here
     float threshold = GetOptionAsFloat("threshold", 0.5f);      // 默认值: 0.5f
     int max_iter = GetOptionAsIndexT("max_iterations", 100);    // 默认值: 100
 
@@ -235,7 +241,7 @@ DataPtr MyMethod::Run() {
     // Create and return result (e.g., return processed poses)
     // 注意: 如果不希望修改输入数据，可以先深拷贝DataPtr
     // Note: If you don't want to modify input data, deep copy DataPtr first
-    // auto result_poses_data = poses->CopyData(); // 假设DataGlobalPoses实现了CopyData
+    // auto result_poses_data = GetInputData("data_global_poses")->CopyData();
     // auto result_poses = GetDataPtr<GlobalPoses>(result_poses_data);
     // ... 修改 result_poses ...
     // return result_poses_data;
@@ -247,28 +253,30 @@ DataPtr MyMethod::Run() {
 
 } // namespace MyPlugin
 
-// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// Plugin registration 插件注册 - 自动从CMake读取PLUGIN_NAME
 // 插件类型："my_method"（来自CMake）
 REGISTRATION_PLUGIN(MyPlugin::MyMethod)
 ```
 
-```{warning}
+````{warning}
 **构造函数中的参数默认值设置**
 
-在构造函数中**不能**使用 `method_options_["..."] = "..."` 的方式来提供默认值。这种方式设置的值会被配置文件加载时覆盖。
+构造函数中预先写入 `method_options_` 的值会被 INI 中的同名项覆盖。推荐在 `GetOptionAs...()` 调用中提供缺省值，使配置项缺失或重置后仍有回退值。
 
 **正确做法**：
 - 在调用 `GetOptionAs...()` 函数时直接提供默认值参数
 - 例如：`GetOptionAsFloat("threshold", 0.5f)` 中的 `0.5f` 就是默认值
 
-**错误做法**：
+**不推荐的做法**：
 ```cpp
-// ❌ 错误：不要在构造函数中这样设置默认值
+// 同名 INI 项会覆盖以下值
 method_options_["threshold"] = "0.5";
 method_options_["max_iterations"] = "100";
 ```
 
 
+
+````
 
 ## 方法参数配置
 
@@ -280,6 +288,7 @@ method_options_["max_iterations"] = "100";
   - 文件格式为标准的 INI 格式，包含一个与方法类型同名的节 `[my_method]`。
   - 在节下面定义 `key=value` 对。
   - `MethodPreset` 会自动加载此文件，配置文件中的值会覆盖默认值。
+  - PoMVG GUI 的普通视觉分组请把参数继续放在 `[my_method]` 下，并使用 `## Group | 分组` 标记，例如 `## Input | 输入`、`## Algorithm | 算法`。额外的 `[section]` 是子 method/组件配置命名空间，不会被 `GetOptionAs...()` 自动读取。
 - **运行时设置**:
   - 可以通过 `SetMethodOptions(const MethodOptions& options)` 批量设置选项。
   - 可以通过 `SetMethodOption(const MethodParams& key, const ParamsValue& value)` 单独设置选项。
@@ -291,11 +300,9 @@ method_options_["max_iterations"] = "100";
 ```{important}
 **默认值的正确设置方式**
 
-**❌ 错误**：在构造函数中使用 `method_options_["param"] = "value"` 来设置默认值
-- 这种方式设置的值会在配置文件加载时被覆盖
-- 如果配置文件中没有该参数，则该参数会变成空字符串或未定义
+**配置覆盖**：预先写入 `method_options_` 的值可被同名 INI 项覆盖；INI 缺少该项时，`LoadMethodOptions()` 不会主动清除已有值。
 
-**✅ 正确**：在调用 `GetOptionAs...()` 时通过函数参数提供默认值
+**推荐**：在调用 `GetOptionAs...()` 时通过函数参数提供缺省值
 - 例如：`GetOptionAsFloat("threshold", 0.5f)`
 - 当配置文件和运行时都未设置该参数时，会使用 `0.5f` 作为默认值
 ```
@@ -303,7 +310,7 @@ method_options_["max_iterations"] = "100";
 
 ## 核心数据类型
 
-核心库提供了多种预定义的数据类型，可以直接在插件中使用或作为参考（详见 **核心数据类型详细说明**：请参阅 [附录A：PoSDK核心数据类型](../appendices/appendix_a_types.md)）
+核心库提供了多种预定义的数据类型，可以直接在插件中使用或作为参考（详见 **核心数据类型详细说明**：请参阅 [附录A：PoMVG核心数据类型](../appendices/appendix_a_types.md)）
 
 ---
 
@@ -361,23 +368,18 @@ for (const auto& [key, value] : pkg) {
 ---
 
 (getrequireddatatypes)=
-#### `GetRequiredDataTypes()`
+#### `GetRequiredDataTypes()` ⚠️ 已废弃
+
+```{warning}
+请使用 [`GetInputTypes()`](#getinputtypes) 替代。
+```
 
 获取所有必需输入数据的类型列表。
 
 **函数签名**:
 ```cpp
+[[deprecated("Use GetInputTypes() instead")]]
 std::vector<std::string> GetRequiredDataTypes() const;
-```
-
-**返回值**: 必需数据类型的字符串向量
-
-**使用示例**:
-```cpp
-auto types = method->GetRequiredDataTypes();
-for (const auto& type : types) {
-    std::cout << "需要类型: " << type << std::endl;
-}
 ```
 
 ---
@@ -479,23 +481,125 @@ AddOutputDataPtr(sub_package, "sub_results");
 ---
 
 (getoutputdatatypes)=
-#### `GetOutputDataTypes()`
+#### `GetOutputDataTypes()` ⚠️ 已废弃
 
-获取输出数据包中所有数据的类型列表。
+```{warning}
+请使用 [`GetOutputTypes()`](#getoutputtypes) 替代。
+```
+
+获取通过 `output_types_` 声明的输出类型列表。
 
 **函数签名**:
 ```cpp
+[[deprecated("Use GetOutputTypes() instead")]]
 std::vector<std::string> GetOutputDataTypes() const;
 ```
 
-**返回值**: 输出数据类型的字符串向量
+---
+
+(getinputtypes)=
+#### `GetInputTypes()` （推荐）
+
+获取输入数据类型列表。替代已废弃的 `GetRequiredDataTypes()`。
+
+**函数签名**:
+```cpp
+const std::vector<std::string>& GetInputTypes() const;
+```
+
+**返回值**: 输入数据类型的字符串向量引用
 
 **使用示例**:
 ```cpp
-auto output_types = method->GetOutputDataTypes();
-for (const auto& type : output_types) {
-    std::cout << "输出类型: " << type << std::endl;
+const auto& types = method->GetInputTypes();
+for (const auto& type : types) {
+    std::cout << "输入类型: " << type << std::endl;
 }
+```
+
+---
+
+(getoutputtypes)=
+#### `GetOutputTypes()` （推荐）
+
+获取输出数据类型列表。替代已废弃的 `GetOutputDataTypes()`。
+
+**函数签名**:
+```cpp
+const std::vector<std::string>& GetOutputTypes() const;
+```
+
+**返回值**: 输出数据类型的字符串向量引用
+
+---
+
+(getinputdata)=
+#### `GetInputData()`
+
+按名称从 `required_package_` 获取输入数据。
+
+**函数签名**:
+```cpp
+DataPtr GetInputData(const std::string &dataName) const;
+```
+
+**参数**:
+- `dataName`: 数据在 `required_package_` 中的键名
+
+**返回值**: 数据指针，未找到时返回 `nullptr`
+
+---
+
+(getinputdataas)=
+#### `GetInputDataAs<T>()` （推荐）
+
+按名称获取类型化输入数据指针。等价于 `GetDataPtr<T>(GetInputData(dataName))`。
+
+**函数签名**:
+```cpp
+template <typename T>
+std::shared_ptr<T> GetInputDataAs(const std::string &dataName) const;
+```
+
+**使用示例**:
+```cpp
+auto tracks = method->GetInputDataAs<Tracks>("data_tracks");
+```
+
+---
+
+(createoutputdata)=
+#### `CreateOutputData()`
+
+按名称通过工厂创建输出数据，可选自动添加到输出包。
+
+**函数签名**:
+```cpp
+DataPtr CreateOutputData(const std::string &dataName, bool addToPackage = true);
+```
+
+**参数**:
+- `dataName`: 数据类型名称
+- `addToPackage`: 是否自动添加到输出数据包（默认 `true`）
+
+**返回值**: 创建的数据指针
+
+---
+
+(createoutputdataas)=
+#### `CreateOutputDataAs<T>()` （推荐）
+
+按名称创建类型化输出数据指针。
+
+**函数签名**:
+```cpp
+template <typename T>
+std::shared_ptr<T> CreateOutputDataAs(const std::string &dataName, bool addToPackage = true);
+```
+
+**使用示例**:
+```cpp
+auto result_poses = method->CreateOutputDataAs<GlobalPoses>("data_global_poses");
 ```
 
 ---
@@ -735,23 +839,176 @@ DataPtr GetGTData() const;
 
 ---
 
-### 性能分析函数（MethodPresetProfiler）
+### 性能分析与评估函数（MethodPresetProfiler）
 
-(enableprofiling)=
-#### `EnableProfiling()`
+(setprofilerlabel)=
+#### `SetProfilerLabel()`
 
-启用性能分析。详见[性能分析系统](../advanced_development/profiler.md)。
+设置性能分析标签（字符串版本）。
+
+**函数签名**:
+```cpp
+void SetProfilerLabel(const std::string &profiler_label);
+```
+
+**参数**:
+- `profiler_label`: 性能分析标签字符串
+
+**使用示例**:
+```cpp
+method->SetProfilerLabel("MyAlgorithm_v2");
+```
 
 ---
 
-(disableprofiling)=
-#### `DisableProfiling()`
+(setprofilerlabels)=
+#### `SetProfilerLabels()`
 
-禁用性能分析。
+设置结构化性能分析标签（键值对），用于CSV导出时使用自定义表头。
+
+**函数签名**:
+```cpp
+void SetProfilerLabels(const std::unordered_map<std::string, std::string> &structured_labels);
+```
+
+**使用示例**:
+```cpp
+method->SetProfilerLabels({{"pipeline", "PoSDK"}, {"dataname", "test_data1"}});
+```
 
 ---
 
-(getprofilerinfo)=
-#### `GetProfilerInfo()`
+(getprofilerlabel)=
+#### `GetProfilerLabel()`
 
-获取性能分析信息。
+获取性能分析标签字符串。如果未设置，默认返回 `GetType()` 的值。
+
+**函数签名**:
+```cpp
+std::string GetProfilerLabel() const;
+```
+
+---
+
+(getprofilerlabels)=
+#### `GetProfilerLabels()`
+
+获取结构化性能分析标签。
+
+**函数签名**:
+```cpp
+const std::unordered_map<std::string, std::string>& GetProfilerLabels() const;
+```
+
+---
+
+(hasstructuredlabels)=
+#### `HasStructuredLabels()`
+
+检查是否设置了结构化标签。
+
+**函数签名**:
+```cpp
+bool HasStructuredLabels() const;
+```
+
+---
+
+(setevaluatoralgorithm)=
+#### `SetEvaluatorAlgorithm()`
+
+设置评估器中使用的算法名称，用于在评估器中区分不同的算法配置。如果不设置则默认使用 `GetType()` 的值。
+
+**函数签名**:
+```cpp
+void SetEvaluatorAlgorithm(const std::string &algorithm_name);
+```
+
+---
+
+(getevaluatoralgorithm)=
+#### `GetEvaluatorAlgorithm()`
+
+获取评估器中使用的算法名称。未设置时返回空字符串，调用方在需要时应使用 `GetType()` 作为备选。
+
+**函数签名**:
+```cpp
+std::string GetEvaluatorAlgorithm() const;
+```
+
+---
+
+(clearevaluatoralgorithm)=
+#### `ClearEvaluatorAlgorithm()`
+
+清空评估器算法设置，将 `algorithm_` 重置为空字符串。在每次测试运行前调用此方法，避免上一次运行设置的算法名缓存影响当前运行。
+
+**函数签名**:
+```cpp
+void ClearEvaluatorAlgorithm();
+```
+
+---
+
+(callevaluator)=
+#### `CallEvaluator()`
+
+调用评估器进行评估。该函数会拷贝输入数据，检查真值数据，并调用 `DataIO::Evaluate()` 函数进行评估。支持单个数据对象和 `DataPackage` 两种情况。
+
+**函数签名**:
+```cpp
+bool CallEvaluator(const DataPtr &result_data);
+```
+
+**参数**:
+- `result_data`: 待评估的结果数据
+
+**返回值**: 是否成功调用评估
+
+```{seealso}
+- [性能分析系统详细说明](../advanced_development/profiler.md)
+- [EvaluatorManager 精度评估器](../advanced_development/evaluator_manager.md)
+```
+
+## 可插拔双视图估计器契约
+
+如果新 estimator 希望被 `two_view_estimator` 直接选择，不应要求 wrapper
+预先知道它的插件 ID。插件除了继承 `MethodPresetProfiler`，还应实现可选的
+能力接口：
+
+```cpp
+class MyEstimator final
+    : public PoSDK::Interface::MethodPresetProfiler,
+      public PoSDK::Interface::StaticTwoViewEstimatorCapabilities<
+          PoSDK::Interface::TwoViewEstimatorInputContract::IdMatchesWithFeaturesAndCameras,
+          PoSDK::Interface::TwoViewEstimatorPoseConvention::PoSDK,
+          PoSDK::Interface::TwoViewEstimatorInlierContract::MatchesInPlace,
+          PoSDK::Interface::TwoViewEstimatorRefinementContract::Unsupported>
+{
+    // Run() 与 GetType() ...
+};
+```
+
+同时在严格 source manifest 中声明同一份契约。GUI 只读取静态 manifest，
+不会为了生成下拉选项而在 GUI 进程内实例化原生插件：
+
+```json
+"capabilities": {
+  "two_view_estimator": {
+    "contract_version": 1,
+    "input_contract": "id_matches_features_cameras",
+    "output_contract": "relative_pose",
+    "pose_convention": "posdk",
+    "inlier_contract": "matches_in_place",
+    "refinement_contract": "unsupported"
+  }
+}
+```
+
+manifest 与运行时 provider 必须一致。`BearingPairs` 类型应选择
+`bearing_pairs + sample_best_inliers`；外部匹配类型应选择
+`id_matches_features_cameras`，通常通过 `matches_in_place` 回传内点。
+位姿约定和 refine 所有权属于不可变契约，不应作为普通用户参数切换。
+契约 estimator 必须返回 `DataMap<RelativePose>`；声明
+`estimator_optional` 或 `estimator_always` 后，wrapper 不会再重复执行外部
+refine。

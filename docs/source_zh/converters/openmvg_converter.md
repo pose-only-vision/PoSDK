@@ -10,12 +10,13 @@ OpenMVG文件转换器提供直接解析OpenMVG工具输出文件的功能，无
 ### 支持的数据类型
 (openmvg-supported-data-types)=
 
-| 数据类型     | OpenMVG格式       | PoSDK类型          | 转换函数                                 |
-| ------------ | ----------------- | ------------------ | ---------------------------------------- |
-| **特征点**   | `.feat` 二进制    | `ImageFeatureInfo` | [`LoadFeatures`](openmvg-load-features)  |
-| **匹配**     | `.matches` 二进制 | `Matches`          | [`LoadMatches`](openmvg-load-matches)    |
-| **SfM数据**  | `sfm_data.json`   | `GlobalPoses`      | [`LoadSfMData`](openmvg-load-sfm-data)   |
-| **图像信息** | `sfm_data.json`   | `DataImages`       | [`ToDataImages`](openmvg-to-data-images) |
+| 数据类型     | OpenMVG格式       | PoMVG类型          | 转换函数                                                   |
+| ------------ | ----------------- | ------------------ | ---------------------------------------------------------- |
+| **特征点**   | `.feat` 二进制    | `ImageFeatureInfo` | [`LoadFeatures`](openmvg-load-features)                    |
+| **匹配**     | `.matches` 二进制 | `Matches`          | [`LoadMatches`](openmvg-load-matches)                      |
+| **SfM数据**  | `sfm_data.json`   | `GlobalPoses`      | [`LoadSfMData`](openmvg-load-sfm-data)                     |
+| **图像信息** | `sfm_data.json`   | `DataImages`       | [`ToDataImages`](openmvg-to-data-images)                   |
+| **相机模型** | `sfm_data.json`   | `CameraModels`     | [`LoadSfMDataIntrinsics`](openmvg-load-sfm-data-intrinsics) / [`ToDataCameraModels`](openmvg-to-data-camera-models) |
 
 ---
 
@@ -161,7 +162,7 @@ if (success) {
 ### `ToDataImages`
 (openmvg-to-data-images)=
 
-将OpenMVG的SfM数据文件转换为PoSDK图像数据
+将OpenMVG的SfM数据文件转换为PoMVG图像数据
 
 **函数签名**:
 ```cpp
@@ -199,7 +200,7 @@ if (success) {
 ### `ToDataFeatures`
 (openmvg-to-data-features)=
 
-将OpenMVG的特征文件转换为PoSDK特征数据
+将OpenMVG的特征文件转换为PoMVG特征数据
 
 **函数签名**:
 ```cpp
@@ -245,7 +246,7 @@ if (success) {
 ### `ToDataMatches`
 (openmvg-to-data-matches)=
 
-将OpenMVG的匹配文件转换为PoSDK匹配数据
+将OpenMVG的匹配文件转换为PoMVG匹配数据
 
 **函数签名**:
 ```cpp
@@ -278,7 +279,7 @@ if (success) {
 ### `ToDataGlobalPoses`
 (openmvg-to-data-global-poses)=
 
-将OpenMVG的SfM数据文件转换为PoSDK全局位姿数据
+将OpenMVG的SfM数据文件转换为PoMVG全局位姿数据
 
 **函数签名**:
 ```cpp
@@ -309,6 +310,71 @@ if (success) {
     
     const auto& poses = data_global_poses->GetGlobalPosesConst();
     LOG_INFO_ZH << "加载了 " << poses.size() << " 个全局位姿";
+}
+```
+
+### `LoadSfMDataIntrinsics`
+(openmvg-load-sfm-data-intrinsics)=
+
+从SfM数据文件加载内参和视图到内参的映射
+
+**函数签名**:
+```cpp
+static bool LoadSfMDataIntrinsics(
+    const std::string &sfm_data_file,
+    types::CameraModels &camera_models);
+```
+
+**参数说明**:
+| 参数            | 类型                    | 说明                   |
+| --------------- | ----------------------- | ---------------------- |
+| `sfm_data_file` | `const std::string&`    | [输入] SfM数据文件路径 |
+| `camera_models` | `types::CameraModels&`  | [输出] 相机模型        |
+
+**返回值**: `bool` - 转换是否成功
+
+**使用示例**:
+```cpp
+// 加载OpenMVG内参数据
+types::CameraModels camera_models;
+bool success = OpenMVGFileConverter::LoadSfMDataIntrinsics(
+    "sfm_data.json", camera_models);
+
+if (success) {
+    LOG_INFO_ZH << "加载了 " << camera_models.size() << " 个相机模型";
+}
+```
+
+### `ToDataCameraModels`
+(openmvg-to-data-camera-models)=
+
+将OpenMVG的SfM数据文件转换为PoMVG的相机模型数据
+
+**函数签名**:
+```cpp
+static bool ToDataCameraModels(
+    const std::string &sfm_data_file,
+    Interface::DataPtr &camera_models_data);
+```
+
+**参数说明**:
+| 参数                 | 类型                  | 说明                      |
+| -------------------- | --------------------- | ------------------------- |
+| `sfm_data_file`      | `const std::string&`  | [输入] SfM数据文件路径    |
+| `camera_models_data` | `Interface::DataPtr&` | [输出] 相机模型数据指针   |
+
+**返回值**: `bool` - 转换是否成功
+
+**使用示例**:
+```cpp
+// 加载OpenMVG相机模型
+Interface::DataPtr camera_models_data;
+bool success = OpenMVGFileConverter::ToDataCameraModels(
+    "sfm_data.json", camera_models_data);
+
+if (success) {
+    auto package = std::make_shared<Interface::DataPackage>();
+    package->AddData(camera_models_data);
 }
 ```
 
@@ -374,7 +440,7 @@ package->AddData(global_poses_data);
 package->Save("posdk_project.pb");
 ```
 
-### OpenMVG → PoSDK → 进一步处理
+### OpenMVG → PoMVG → 进一步处理
 ```cpp
 // 加载OpenMVG全局位姿
 types::GlobalPoses openmvg_poses;

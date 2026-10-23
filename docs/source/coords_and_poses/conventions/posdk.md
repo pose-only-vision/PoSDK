@@ -1,10 +1,10 @@
-# PoSDK Standard Pose Conventions
+# PoMVG Standard Pose Conventions
 
-To ensure consistency in library internal operations and clarity when interacting with external data, PoSDK follows the following standard conventions for camera pose representation.
+To ensure consistency in library internal operations and clarity when interacting with external data, PoMVG follows the following standard conventions for camera pose representation.
 
 ## 1. Global Camera Pose (`types::GlobalPoses`)
 
-In PoSDK, the global pose of a single camera (i.e., the camera's orientation and position relative to the world coordinate system) is defined by a rotation matrix $R$ and a translation vector $\mathbf{t}$. By default, PoSDK uses the **`PoseFormat::RwTw`** format.
+In PoMVG, the global pose of a single camera (i.e., the camera's orientation and position relative to the world coordinate system) is defined by a rotation matrix $R$ and a translation vector $\mathbf{t}$. By default, PoMVG uses the **`PoseFormat::RwTw`** format.
 
 ### PoseFormat::RwTw (Default)
 
@@ -23,7 +23,7 @@ $$\mathbf{x}_c \sim R_w^c \cdot (\mathbf{X}_w - \mathbf{t}_w)$$
 
 ### PoseFormat::RwTc
 
-PoSDK also supports another common pose representation format **`PoseFormat::RwTc`** and provides conversion functions between the two formats.
+PoMVG also supports another common pose representation format **`PoseFormat::RwTc`** and provides conversion functions between the two formats.
 
 -   **Meaning**: A 3D feature point $\mathbf{X}_w$ in the world coordinate system is transformed to a normalized image feature point $\mathbf{x}_c$ in the camera coordinate system using the formula:
 
@@ -56,7 +56,7 @@ $$\mathbf{x}_j \sim R_{ij} \cdot \mathbf{x}_i + \mathbf{t}_{ij}$$
 
 ## 3. Convert `GlobalPoses` to `RelativePose`
 
-If the global poses of two cameras are known (using PoSDK's default `RwTw` format as an example):
+If the global poses of two cameras are known (using PoMVG's default `RwTw` format as an example):
 -   Camera $i$: $(R_w^i, \mathbf{t}_w^i)$
 -   Camera $j$: $(R_w^j, \mathbf{t}_w^j)$
 
@@ -77,7 +77,7 @@ $$\mathbf{t}_{ij} = R_w^j \cdot (\mathbf{t}_w^i - \mathbf{t}_w^j)$$
 
 -   **Pixel coordinates**: $\mathbf{p} = (u, v)^T$, origin at top-left corner of image, $u$ to the right, $v$ downward.
     -   Units are pixels
-    -   In PoSDK typically represented as `std::vector<cv::Point2f>` or `Eigen::Matrix<double, 2, N>`
+    -   In PoMVG typically represented as `std::vector<cv::Point2f>` or `Eigen::Matrix<double, 2, N>`
 
 ### 4.2 Homogeneous Pixel Coordinates (3D)
 
@@ -111,4 +111,4 @@ $$\mathbf{t}_{ij} = R_w^j \cdot (\mathbf{t}_w^i - \mathbf{t}_w^j)$$
     -   Result of normalizing the normalized image coordinates $\mathbf{x}$
     -   Unit vector with constant magnitude of 1
     -   Represents the unit direction vector from camera center to image feature point
-    -   In PoSDK, `types::BearingVectors` is an `Eigen::Matrix<double, 3, Eigen::Dynamic>`, where each column is a 3D bearing vector
+    -   In PoMVG, `types::BearingVectors` is an `Eigen::Matrix<double, 3, Eigen::Dynamic>`, where each column is a 3D bearing vector

@@ -4,7 +4,7 @@
 
 ## 概述
 
-po_core 是 PoSDK 的核心库，通过自动工作流在不同平台上构建和发布。本文档列出了：
+po_core 是 PoMVG 的核心库，通过自动工作流在不同平台上构建和发布。本文档列出了：
 
 - po_core 支持的构建平台
 - 构建工具版本要求
@@ -16,9 +16,9 @@ po_core 目前支持以下平台的自动构建：
 
 | 平台       | 架构   | 版本                       | 状态       |
 | ---------- | ------ | -------------------------- | ---------- |
-| **Ubuntu** | x86_64 | 24.04.3 LTS (Noble Numbat) | ✅ 完全支持 |
-| **Ubuntu** | arm64  | 24.04.3 LTS (Noble Numbat) | ✅ 完全支持 |
-| **macOS**  | arm64  | 15.3+                      | ✅ 完全支持 |
+| **Ubuntu** | x86_64 | 24.04.3 LTS (Noble Numbat) | Yes |
+| **Ubuntu** | arm64  | 24.04.3 LTS (Noble Numbat) | Yes |
+| **macOS**  | arm64  | 15.3+                      | Yes |
 
 ## 构建工具版本要求
 
@@ -56,6 +56,6 @@ po_core 目前支持以下平台的自动构建：
 
 ## 相关文档
 
-- [基础安装指南](installation.md)
+- [基础安装说明](installation.md)
 - [使用预编译库](using_precompiled.md)
 - [返回安装文档首页](index.md)

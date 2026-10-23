@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Roman_Forum",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 1134,
+  "registered_views": 1034,
+  "points": 295786,
+  "accuracy": {},
+  "timing": {
+    "backend": 3393.8403701249044,
+    "frontend": 33.43473537568934,
+    "pipeline": 3444.2885863755364
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.7455024297215711,
+    "median": 0.5490460552587133,
+    "observations": 1373674,
+    "points": 295786,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Roman_Forum/openmvg_incremental/points.ply",
+    "g2o": "public/onedsfm/Roman_Forum/openmvg_incremental/poses.g2o",
+    "metadata": "public/onedsfm/Roman_Forum/openmvg_incremental/result.json",
+    "reprojection": "public/onedsfm/Roman_Forum/openmvg_incremental/reprojection.json"
+  }
+}

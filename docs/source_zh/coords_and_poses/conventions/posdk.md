@@ -1,10 +1,10 @@
-# PoSDK 标准位姿约定
+# PoMVG 标准位姿约定
 
-为了确保库内部操作的一致性和与外部数据交互时的清晰性，PoSDK 对相机位姿的表示遵循以下标准约定。
+为了确保库内部操作的一致性和与外部数据交互时的清晰性，PoMVG 对相机位姿的表示遵循以下标准约定。
 
 ## 1. 全局相机位姿 (`types::GlobalPoses`)
 
-PoSDK 中，单个相机的全局位姿（即相机相对于世界坐标系的姿态和位置）由旋转矩阵 $R$ 和平移向量 $\mathbf{t}$ 定义。默认情况下，PoSDK 采用 **`PoseFormat::RwTw`** 格式。
+PoMVG 中，单个相机的全局位姿（即相机相对于世界坐标系的姿态和位置）由旋转矩阵 $R$ 和平移向量 $\mathbf{t}$ 定义。默认情况下，PoMVG 采用 **`PoseFormat::RwTw`** 格式。
 
 ### PoseFormat::RwTw (默认)
 
@@ -23,7 +23,7 @@ $$\mathbf{x}_c \sim R_w^c \cdot (\mathbf{X}_w - \mathbf{t}_w)$$
 
 ### PoseFormat::RwTc
 
-PoSDK 也支持另一种常见的位姿表示格式 **`PoseFormat::RwTc`**，并提供了两者之间的转换函数。
+PoMVG 也支持另一种常见的位姿表示格式 **`PoseFormat::RwTc`**，并提供了两者之间的转换函数。
 
 -   **含义**: 世界坐标系中的一个3D特征点 $\mathbf{X}_w$ 转换到相机坐标系下的归一化图像特征点 $\mathbf{x}_c$ 的公式为
 
@@ -56,7 +56,7 @@ $$\mathbf{x}_j \sim R_{ij} \cdot \mathbf{x}_i + \mathbf{t}_{ij}$$
 
 ## 3. Convert `GlobalPoses` to `RelativePose`
 
-如果已知两个相机的全局位姿（以PoSDK默认的 `RwTw` 格式为例）：
+如果已知两个相机的全局位姿（以PoMVG默认的 `RwTw` 格式为例）：
 -   相机 $i$: $(R_w^i, \mathbf{t}_w^i)$
 -   相机 $j$: $(R_w^j, \mathbf{t}_w^j)$
 
@@ -77,7 +77,7 @@ $$\mathbf{t}_{ij} = R_w^j \cdot (\mathbf{t}_w^i - \mathbf{t}_w^j)$$
 
 -   **像素坐标**: $\mathbf{p} = (u, v)^T$，原点在图像左上角，$u$向右，$v$向下。
     -   单位为像素
-    -   在PoSDK中通常用 `std::vector<cv::Point2f>` 或 `Eigen::Matrix<double, 2, N>` 表示
+    -   在PoMVG中通常用 `std::vector<cv::Point2f>` 或 `Eigen::Matrix<double, 2, N>` 表示
 
 ### 4.2 齐次像素坐标 (3D)
 
@@ -111,4 +111,4 @@ $$\mathbf{t}_{ij} = R_w^j \cdot (\mathbf{t}_w^i - \mathbf{t}_w^j)$$
     -   是归一化图像坐标 $\mathbf{x}$ 进行单位化后的结果
     -   模长恒为1的单位向量
     -   表示从相机光心到图像特征点的单位方向向量
-    -   在PoSDK中，`types::BearingVectors` 是一个 `Eigen::Matrix<double, 3, Eigen::Dynamic>`，每一列是一个3D的bearing vector
+    -   在PoMVG中，`types::BearingVectors` 是一个 `Eigen::Matrix<double, 3, Eigen::Dynamic>`，每一列是一个3D的bearing vector

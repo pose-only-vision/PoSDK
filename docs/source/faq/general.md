@@ -1,6 +1,6 @@
 # Frequently Asked Questions (FAQ)
 
-Below are common questions and answers when using PoSDK. If your question is not listed here, please refer to the detailed documentation or submit an issue on GitHub.
+Below are common questions and answers when using PoMVG. If your question is not listed here, please refer to the detailed documentation or submit an issue on GitHub.
 
 ## Installation-Related Issues
 
@@ -11,7 +11,7 @@ A: Most dependency installation errors can be resolved through the following ste
 - Install dependencies using package managers (such as apt, brew)
 - For specific version requirements, consider compiling from source
 
-### Q: Can PoSDK be used on macOS/Windows?
+### Q: Can PoMVG be used on macOS/Windows?
 
 A: The current version mainly supports Linux environments. We are working to provide full support for macOS and Windows. Please follow project updates.
 

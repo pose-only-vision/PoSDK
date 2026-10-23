@@ -1,0 +1,22 @@
+{
+  "dataset": "eth3d",
+  "scene": "relief",
+  "platform": "OpenMVG Global",
+  "points": 68822,
+  "ply_sha256": "1e4362f092ef215aa4bf98e5e97aba43caa16135542dcd700bb2992035d6d4c3",
+  "original_video_sha256": "86e9d547c7349b52337b43bca880b5fff89c6cc7717905cbb2718389578bc8fb",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 571,
+    "fps": 30.0,
+    "duration_seconds": 19.033333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 571,
+    "fps": 30.0,
+    "duration_seconds": 19.033333
+  }
+}

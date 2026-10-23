@@ -1,12 +1,14 @@
 # Plugin Development Quick Example
 
-This document quickly introduces how to develop PoSDK plugins through simple examples. For detailed interface descriptions, please refer to [Data Plugin Interface Details](data_plugins.md) and [Method Plugin Interface Details](method_plugins.md).
+This document quickly introduces how to develop PoMVG plugins through simple examples. For detailed interface descriptions, please refer to [Data Plugin Interface Details](data_plugins.md) and [Method Plugin Interface Details](method_plugins.md).
 
 ---
 
 ## Plugin Registration System
 
-All PoSDK plugins need to be registered through the `REGISTRATION_PLUGIN` macro, which is defined in `pomvg_plugin_register.hpp` (already included in `po_core.hpp`).
+All PoMVG plugins need to be registered through the `REGISTRATION_PLUGIN` macro, which is defined in `posdk_register.hpp` (already included in `po_core.hpp`).
+
+Hand-written plugins also need `input_types` / `output_types` in `manifest.json` for ordinary GUI ports. Use `[]` for no ordinary ports; see the [plugin guide](plugin_guide.md).
 
 ### Registration Macro Syntax
 
@@ -19,7 +21,7 @@ REGISTRATION_PLUGIN(PluginClassName)
 - Plugin type string is automatically read from CMake `PLUGIN_NAME` macro
 
 ```{important}
-** Automatic Implementation of `GetType()` Function**
+**Automatic Implementation of `GetType()` Function**
 
 - Macro **automatically implements** `GetType()` function
 - Only **declare** `const std::string& GetType() const override;` in header file
@@ -31,12 +33,13 @@ REGISTRATION_PLUGIN(PluginClassName)
 - Must be placed at the end of `.cpp` source file (cannot be placed in `.hpp` header file)
 - Plugin name must be defined in CMakeLists.txt using `add_posdk_plugin(plugin_name ...)`
 - Plugin type string is automatically read from CMake, ensuring consistency between CMake target, file name, and registration type
+- The build also emits `posdk_plugin_<plugin_name>.posdk.json`, which is used by the runtime loader for compatibility filtering
 
 ---
 
 ## Method Plugin Development Quick Example
 
-Method plugins are used to implement specific algorithm logic. PoSDK provides three Method base classes to choose from:
+Method plugins are used to implement specific algorithm logic. PoMVG provides three Method base classes to choose from:
 
 ### Base Class Selection Guide
 
@@ -63,6 +66,9 @@ add_posdk_plugin(my_simple_method
     PLUGIN_TYPE methods
     SOURCES my_simple_method.cpp
     HEADERS my_simple_method.hpp
+    # Optional deployment declaration:
+    # SUPPORTED_SYSTEMS macos linux
+    # SUPPORTED_ARCHES arm64 x86_64
 )
 ```
 
@@ -170,17 +176,15 @@ MyPresetMethod::MyPresetMethod() {
     // Load configuration file (configs/methods/my_preset_method.ini)
     // method_options_ automatically loads from configuration file
     InitializeDefaultConfigPath();
-    // Initialize log directory
-    InitializeLogDir();
 }
 
 // Don't need to manually implement GetType(), macro automatically generates
 
 DataPtr MyPresetMethod::Run() {
     // 1. Get input data (MethodPreset already automatically checks types)
-    // Recommended: use GetRequiredDataPtr for simplified access
-    auto tracks = GetRequiredDataPtr<Tracks>("data_tracks");
-    auto cameras = GetRequiredDataPtr<CameraModels>("data_camera_models");
+    // Current recommended accessors are GetInputDataAs / CreateOutputDataAs.
+    auto tracks = GetInputDataAs<Tracks>("data_tracks");
+    auto cameras = GetInputDataAs<CameraModels>("data_camera_models");
 
     if (!tracks || !cameras) {
         LOG_ERROR_ZH << "缺少必要的输入数据";
@@ -279,6 +283,7 @@ public:
 **my_profiler_method.cpp**:
 ```cpp
 #include "my_profiler_method.hpp"
+#include <po_core/ProfilerManager.hpp>
 
 namespace MyPlugin {
 
@@ -289,14 +294,13 @@ MyProfilerMethod::MyProfilerMethod() {
     // Load configuration file (configs/methods/my_profiler_method.ini)
     // method_options_ automatically loads from configuration file
     InitializeDefaultConfigPath();
-    InitializeLogDir();
 }
 
 // Don't need to manually implement GetType(), macro automatically generates
 
 DataPtr MyProfilerMethod::Run() {
     // ✅ Performance analysis: Start session (automatically uses method labels)
-    POSDK_START(true);  // Default: TIME only to save overhead
+    POSDK_START(GetOptionAsBool("enable_profiling", false));  // Time-only profiling
     
     // Performance analysis: Step 1 - Add stage checkpoint
     PROFILER_STAGE("preprocessing");
@@ -336,7 +340,7 @@ REGISTRATION_PLUGIN(MyPlugin::MyProfilerMethod)
 [my_profiler_method]
 threshold=0.7
 enable_profiling=true
-enable_evaluation=true
+enable_evaluator=true
 ```
 
 ### Usage
@@ -348,12 +352,14 @@ auto data_package = FactoryData::Create("data_package");
 
 auto result = method->Build(data_package);
 
-// Performance statistics automatically exported to CSV file
+// View performance statistics in the GUI Profiler window and export CSV there.
 ```
 
 ---
 
 ## DataIO Plugin Development Quick Example
+
+The `Save()` / `Load()` bodies below are placeholders. Implement file I/O before using them to save or load files.
 
 DataIO plugins are used to encapsulate various data types. The simplest way is to inherit from `DataIO` base class.
 
@@ -391,6 +397,9 @@ public:
     // Only declare, automatically implemented by REGISTRATION_PLUGIN macro
     const std::string& GetType() const override;
     void* GetData() override;
+    DataDetails Details() const override {
+        return {"CustomData", "Custom data with id, name and values."};
+    }
 
     // Optional: implement Save/Load
     bool Save(const std::string& folder = "",
@@ -450,18 +459,18 @@ if (custom_data) {
 }
 
 // Save data
-data->Save("/path/to/folder", "my_data");
+data->Save("/path/to/folder", "my_data", ".dat");
 
 // Load data
 auto loaded_data = FactoryData::Create("my_custom_data");
-loaded_data->Load("/path/to/folder/my_data.dat");
+loaded_data->Load("/path/to/folder/my_data.dat", "dat");
 ```
 
 ---
 
 ## Example 4: DataIO Plugin Supporting Protobuf Serialization
 
-Using `PbDataIO` base class can easily implement protobuf serialization and persistence of data. This is PoSDK's recommended data plugin implementation method, suitable for scenarios requiring cross-platform storage and version compatibility.
+Using `PbDataIO` base class can easily implement protobuf serialization and persistence of data. This is PoMVG's recommended data plugin implementation method, suitable for scenarios requiring cross-platform storage and version compatibility.
 
 ```{seealso}
 For complete PbDataIO development guide, serialization macro usage instructions, and advanced features, please refer to [Serialization Storage and Reading](../advanced_development/serialization.md).
@@ -474,9 +483,25 @@ For complete PbDataIO development guide, serialization macro usage instructions,
 # Plugin name defined here (single definition point)
 add_posdk_plugin(data_example
     PLUGIN_TYPE data
-    SOURCES data_example.cpp
+    SOURCES data_example.cpp proto/my_example.pb.cc
     HEADERS data_example.hpp
 )
+```
+
+Define `proto/my_example.proto` first and use the SDK-compatible `protoc` to generate `proto/my_example.pb.h` and `.cc`. The CMake example above compiles the generated `.cc`.
+
+```protobuf
+syntax = "proto3";
+package proto;
+message ExampleData {
+    int32 id = 1;
+    string name = 2;
+    repeated double values = 3;
+}
+```
+
+```bash
+protoc --proto_path=. --cpp_out=. proto/my_example.proto
 ```
 
 **data_example.hpp**:
@@ -506,6 +531,9 @@ public:
     const std::string& GetType() const override;
     void* GetData() override;
     DataPtr CopyData() const override;
+    DataDetails Details() const override {
+        return {"ExampleDataStruct", "Example data with Protobuf serialization."};
+    }
 
 protected:
     // Three protobuf interfaces that PbDataIO must implement
@@ -575,9 +603,10 @@ bool DataExample::FromProto(const google::protobuf::Message& message) {
     }
 
     // Use macros to simplify deserialization
-    PROTO_GET_BASIC(*proto_msg, id, data_ptr_->id);
-    PROTO_GET_BASIC(*proto_msg, name, data_ptr_->name);
-    PROTO_GET_ARRAY(*proto_msg, values, data_ptr_->values);
+    const auto& proto_data = *proto_msg;
+    PROTO_GET_BASIC(proto_data, id, data_ptr_->id);
+    PROTO_GET_BASIC(proto_data, name, data_ptr_->name);
+    PROTO_GET_ARRAY(proto_data, values, data_ptr_->values);
 
     return true;
 }
@@ -635,7 +664,7 @@ For detailed protobuf serialization macro list, `.proto` file definitions, advan
 ### Method Plugin Development
 
 1. **Must Override**:
-   - ** `GetType()`**: Only **declare** in header file, automatically implemented by `REGISTRATION_PLUGIN` macro
+   - **`GetType()`**: Only **declare** in header file, automatically implemented by `REGISTRATION_PLUGIN` macro
    - `Build()` or `Run()`: Implement algorithm logic
 
 2. **Base Class Selection**:
@@ -652,8 +681,9 @@ For detailed protobuf serialization macro list, `.proto` file definitions, advan
 ### DataIO Plugin Development
 
 1. **Must Override**:
-   - ** `GetType()`**: Only **declare** in header file, automatically implemented by `REGISTRATION_PLUGIN` macro
+   - **`GetType()`**: Only **declare** in header file, automatically implemented by `REGISTRATION_PLUGIN` macro
    - `GetData()`: Return internal data pointer
+   - `Details()`: Return the core type name and description
 
 2. **Optional Override**:
    - `Save()`/`Load()`: Data persistence

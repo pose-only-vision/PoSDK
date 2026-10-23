@@ -1,6 +1,10 @@
-# Installation Guide
+# v1.0.0 Installation Guide (Historical Source)
 
-This document describes PoSDK installation requirements and procedures.
+```{note}
+**Future feature updates and user documentation will focus on the GUI edition.** This page preserves older source installation and build instructions for historical reference. New users should follow the [v2.1.1 GUI Installation Guide](gui_installation.md) and install the DMG.
+```
+
+The requirements, installation scripts and troubleshooting below apply to v1.0.0.
 
 ## System Requirements
 
@@ -13,49 +17,18 @@ This document describes PoSDK installation requirements and procedures.
   - Clang 13+ (Recommended for macOS)
 - **Build Tools**: CMake 3.28+ (3.28+ required for some dependency libraries)
 
-## Testing Installation (PoSDK 2.0.0 macOS arm64 DMG)
-
-If your goal is to test a published PoSDK workflow rather than develop PoSDK,
-use the signed `PoSDK-GUI-2.0.0-macos150-arm64.dmg` from the
-[PoSDK 2.0.0 release](https://github.com/pose-only-vision/PoSDK/releases).
-This path does not require a source checkout, CMake, Qt, or a local compiler.
-
-1. Download the PoSDK GUI DMG and its adjacent `.sha256` file.
-2. Verify the checksum before opening the image:
-
-   ```bash
-   shasum -a 256 -c PoSDK-GUI-2.0.0-macos150-arm64.dmg.sha256
-   ```
-
-3. Open the DMG and drag `PoSDK GUI.app` to `/Applications`.
-4. Start the application and, if required, approve the first-launch prompt
-   after confirming the release identity and checksum.
-5. Follow [Running the LiRPpaper Workflows](../lirppaper_workflows.md) to
-   open a built-in workflow, download or associate its dataset from the
-   dataset-loader module, run it, and inspect the Evaluator/Profiler artifacts.
-
-The DMG contains the application and its built-in workflow definitions. The
-dataset-loader modules provide the supported download and association flow.
-Dataset licenses and any restrictions imposed by the original providers still
-apply. Do not copy workflow outputs into the application bundle or the
-read-only DMG.
-
-For the exact testing procedure, including the required `dataset_dir`,
-`specific_data`, image-folder, and ground-truth-folder layout, see the
-[LiRPpaper workflow guide](../lirppaper_workflows.md).
-
 ## One-Click Installation
 
-PoSDK provides an automated installation script that can install all required system dependencies and plugin dependencies with one command. See [Quick Start](#quick-start) for detailed installation steps.
+PoMVG provides an automated installation script that can install all required system dependencies and plugin dependencies with one command. See [Quick Start](#quick-start) for detailed installation steps.
 
 The installation script automatically completes the following steps:
 1. Update system package list
-2. Install PoSDK framework development dependencies
+2. Install PoMVG framework development dependencies
 3. Install dependencies required by current plugins
 
-## PoSDK Framework Development Dependencies
+## PoMVG Framework Development Dependencies
 
-The following are system dependency libraries required for normal operation of the PoSDK framework:
+The following are system dependency libraries required for normal operation of the PoMVG framework:
 
 | Dependency Library  | Minimum Version | Purpose                                                    | Installation Command                                                                 |
 | ------------------- | --------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------ |
@@ -83,11 +56,11 @@ The following are system dependency libraries required for normal operation of t
 (installation-flow-explained)=
 ## Detailed Installation Process
 
-This section details PoSDK's multi-stage installation process, helping you understand the purpose of each installation step and when to skip redundant installations.
+This section details PoMVG's multi-stage installation process, helping you understand the purpose of each installation step and when to skip redundant installations.
 
 ### Installation Process Overview
 
-PoSDK installation is divided into three main stages:
+PoMVG installation is divided into three main stages:
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -145,6 +118,7 @@ During installation, you will encounter the following prompt points. The meaning
 
 (installation-prompt-table)=
 
+```{only} html
 | Stage              | Script File                | Prompt Message                                                         | Default | Meaning                                                                | Recommended Action                                                  |
 | ------------------ | -------------------------- | ---------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | **System Deps**    | `install.sh`               | `Would you like to upgrade Qt now?`                                    | `[Y/n]` | Asks if upgrade Qt when version is too old                             | Press Enter (upgrade Qt to avoid conflicts)                         |
@@ -172,6 +146,79 @@ During installation, you will encounter the following prompt points. The meaning
 | **Build Deps**     | `install_glomap.sh`        | `Skip this installation and use existing build? [Y/n]`                 | `[Y/n]` | Asks if skip installation when GLOMAP detected                         | Press Enter (skip installation)                                     |
 | **Build Deps**     | `install_glomap.sh`        | `Use local dependencies for build?`                                    | `[Y/n]` | Asks if use local dependencies to build GLOMAP                         | Press Enter (use local dependencies)                                |
 | **Error Handling** | `install_dependencies.sh`  | `Continue with remaining installations?`                               | `[Y/n]` | Asks if continue with remaining when a dependency fails                | Press Enter (continue installing other dependencies)                |
+```
+
+```{only} latex
+.. raw:: latex
+
+   \begin{footnotesize}
+   \begin{longtable}{|p{0.12\textwidth}|p{0.16\textwidth}|p{0.25\textwidth}|p{0.08\textwidth}|p{0.18\textwidth}|p{0.16\textwidth}|}
+   \hline
+   \textbf{Stage} & \textbf{Script File} & \textbf{Prompt Message} & \textbf{Default} & \textbf{Meaning} & \textbf{Recommended Action} \\
+   \hline
+   \endfirsthead
+   
+   \hline
+   \textbf{Stage} & \textbf{Script File} & \textbf{Prompt Message} & \textbf{Default} & \textbf{Meaning} & \textbf{Recommended Action} \\
+   \hline
+   \endhead
+   
+   \hline
+   \endfoot
+   
+   \textbf{System Deps} & \texttt{install.sh} & Would you like to upgrade Qt now? & [Y/n] & Asks if upgrade Qt when version is too old & Press Enter (upgrade Qt to avoid conflicts) \\
+   \hline
+   \textbf{System Deps} & \texttt{install.sh} & Would you like to fix this automatically? & [y/N] & Asks if auto-fix when Qt version conflict detected & Press Enter (don't auto-fix, manual handling safer) \\
+   \hline
+   \textbf{System Deps} & \texttt{install.sh} & Continue with Qt6 installation? & [y/N] & Asks if continue installing Qt6 when Qt5 detected & Press Enter (skip Qt6 installation to avoid conflicts) \\
+   \hline
+   \textbf{Download} & \texttt{download\_dependencies.sh} & Skip download and use local package? & [Y/n] & Asks if skip download and use local package & Press Enter (use local package, extract all and overwrite existing) \\
+   \hline
+   \textbf{Download} & \texttt{download\_po\_core.sh} & Skip reinstall and use existing po\_core installation? & [Y/n] & Asks if skip reinstall when po\_core detected & Press Enter (skip installation to save time) \\
+   \hline
+   \textbf{Download} & \texttt{download\_po\_core.sh} & Skip download and use local package? & [Y/n] & Asks if skip download when local po\_core package detected & Press Enter (use local package to save bandwidth) \\
+   \hline
+   \textbf{Test Data} & \texttt{download\_Strecha.sh} & Do you want to re-download test data? & [y/N] & Asks if re-download when test data exists & Press Enter (skip re-download) \\
+   \hline
+   \textbf{Test Data} & \texttt{download\_Strecha.sh} & Skip download and use existing local package? & [Y/n] & Asks if skip download when local test data package detected & Press Enter (use local package) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_cmake.sh} & Version sufficient, skip installation? & [Y/n] & Asks if skip installation when CMake version sufficient & Press Enter (skip installation to save time) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_boost.sh} & Skip rebuild and use existing Boost installation? & [Y/n] & Asks if skip rebuild when Boost detected & Press Enter (skip rebuild) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_absl.sh} & Do you want to skip this installation and use the existing build? & [Y/n] & Asks if skip installation when Abseil detected & Press Enter (skip installation) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_nlohmann.sh} & Do you want to skip this installation and use the existing build? & [Y/n] & Asks if skip installation when nlohmann/json detected & Press Enter (skip installation) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_protobuf.sh} & Do you want to skip this installation and use the existing build? & [Y/n] & Asks if skip installation when Protocol Buffers detected & Press Enter (skip installation) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_opencv.sh} & (No skip prompt, automatically detects and uses existing installation) & - & OpenCV installation script auto-detects and uses existing installation & No action needed (auto-handled) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_ceres.sh} & Skip rebuild and use existing Ceres Solver installation? & [Y/n] & Asks if skip rebuild when Ceres detected & Press Enter (skip rebuild to save time) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_magsac.sh} & Skip rebuild and use existing MAGSAC installation? & [Y/n] & Asks if skip rebuild when MAGSAC detected & Press Enter (skip rebuild) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_opengv.sh} & Skip rebuild and use existing OpenGV installation? & [Y/n] & Asks if skip rebuild when OpenGV detected & Press Enter (skip rebuild) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_poselib.sh} & Skip rebuild and use existing PoseLib installation? & [Y/n] & Asks if skip rebuild when PoseLib detected & Press Enter (skip rebuild) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_openmvg.sh} & Skip rebuild and use existing OpenMVG installation? & [Y/n] & Asks if skip rebuild when OpenMVG detected & Press Enter (skip rebuild) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_colmap.sh} & Skip rebuild and use existing COLMAP installation? & [Y/n] & Asks if skip rebuild when COLMAP detected & Press Enter (skip rebuild) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_graphoptim.sh} & Skip rebuild and use existing GraphOptim build? & [Y/n] & Asks if skip rebuild when GraphOptim detected & Press Enter (skip rebuild) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_graphoptim.sh} & Skip building internal COLMAP support (build core only)? & [Y/n] & Asks if skip building internal COLMAP support & Press Enter (skip COLMAP support, build core only) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_glomap.sh} & Skip this installation and use existing build? [Y/n] & [Y/n] & Asks if skip installation when GLOMAP detected & Press Enter (skip installation) \\
+   \hline
+   \textbf{Build Deps} & \texttt{install\_glomap.sh} & Use local dependencies for build? & [Y/n] & Asks if use local dependencies to build GLOMAP & Press Enter (use local dependencies) \\
+   \hline
+   \textbf{Error Handling} & \texttt{install\_dependencies.sh} & Continue with remaining installations? & [Y/n] & Asks if continue with remaining when a dependency fails & Press Enter (continue installing other dependencies) \\
+   \hline
+   \end{longtable}
+   \end{footnotesize}
+```
 
 ```{important}
 **Default Values Usage:**
@@ -201,7 +248,7 @@ Manual selection needed in the following cases:
 
 ## Quick Start
 
-You can quickly launch the PoSDK Global SfM pipeline by following these steps:
+You can quickly launch the PoMVG Global SfM pipeline by following these steps:
 
 ### Prerequisites
 
@@ -223,7 +270,7 @@ cd PoSDK
 
 **Features:**
 - **Resume Installation** - Re-run `./install.sh` if network timeouts occur
-- **Automated Setup** - Downloads dependencies, builds PoSDK, and prepares test data
+- **Automated Setup** - Downloads dependencies, builds PoMVG, and prepares test data
 - **Skip Detection** - Automatically detects existing installations and prompts to skip (default: Y)
 
 ```{tip}
@@ -236,16 +283,14 @@ For detailed explanation of each installation step and prompt, see [](#installat
 
 ```{note}
 **For Poor Network Conditions:**
-If automatic download fails, manually download the matching dependency assets
-from [GitHub Releases](https://github.com/pose-only-vision/PoSDK/releases) and
-copy files directly (no extraction needed):
+If automatic download fails, manually download from [GitHub Releases](https://github.com/pose-only-vision/PoSDK/releases/tag/v1.0.0) and copy files directly (no extraction needed):
 - `po_core` + `PoSDK dependencies` → `./dependencies/`
 - `PoSDK_test_data` → `./tests/`
 ```
 
 Then run `./install.sh` to complete setup.
 
-### Step 2: Build PoSDK (if not done during installation)
+### Step 2: Build PoMVG (if not done during installation)
 
 ```bash
 mkdir build && cd build
@@ -256,7 +301,7 @@ make -j$(nproc)
 ### Build Output Directory Structure
 (posdk-build-output-structure)=
 
-After successful build, PoSDK generates an `output` directory in the build folder with the following structure:
+After successful build, PoMVG generates an `output` directory in the build folder with the following structure:
 
 ```text
 output/
@@ -312,7 +357,7 @@ output/
 ```{note}
 **Directory Descriptions**:
 - **bin/**: Contains all executable files and runtime-generated data directories
-- **lib/**: Contains PoSDK aggregate library and CMake configurations
+- **lib/**: Contains PoMVG aggregate library and CMake configurations
 - **include/**: Contains all header files needed for development (public interfaces)
 - **configs/**: Contains all plugin configuration files (read at runtime)
 - **plugins/**: Contains all dynamically loaded plugin libraries
@@ -324,10 +369,10 @@ output/
 ```{tip}
 **Development Tips**:
 1. Modify configuration files directly in `output/configs/methods/` without rebuilding
-2. Test data default path is `{exe_dir}/../tests/Strecha`, use relative paths in config files
+2. For GUI workflows, open the Dataset Loader and associate the absolute `output/tests/Strecha` directory before running
 ```
 
-### Step 3: Run PoSDK
+### Step 3: Run PoMVG
 
 ```bash
 # Run PoSDK from build directory
@@ -336,7 +381,7 @@ output/
 
 ### Step 4: View Results
 
-PoSDK generates results in the working directory:
+PoMVG generates results in the working directory:
 
 #### Directory Structure
 - **`globalsfm_pipeline_work/`** - Main working directory (configured in `globalsfm_pipeline.ini`)
@@ -467,7 +512,7 @@ brew upgrade cmake
 #### 4. Network Issues Causing Dependency Download Failures
 
 **Solution**:
-- Manually download dependency packages from GitHub Releases: [PoSDK Releases](https://github.com/pose-only-vision/PoSDK/releases)
+- Manually download dependency packages from GitHub Releases: [PoMVG Releases](https://github.com/pose-only-vision/PoSDK/releases)
 - Place downloaded files in corresponding directories:
   - `po_core` + dependency packages → `./dependencies/`
   - Test data → `./tests/`
@@ -501,7 +546,7 @@ If encountering installation issues, first verify the [System Requirements](#sys
 If the issue remains unresolved:
 1. Check this FAQ for related issues
 2. Refer to official documentation for each dependency library
-3. Submit an issue at [PoSDK GitHub Issues](https://github.com/pose-only-vision/PoSDK/issues), providing:
+3. Submit an issue at [PoMVG GitHub Issues](https://github.com/pose-only-vision/PoSDK/issues), providing:
    - Operating system and version
    - Error logs
    - Solutions already attempted

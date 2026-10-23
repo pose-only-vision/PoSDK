@@ -5,7 +5,7 @@ Global translation evaluation is specifically designed to measure the accuracy o
 ## Mathematical Definition
 
 ### Global Translation Representation
-In PoSDK, global translation refers to the position vector of the camera center in the world coordinate system:
+In PoMVG, global translation refers to the position vector of the camera center in the world coordinate system:
 
 - **RwTw format**: $\mathbf{t}_w$ directly represents the world coordinates of the camera center
 - **RwTc format**: $\mathbf{t}_c = -R_w^c \cdot \mathbf{t}_w$, needs conversion to get world coordinates
@@ -29,7 +29,7 @@ $$\text{Position Error} = ||\mathbf{t}_w^{gt} - \mathbf{t}_w^{est}||_2$$
 
 Evaluates the accuracy of translation direction:
 
-$$\text{Direction Error} = \arccos\left(\frac{\mathbf{t}_w^{gt\,T} \mathbf{t}_w^{est}}{||\mathbf{t}_w^{gt}|| \cdot ||\mathbf{t}_w^{est}||}\right) \times \frac{180°}{\pi}$$
+$$\text{Direction Error} = \arccos\left(\frac{\mathbf{t}_w^{gt\,T} \mathbf{t}_w^{est}}{||\mathbf{t}_w^{gt}|| \cdot ||\mathbf{t}_w^{est}||}\right) \times \frac{180^\circ}{\pi}$$
 
 **Physical Meaning**: Angle between two translation vectors, in degrees. Suitable for cases where scale is uncertain.
 
@@ -441,7 +441,7 @@ for (size_t i = 0; i < position_errors.size(); ++i) {
 ---
 
 **Related References**:
-- [PoSDK Pose Conventions](../conventions/posdk.md)
+- [PoMVG Pose Conventions](../conventions/posdk.md)
 - [Global Pose Evaluation](global_poses.md)
 - [Relative Pose Evaluation](relative_poses.md)
 - [Evaluation System Overview](index.md)

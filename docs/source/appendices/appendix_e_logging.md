@@ -1,6 +1,6 @@
 # Logging Management
 
-PoSDK provides a high-performance bilingual logging system supporting Chinese and English log output, with thread safety, synchronous output, file output, and other features.
+PoMVG provides a high-performance bilingual logging system supporting Chinese and English log output, with thread safety, synchronous output, file output, and other features.
 
 ## Log Levels
 
@@ -196,13 +196,13 @@ LOG_INFO_ZH << "这条日志不显示文件位置";
 ### Get Processed Log Count
 
 ```cpp
-size_t count = GET_LOG_PROCESSED_COUNT();
+uint64_t count = GET_LOG_PROCESSED_COUNT();
 ```
 
 ### Get Dropped Log Count
 
 ```cpp
-size_t dropped = GET_LOG_DROPPED_COUNT();  // Always 0 in synchronous mode
+uint64_t dropped = GET_LOG_DROPPED_COUNT();  // Always 0 in synchronous mode
 ```
 
 ### Force Flush All Buffers
@@ -213,11 +213,50 @@ FLUSH_ALL_LOGS()
 
 ## Language Environment Settings
 
-Set global language environment via `LanguageEnvironment` class:
+Manage global language environment via the `LanguageEnvironment` class. This class is defined in `<po_core/language_environment.hpp>` under the `PoSDK::Interface` namespace.
+
+### SetChinese / SetEnglish
+
+Set the global language environment to Chinese or English:
 
 ```cpp
 PoSDK::Interface::LanguageEnvironment::SetChinese();   // Set Chinese environment
-PoSDK::Interface::LanguageEnvironment::SetEnglish();  // Set English environment
+PoSDK::Interface::LanguageEnvironment::SetEnglish();   // Set English environment
+```
+
+### SetLanguage
+
+Set language environment via string. Supports `"ZH"`, `"zh"`, `"CN"`, `"cn"` for Chinese, and `"EN"`, `"en"` for English. Invalid input keeps the current setting unchanged.
+
+```cpp
+PoSDK::Interface::LanguageEnvironment::SetLanguage("ZH");  // Set Chinese environment
+PoSDK::Interface::LanguageEnvironment::SetLanguage("EN");  // Set English environment
+```
+
+### IsChineseLanguage / IsEnglishLanguage
+
+Query the current language environment:
+
+```cpp
+bool is_zh = PoSDK::Interface::LanguageEnvironment::IsChineseLanguage();  // Is current environment Chinese
+bool is_en = PoSDK::Interface::LanguageEnvironment::IsEnglishLanguage();  // Is current environment English
+```
+
+### GetCurrentLanguageString
+
+Get string representation of the current language, returns `"ZH"` or `"EN"`:
+
+```cpp
+std::string lang = PoSDK::Interface::LanguageEnvironment::GetCurrentLanguageString();
+```
+
+### GetText
+
+Automatically select text based on the current language environment:
+
+```cpp
+std::string msg = PoSDK::Interface::LanguageEnvironment::GetText("中文文本", "English text");
+// Returns "中文文本" in Chinese environment, "English text" in English environment
 ```
 
 Language environment affects output filtering of `BILINGUAL_LOG_XXX(ZH/EN)` macros, but does not affect `BILINGUAL_LOG_ALWAYS_XXX` macros.
@@ -270,24 +309,71 @@ int main() {
     ENABLE_LOG_FILE("logs/app.log");
     ENABLE_SOURCE_LOC();
     SET_LOG_LEVEL(INFO);
-    
+
     // Set language environment
     PoSDK::Interface::LanguageEnvironment::SetChinese();
-    
+
     // Use logging
     LOG_INFO_ZH << "应用程序启动";
     LOG_INFO_EN << "Application started";
-    
+
     // Conditional logging
     bool debug_mode = true;
     BILINGUAL_LOG_DEBUG_IF(ZH, debug_mode) << "调试模式已启用";
-    
+
     // Always output critical logs
     LOG_INFO_ALL << "系统状态正常";
-    
+
     // View statistics
     std::cout << "已处理日志: " << GET_LOG_PROCESSED_COUNT() << std::endl;
-    
+
     return 0;
 }
+```
+
+## Convenience Configuration Functions
+
+`<po_core/po_logger.hpp>` provides the following global convenience functions under the `PoSDK` namespace for quick logging system configuration.
+
+### ConfigureLogging
+
+Quickly configure log level and language environment:
+
+- Signature: `void PoSDK::ConfigureLogging(Logger::LogLevel level = Logger::LogLevel::INFO, const std::string &language = "ZH")`
+- Parameters:
+  - `level`: Log level, defaults to `INFO`.
+  - `language`: Language environment string (`"ZH"` or `"EN"`), defaults to `"ZH"`.
+
+```cpp
+PoSDK::ConfigureLogging(PoSDK::Logger::LogLevel::WARNING, "EN");
+```
+
+### ConfigureLoggingWithFile
+
+Quickly configure log level, language environment, and enable file output:
+
+- Signature: `bool PoSDK::ConfigureLoggingWithFile(const std::string &log_file_path, Logger::LogLevel level = Logger::LogLevel::INFO, const std::string &language = "ZH")`
+- Parameters:
+  - `log_file_path`: Log file path.
+  - `level`: Log level, defaults to `INFO`.
+  - `language`: Language environment string, defaults to `"ZH"`.
+- Return Value: `bool` - Whether file output was enabled successfully.
+
+```cpp
+PoSDK::ConfigureLoggingWithFile("logs/myapp.log", PoSDK::Logger::LogLevel::DEBUG, "ZH");
+```
+
+### EnableTimestampLogFile
+
+Enable log file with automatic timestamp-based naming, filename format is `{base_path}_{YYYYMMDD_HHMMSS}{extension}`:
+
+- Signature: `bool PoSDK::EnableTimestampLogFile(const std::string &base_path = "logs/posdk_log", const std::string &extension = ".txt")`
+- Parameters:
+  - `base_path`: Base path for the log file, defaults to `"logs/posdk_log"`.
+  - `extension`: File extension, defaults to `".txt"`.
+- Return Value: `bool` - Whether file output was enabled successfully.
+
+```cpp
+PoSDK::EnableTimestampLogFile("logs/session");
+// Generates something like: logs/session_20260319_143025.txt
 ```

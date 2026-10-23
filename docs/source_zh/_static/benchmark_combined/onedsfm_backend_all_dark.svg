@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1146" role="img">
+<title>1DSfM / backend / all measured configurations</title>
+<rect width="100%" height="100%" fill="#152735"/>
+<g fill="#d9e6f3" font-family="sans-serif" font-size="13">
+<rect x="20" y="12" width="9" height="9" fill="#2176e7"/>
+<text x="35.00" y="22.00" >PoMVG P3P + PA2 / batch LiGT (n=4)</text>
+<rect x="470" y="12" width="9" height="9" fill="#e19729"/>
+<text x="485.00" y="22.00" >GLOMAP · native 1DSfM (n=14)</text>
+<rect x="20" y="33" width="9" height="9" fill="#25a593"/>
+<text x="35.00" y="43.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="470" y="33" width="9" height="9" fill="#8663bd"/>
+<text x="485.00" y="43.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="20" y="54" width="9" height="9" fill="#af617d"/>
+<text x="35.00" y="64.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="470" y="54" width="9" height="9" fill="#bd941c"/>
+<text x="485.00" y="64.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="20" y="75" width="9" height="9" fill="#d36736"/>
+<text x="35.00" y="85.00" >1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh (n=4)</text>
+<rect x="470" y="75" width="9" height="9" fill="#2176e7"/>
+<text x="485.00" y="85.00" >OpenMVG Stellar · native 1DSfM (n=9)</text>
+<rect x="20" y="96" width="9" height="9" fill="#e19729"/>
+<text x="35.00" y="106.00" >PoMVG · Git 09d8356f / CURRENT v11 · LiGT–P3P/PA2 分流 / Split (n=2)</text>
+<path d="M200.00,141 V1101" stroke="#344757"/>
+<text x="200.00" y="1121.00" fill="#9daec1" text-anchor="middle">10</text>
+<path d="M423.33,141 V1101" stroke="#344757"/>
+<text x="423.33" y="1121.00" fill="#9daec1" text-anchor="middle">100</text>
+<path d="M646.67,141 V1101" stroke="#344757"/>
+<text x="646.67" y="1121.00" fill="#9daec1" text-anchor="middle">1000</text>
+<path d="M870.00,141 V1101" stroke="#344757"/>
+<text x="870.00" y="1121.00" fill="#9daec1" text-anchor="middle">10000</text>
+<text x="188.00" y="177.00" text-anchor="end" fill="#9daec1">Alamo</text>
+<rect x="200" y="146.00" width="330.01" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Alamo" data-value="300.379"><title>PoMVG P3P + PA2 / batch LiGT / Alamo: 300 s</title></rect>
+<rect x="200" y="152.00" width="310.11" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Alamo" data-value="244.66"><title>GLOMAP · native 1DSfM / Alamo: 245 s</title></rect>
+<rect x="200" y="188.00" width="287.99" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Alamo" data-value="194.760281334"><title>OpenMVG Stellar · native 1DSfM / Alamo: 195 s</title></rect>
+<text x="188.00" y="241.00" text-anchor="end" fill="#9daec1">Ellis Island</text>
+<rect x="200" y="210.00" width="152.52" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Ellis_Island" data-value="48.188"><title>PoMVG P3P + PA2 / batch LiGT / Ellis_Island: 48.2 s</title></rect>
+<rect x="200" y="216.00" width="157.22" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Ellis_Island" data-value="50.58"><title>GLOMAP · native 1DSfM / Ellis_Island: 50.6 s</title></rect>
+<rect x="200" y="222.00" width="160.38" height="4.5" fill="#25a593" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:glomap_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="52.2521045001"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 52.3 s</title></rect>
+<rect x="200" y="228.00" width="57.43" height="4.5" fill="#8663bd" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_incremental_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="18.0782163749"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 18.1 s</title></rect>
+<rect x="200" y="234.00" width="179.24" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_global_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="63.468974374"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 63.5 s</title></rect>
+<rect x="200" y="240.00" width="87.33" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_stellar_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="24.6058694159"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 24.6 s</title></rect>
+<rect x="200" y="246.00" width="297.10" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:colmap_fixed_intrinsics_20261014_a3" data-scene="Ellis_Island" data-value="213.946403333"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Ellis_Island: 214 s</title></rect>
+<rect x="200" y="252.00" width="125.08" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Ellis_Island" data-value="36.3121824581"><title>OpenMVG Stellar · native 1DSfM / Ellis_Island: 36.3 s</title></rect>
+<text x="188.00" y="305.00" text-anchor="end" fill="#9daec1">Gendarmenmarkt</text>
+<rect x="200" y="274.00" width="322.26" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Gendarmenmarkt" data-value="277.299"><title>PoMVG P3P + PA2 / batch LiGT / Gendarmenmarkt: 277 s</title></rect>
+<rect x="200" y="280.00" width="239.02" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Gendarmenmarkt" data-value="117.56"><title>GLOMAP · native 1DSfM / Gendarmenmarkt: 118 s</title></rect>
+<rect x="200" y="286.00" width="235.82" height="4.5" fill="#25a593" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:glomap_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="113.742132625"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 114 s</title></rect>
+<rect x="200" y="292.00" width="374.22" height="4.5" fill="#8663bd" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_incremental_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="473.836996875"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 474 s</title></rect>
+<rect x="200" y="298.00" width="241.12" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_global_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="120.130789083"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 120 s</title></rect>
+<rect x="200" y="304.00" width="165.16" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_stellar_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="54.893024083"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 54.9 s</title></rect>
+<rect x="200" y="310.00" width="417.99" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:colmap_fixed_intrinsics_20261014_a3" data-scene="Gendarmenmarkt" data-value="744.007053292"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Gendarmenmarkt: 744 s</title></rect>
+<rect x="200" y="316.00" width="225.90" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Gendarmenmarkt" data-value="102.682100751"><title>OpenMVG Stellar · native 1DSfM / Gendarmenmarkt: 103 s</title></rect>
+<text x="188.00" y="369.00" text-anchor="end" fill="#9daec1">Madrid Metropolis</text>
+<rect x="200" y="338.00" width="209.89" height="4.5" fill="#2176e7" data-config="primary:posdk" data-scene="Madrid_Metropolis" data-value="87.055"><title>PoMVG P3P + PA2 / batch LiGT / Madrid_Metropolis: 87.1 s</title></rect>
+<rect x="200" y="344.00" width="158.57" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Madrid_Metropolis" data-value="51.29"><title>GLOMAP · native 1DSfM / Madrid_Metropolis: 51.3 s</title></rect>
+<rect x="200" y="350.00" width="159.33" height="4.5" fill="#25a593" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:glomap_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="51.692172375"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 51.7 s</title></rect>
+<rect x="200" y="356.00" width="277.16" height="4.5" fill="#8663bd" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_incremental_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="174.19129075"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 174 s</title></rect>
+<rect x="200" y="362.00" width="195.92" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_global_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="75.3777988751"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 75.4 s</title></rect>
+<rect x="200" y="368.00" width="125.94" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_stellar_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="36.63588875"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 36.6 s</title></rect>
+<rect x="200" y="374.00" width="273.59" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:colmap_fixed_intrinsics_20261014_a3" data-scene="Madrid_Metropolis" data-value="167.896964458"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Madrid_Metropolis: 168 s</title></rect>
+<rect x="200" y="380.00" width="146.75" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Madrid_Metropolis" data-value="45.402080541"><title>OpenMVG Stellar · native 1DSfM / Madrid_Metropolis: 45.4 s</title></rect>
+<text x="188.00" y="433.00" text-anchor="end" fill="#9daec1">Piazza del Popolo</text>
+<rect x="200" y="408.00" width="141.74" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Piazza_del_Popolo" data-value="43.12"><title>GLOMAP · native 1DSfM / Piazza_del_Popolo: 43.1 s</title></rect>
+<rect x="200" y="414.00" width="156.77" height="4.5" fill="#25a593" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:glomap_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="50.343172167"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 50.3 s</title></rect>
+<rect x="200" y="420.00" width="244.03" height="4.5" fill="#8663bd" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_incremental_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="123.786948958"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 124 s</title></rect>
+<rect x="200" y="426.00" width="185.30" height="4.5" fill="#af617d" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_global_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="67.5650144171"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 67.6 s</title></rect>
+<rect x="200" y="432.00" width="97.03" height="4.5" fill="#bd941c" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:openmvg_stellar_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="27.1941746669"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 27.2 s</title></rect>
+<rect x="200" y="438.00" width="306.07" height="4.5" fill="#d36736" data-config="native-five-platform-fixed-intrinsics-1dsfm-20261014-a3:colmap_fixed_intrinsics_20261014_a3" data-scene="Piazza_del_Popolo" data-value="234.68379975"><title>1DSfM · 五个平台统一固定内参（全部新跑） / five native pipelines, fixed intrinsics, all fresh / Piazza_del_Popolo: 235 s</title></rect>
+<rect x="200" y="444.00" width="146.02" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Piazza_del_Popolo" data-value="45.0631842082"><title>OpenMVG Stellar · native 1DSfM / Piazza_del_Popolo: 45.1 s</title></rect>
+<text x="188.00" y="497.00" text-anchor="end" fill="#9daec1">NYC Library</text>
+<rect x="200" y="472.00" width="164.76" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="NYC_Library" data-value="54.67"><title>GLOMAP · native 1DSfM / NYC_Library: 54.7 s</title></rect>
+<rect x="200" y="508.00" width="158.74" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="NYC_Library" data-value="51.3774523751"><title>OpenMVG Stellar · native 1DSfM / NYC_Library: 51.4 s</title></rect>
+<text x="188.00" y="561.00" text-anchor="end" fill="#9daec1">Union Square</text>
+<rect x="200" y="536.00" width="206.91" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Union_Square" data-value="84.42"><title>GLOMAP · native 1DSfM / Union_Square: 84.4 s</title></rect>
+<rect x="200" y="572.00" width="189.14" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Union_Square" data-value="70.287929625"><title>OpenMVG Stellar · native 1DSfM / Union_Square: 70.3 s</title></rect>
+<text x="188.00" y="625.00" text-anchor="end" fill="#9daec1">Yorkminster</text>
+<rect x="200" y="600.00" width="238.68" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Yorkminster" data-value="117.14"><title>GLOMAP · native 1DSfM / Yorkminster: 117 s</title></rect>
+<text x="188.00" y="689.00" text-anchor="end" fill="#9daec1">Montreal Notre Dame</text>
+<rect x="200" y="664.00" width="291.69" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Montreal_Notre_Dame" data-value="202.34"><title>GLOMAP · native 1DSfM / Montreal_Notre_Dame: 202 s</title></rect>
+<text x="188.00" y="753.00" text-anchor="end" fill="#9daec1">Tower of London</text>
+<rect x="200" y="728.00" width="244.58" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Tower_of_London" data-value="124.49"><title>GLOMAP · native 1DSfM / Tower_of_London: 124 s</title></rect>
+<text x="188.00" y="817.00" text-anchor="end" fill="#9daec1">Roman Forum</text>
+<rect x="200" y="792.00" width="319.95" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Roman_Forum" data-value="270.78"><title>GLOMAP · native 1DSfM / Roman_Forum: 271 s</title></rect>
+<text x="188.00" y="881.00" text-anchor="end" fill="#9daec1">Notre Dame</text>
+<rect x="200" y="856.00" width="384.25" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Notre_Dame" data-value="525.44"><title>GLOMAP · native 1DSfM / Notre_Dame: 525 s</title></rect>
+<text x="188.00" y="945.00" text-anchor="end" fill="#9daec1">Vienna Cathedral</text>
+<rect x="200" y="920.00" width="373.78" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Vienna_Cathedral" data-value="471.67"><title>GLOMAP · native 1DSfM / Vienna_Cathedral: 472 s</title></rect>
+<text x="188.00" y="1009.00" text-anchor="end" fill="#9daec1">Piccadilly</text>
+<rect x="200" y="984.00" width="441.74" height="4.5" fill="#e19729" data-config="glomap-native-1dsfm-20261011:glomap_native" data-scene="Piccadilly" data-value="950.46"><title>GLOMAP · native 1DSfM / Piccadilly: 950 s</title></rect>
+<rect x="200" y="1020.00" width="460.39" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Piccadilly" data-value="1152.00519046"><title>OpenMVG Stellar · native 1DSfM / Piccadilly: 1.15e+03 s</title></rect>
+<rect x="200" y="1026.00" width="362.45" height="4.5" fill="#e19729" data-config="posdk-restored-split-20261012:posdk_restored_split" data-scene="Piccadilly" data-value="419.684"><title>PoMVG · Git 09d8356f / CURRENT v11 · LiGT–P3P/PA2 分流 / Split / Piccadilly: 420 s</title></rect>
+<text x="188.00" y="1073.00" text-anchor="end" fill="#9daec1">Trafalgar</text>
+<rect x="200" y="1084.00" width="591.09" height="4.5" fill="#2176e7" data-config="openmvg-stellar-1dsfm-20261011:openmvg_stellar" data-scene="Trafalgar" data-value="4432.55235092"><title>OpenMVG Stellar · native 1DSfM / Trafalgar: 4.43e+03 s</title></rect>
+<rect x="200" y="1090.00" width="443.39" height="4.5" fill="#e19729" data-config="posdk-restored-split-20261012:posdk_restored_split" data-scene="Trafalgar" data-value="966.74"><title>PoMVG · Git 09d8356f / CURRENT v11 · LiGT–P3P/PA2 分流 / Split / Trafalgar: 967 s</title></rect>
+<text x="535.00" y="1140.00" fill="#9daec1" text-anchor="middle">Backend seconds (log scale)</text>
+</g></svg>

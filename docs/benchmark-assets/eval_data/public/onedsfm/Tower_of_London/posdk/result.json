@@ -1,0 +1,34 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Tower_of_London",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 508,
+  "registered_views": 508,
+  "points": 151324,
+  "accuracy": {},
+  "timing": {
+    "backend": 56.66,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.5496411968812382,
+    "median": 0.43193718854705077,
+    "observations": 733592,
+    "points": 151324,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Tower_of_London/posdk/points.ply",
+    "g2o": "public/onedsfm/Tower_of_London/posdk/poses.g2o",
+    "metadata": "public/onedsfm/Tower_of_London/posdk/result.json",
+    "reprojection": "public/onedsfm/Tower_of_London/posdk/reprojection.json"
+  }
+}

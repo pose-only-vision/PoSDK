@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Piccadilly",
+  "platform": "PoMVG",
+  "points": 250284,
+  "ply_sha256": "87c5e6ebad23736f4e0b7bb6263c2a3b2682207f8416479acbbb822ec3e58af0",
+  "original_video_sha256": "61dcc59a56a4ab513ce7cbaa35b46330dc2b41110d442d6526e6483ae109b822",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 873,
+    "fps": 30.0,
+    "duration_seconds": 29.1
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 873,
+    "fps": 30.0,
+    "duration_seconds": 29.1
+  }
+}

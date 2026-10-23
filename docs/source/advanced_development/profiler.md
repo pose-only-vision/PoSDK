@@ -1,201 +1,102 @@
 # Profiler
 
-PoSDK includes a high-performance code execution monitoring tool that helps developers identify performance bottlenecks in program execution.
+## View performance in the GUI
 
-## What is a Performance Label?
+1. Select a method node and enable `enable_profiling` in **Configuration**. Enable `enable_core_profiling` as well if the method provides core-algorithm profiling.
+2. Save and run the workflow. When it finishes, click **Performance** in the toolbar.
+3. Select **Method Time**, **Core Time**, or **Stages**. Click a column heading to sort; use the decimal-place control to change display precision.
+4. Click **Export** to save CSV, or open **Export → Performance Report** to preview or export the complete report.
 
-**Label** is an attribute tag for code segments, used to track the performance of different functions or code blocks. It's like attaching name tags to code blocks, making it easy to see which parts run fast or slow.
+Results are saved in the project's output directory. Opening a project or switching output directories restores the latest saved results for that directory. Starting a new run clears the previous display.
 
-For example:
-- `"feature_extraction"` - marks feature detection code segments
-- `"image_matching"` - marks image matching algorithm code segments
-- `"triangulation_reconstruction"` - marks 3D point reconstruction code segments
+## Read the statistics
 
-## Basic Usage
+| Field | Meaning |
+| --- | --- |
+| `Total Time(ms)` | Accumulated session time for a label, including child calls. |
+| `Session Count` | Number of submitted timing sessions. |
+| `Logical Run Count` | Logical runs explicitly registered by the method. |
+| `Average Time(ms)` | Total time divided by `Average Time Count`: logical runs when available, otherwise session count. |
+| `Average CPU(%)` | Arithmetic mean of valid session CPU percentages; multithreaded work may exceed 100%. |
+| `CPU Sample Count` | Number of valid CPU-measured sessions, also used to weight batch CPU averages. |
+| `Peak Memory(MB)` | Absolute peak process memory observed by sampling, rather than an increase from the initial value. |
+| Stage `Count` | Number of occurrences of the named interval, including repeats within one session. |
+| Process / batch wall time | Elapsed time measured by the GUI from process launch to completion, or from batch start until all tasks finish. |
 
-### 1. Automatic Function Performance Measurement
+Method and core sessions can nest or run in parallel. Their accumulated times overlap and must not be added to obtain workflow wall time. Unmeasured values appear as `N/A`; `0` means a measured zero.
+
+## Reconcile workflow wall time
+
+Each run's result directory contains:
+
+- `workflow_timing.json`: process wall time and exit status recorded by the GUI.
+- `runner-events.jsonl`: node start, completion and run completion events; use `monotonic_elapsed_ms` to calculate node intervals.
+
+Add non-overlapping node intervals to process startup, evaluation/output work between nodes and shutdown to reconcile process wall time. Batch wall time also includes task transitions and result aggregation. Method, core and stage tables locate different costs; do not add their totals across tables.
+
+## Instrument a method
+
+Use the following inside a method derived from `MethodPreset`:
 
 ```cpp
-void FeatureExtractionFunction()
+DataPtr MyMethod::Run()
 {
-    PROFILER_START_AUTO(true);  // Automatically use function name as label for performance measurement
+    // Use the method's configured label; measure time only by default.
+    PROFILER_START_AUTO(GetOptionAsBool("enable_profiling", false));
 
-    // Your feature extraction code...
+    PrepareData();
+    PROFILER_STAGE("prepared");
+    Solve();
+    PROFILER_STAGE("solved");
 
     PROFILER_END();
-    PROFILER_PRINT_STATS(true);
+    return result;
 }
 ```
 
-### 2. Measure Specific Code Segment Performance
+To collect memory, CPU, and thread metrics, replace the start statement with:
 
 ```cpp
-void ImageProcessingFunction()
+POSDK_START(GetOptionAsBool("enable_profiling", false), "time|memory|cpu|threads");
+```
+
+Use one start macro per scope. `PROFILER_START_AUTO` and `POSDK_START` use the current method's label, rather than the C++ function name. In a free function, supply a label explicitly:
+
+```cpp
+void ProcessData()
 {
-    PROFILER_START_AUTO(true);
-
-    // Measure image preprocessing section
-    InitializeData();
-    PROFILER_STAGE("image_preprocessing");
-
-    // Measure feature detection section
-    ExtractFeatures();
-    PROFILER_STAGE("SIFT_feature_detection");
-
+    PROFILER_START("process_data", true);
+    // Process data.
+    PROFILER_STAGE("processed");
     PROFILER_END();
-    PROFILER_PRINT_STATS(true);
 }
 ```
 
-### 3. Enable Profiler and View Results
+For scope timing without an explicit end macro, construct a session directly:
 
 ```cpp
-int main()
+#include <po_core/ProfilerManager.hpp>
+
+void ProcessBlock()
 {
-    // Enable performance profiler (for specific methods)
-    PM_SET_PROFILING_ENABLED("my_algorithm", true);
-
-    // Run your program
-    FeatureExtractionFunction();
-    ImageProcessingFunction();
-
-    // Generate performance report file
-    PM_EXPORT_TO_CSV("performance_report.csv");
-
-    // Or print directly to console for viewing
-    PM_DISPLAY_ALL_PROFILING_DATA();
-
-    return 0;
+    PoSDK::Profiler::ProfilerSession session(
+        "process_block", PoSDK::Profiler::MetricsType::TIME);
+    // Timing is submitted when the session leaves scope.
 }
 ```
 
-## Performance Report Output Examples
+## Save CSV
 
-After running the above code, you will see performance statistics similar to the following:
-
-### Console Output
-```
-=== FeatureExtractionFunction Current Session Performance Statistics ===
-Duration: 125.43 ms
-Memory Increment: 34.2 MB (relative to start)
-CPU Usage: 187.4%
-Thread Count (start/end): 1/4
-
-=== Stage Interval Statistics ===
-  START_to_image_preprocessing: 34.21 ms
-  image_preprocessing_to_SIFT_feature_detection: 55.46 ms
-  SIFT_feature_detection_to_END: 35.76 ms
-```
-
-### CSV File Output (performance_report.csv)
-
-| Label Name (label_str)    | Session Count | Total Execution Time (ms) | Average Time (ms) | Min Time (ms) | Max Time (ms) | Peak Memory (MB) | Average CPU (%) |
-| ------------------------- | ------------- | ------------------------- | ----------------- | ------------- | ------------- | ---------------- | --------------- |
-| FeatureExtractionFunction | 1             | 125.43                    | 125.43            | 125.43        | 125.43        | 34.2             | 187.4           |
-| ImageProcessingFunction   | 1             | 89.67                     | 89.67             | 89.67         | 89.67         | 28.1             | 156.8           |
-
-**Table Description:**
-- **Label Name**: The label string (label_str) you set in your code
-- **Session Count**: How many times this code segment was executed
-- **Total Execution Time**: How long this code segment has accumulated in total
-- **Average Time**: Average execution time per run
-- **Peak Memory**: Maximum memory increment relative to start during this code segment's execution
-- **Average CPU**: Average CPU usage rate for this code segment
-
-## Advanced Usage Tips
-
-### Using Different Performance Metrics
+GUI runs collect profiling files automatically. A standalone C++ program can export after its sessions finish:
 
 ```cpp
-void DataProcessingFunction()
-{
-    // Time only (fastest, suitable for frequently called functions)
-    POSDK_START(true, "time");
-
-    // Time + memory statistics (suitable for memory-sensitive algorithms)
-    POSDK_START(true, "time|memory");
-
-    // Complete statistics (time + memory + CPU + thread count)
-    POSDK_START(true, "time|memory|cpu");
-
-    // Your algorithm code...
-
-    PROFILER_END();
-    PROFILER_PRINT_STATS(true);
-}
+auto &profiler = PoSDK::Profiler::ProfilerManager::GetInstance();
+profiler.ExportToCSV("profile.csv");
 ```
 
-### Monitoring External Program Performance
+The summary is saved in `profile.csv` and stages in `profile_stages.csv`. GUI exports also write wall-time metadata to `profile.meta.json`; retain all three files when moving or importing results. Batch exports preserve method/core scope and experiment dimensions.
 
-```cpp
-void CallExternalTool()
-{
-    PROFILER_START_AUTO(true);
-
-    // Automatically monitor subprocess resource usage when executing external programs
-    int result = POSDK_SYSTEM("python train_model.py --epochs 100");
-
-    PROFILER_END();
-    PROFILER_PRINT_STATS(true);  // Will display total resource consumption including subprocesses
-}
-```
-
-### Experiment Comparison Analysis
-
-```cpp
-void AlgorithmComparisonExperiment()
-{
-    // Experiment 1: Basic algorithm
-    std::unordered_map<std::string, std::string> labels1 = {
-        {"algorithm_type", "basic_sfm"},
-        {"dataset", "indoor_scene"},
-        {"experiment_batch", "2025_01"}
-    };
-    PROFILER_START_STRUCTURED(labels1, true);
-    RunBasicAlgorithm();
-    PROFILER_END();
-
-    // Experiment 2: Improved algorithm
-    std::unordered_map<std::string, std::string> labels2 = {
-        {"algorithm_type", "improved_sfm"},
-        {"dataset", "indoor_scene"},
-        {"experiment_batch", "2025_01"}
-    };
-    PROFILER_START_STRUCTURED(labels2, true);
-    RunImprovedAlgorithm();
-    PROFILER_END();
-
-    // Export comparison results to CSV for Excel analysis
-    PM_EXPORT_TO_CSV("algorithm_comparison_results.csv");
-}
-```
-
-## Practical Recommendations
-
-1. **Use meaningful label names**: Use descriptive names such as "feature_matching", "pose_estimation", etc.
-2. **Measure key code segments**: Focus on algorithms and loops that may be time-consuming
-3. **Review reports regularly**: Use performance reports to identify program bottlenecks and optimize the most time-consuming parts
-4. **Can be disabled in release**: Performance profiling can be disabled via compile options in final release versions to avoid affecting runtime speed
-5. **Choose appropriate metrics**: For frequently called functions, only track time; for memory-sensitive algorithms, add memory monitoring
-
-## System Configuration
-
-The profiler is disabled by default and needs to be manually enabled:
-
-```cpp
-// Enable profiler for specific methods
-PM_SET_PROFILING_ENABLED("my_algorithm", true);
-
-// Check if enabled
-bool profiler_enabled = PM_IS_PROFILING_ENABLED("my_algorithm");
-
-// Clear historical statistics
-PM_CLEAR();
-```
-
-This way, developers can easily monitor code performance, identify program execution bottlenecks, and optimize code to improve overall performance.
-
----
+Legacy CSV files remain readable. If a legacy file has no CPU sample count, its session count is used for compatibility. Missing CPU measurements or discarded stages require a new run.
 
 ## Quick Feature Navigation
 
@@ -811,50 +712,11 @@ Get accumulated average duration from ProfilerManager
 
 ## Performance Metrics Description
 
-### Time Metric (TIME)
-- **Measurement Content**: Wall-clock time from `PROFILER_START` to `PROFILER_END`
-- **Precision**: Millisecond level, using `std::chrono::high_resolution_clock`
-- **Use Cases**: Algorithm execution time analysis, function call duration analysis
-
-### Memory Metric (MEMORY) - **Important: Now Incremental Statistics**
-- **Measurement Content**: **Peak memory increment relative to start** (not absolute memory value)
-- **Calculation Method**: 
-  ```
-  Peak Increment = max(memory observed during monitoring) - memory at start
-  ```
-- **Measurement Scope**: 
-  - Default: Only current process RSS memory
-  - With subprocess monitoring enabled: Current process + sum of all subprocess memory
-- **Platform Implementation**:
-  - **Windows**: `WorkingSetSize` (physical memory)
-  - **macOS**: `resident_size` (RSS memory)
-  - **Linux**: `VmRSS` in `/proc/self/status` (RSS memory)
-
-### CPU Metric (CPU)
-- **Measurement Content**: Process CPU time usage rate (user mode + kernel mode)
-- **Calculation Method**: 
-  ```
-  CPU Usage = (end CPU time - start CPU time) / wall-clock time × 100%
-  ```
-- **Note**: Multi-threaded programs may exceed 100%
-- **Platform Implementation**:
-  - **Windows**: CPU time based on process handle (currently returns 0)
-  - **macOS**: `getrusage(RUSAGE_SELF)` to get user mode + system mode time
-  - **Linux**: utime+stime fields in `/proc/self/stat`
-
-### Thread Count Metric (THREADS)
-- **Measurement Content**: Process thread count (start/end/peak)
-- **Platform Implementation**:
-  - **Windows**: `CreateToolhelp32Snapshot` + `THREADENTRY32`
-  - **macOS**: `task_threads()` to get accurate thread count
-  - **Linux**: `Threads` field in `/proc/self/status`
-
-### Subprocess Monitoring (SUBPROCESS)
-- **Measurement Content**: Resource usage of all descendant processes in the current process tree
-- **Use Cases**: Complete resource statistics when calling external tools (e.g., COLMAP, GLOMAP)
-- **Implementation**:
-  - **Windows**: `CreateToolhelp32Snapshot` to enumerate process tree
-  - **macOS/Linux**: `ps` command + `awk` to recursively find descendant processes
+- **TIME**: Elapsed session time; stage intervals accumulate in checkpoint order.
+- **MEMORY**: Absolute peak process memory observed by sampling. With subprocess monitoring, monitored descendants are included. Peaks shorter than the sampling interval may be missed.
+- **CPU**: Process CPU-time change divided by session elapsed time. Valid sessions are aggregated using `CPU Sample Count`, independently of logical run count.
+- **THREADS**: Process thread count and the sampled peak.
+- **SUBPROCESS**: Process-tree resource monitoring for external programs. Use `POSDK_SYSTEM(command, true)` when invoking them.
 
 ---
 
@@ -1126,11 +988,11 @@ public:
 
 ### System Command Macros
 
-#### 8. `POSDK_SYSTEM(command [, enable_profiling])`
+#### 8. `POSDK_SYSTEM(command [, enable_subprocess_monitoring])`
 **Function**: System command execution with profiling awareness
-**Parameters**: 
+**Parameters**:
 - `command`: Command string to execute
-- `enable_profiling`: Optional, defaults to true
+- `enable_subprocess_monitoring`: Optional, whether to enable subprocess monitoring (defaults to false)
 **Features**: **Automatically dynamically enables subprocess monitoring**, performs pre/post execution sampling
 
 ```cpp
@@ -1278,84 +1140,18 @@ public:
 
 ## Performance Statistics Output Description
 
-### Console Output Example
-```
-=== advanced_sfm_v2.1 Current Session Performance Statistics ===
-Duration: 2847.32 ms
-Memory Increment: 156.8 MB (relative to start)
-CPU Usage: 287.4%
-Thread Count (start/end): 1/8
-Subprocess Count (detected/peak): 3/5
+### Summary
 
-=== Stage Interval Statistics ===
-  START_to_camera_initialization: 145.23 ms
-  camera_initialization_to_feature_extraction: 856.45 ms
-  feature_extraction_to_feature_matching: 1243.67 ms
-  feature_matching_to_external_reconstruction: 445.89 ms
-  external_reconstruction_to_post_processing: 156.08 ms
-  post_processing_to_END: 45.67 ms
-```
+The summary contains dynamic label columns, `Label`, `Profile Scope`, `Average Time Count`, `Total Time(ms)`, `Average Time(ms)`, `Session Count`, and `Logical Run Count`. Memory, CPU, thread, and subprocess columns depend on the enabled metrics. CPU exports also include `CPU Sample Count`.
 
-### CSV Export Format
+`Profile Scope` preserves `method` or `core` classification. GUI batch exports also preserve `Experiment Dimensions`. Mean time uses its exported denominator, CPU uses valid measured-session counts, and peak metrics use the maximum.
 
-#### Main File (experiment_results.csv)
-| algorithm    | dataset   | experiment      | Label                                                               | Session Count | Profiling Threads | Total Time(ms) | Average Time(ms) | Min Time(ms) | Max Time(ms) | Peak Memory(MB) | Average CPU(%) | Process Peak Threads | Total Subprocesses | Peak Subprocesses |
-| ------------ | --------- | --------------- | ------------------------------------------------------------------- | ------------- | ----------------- | -------------- | ---------------- | ------------ | ------------ | --------------- | -------------- | -------------------- | ------------------ | ----------------- |
-| basic_sfm    | dataset_A | comparison_2025 | algorithm=basic_sfm_dataset=dataset_A_experiment=comparison_2025    | 5             | 2                 | 12847.32       | 2569.46          | 2234.12      | 2847.32      | 156.8           | 245.6          | 8                    | 15                 | 5                 |
-| advanced_sfm | dataset_A | comparison_2025 | algorithm=advanced_sfm_dataset=dataset_A_experiment=comparison_2025 | 5             | 2                 | 11234.67       | 2246.93          | 2156.78      | 2334.12      | 142.3           | 267.8          | 12                   | 18                 | 6                 |
+### Stages
 
-#### Stage File (experiment_results_stages.csv) 
-| Label                                                            | Interval Name                               | Total Duration(ms) | Average Duration(ms) | Count |
-| ---------------------------------------------------------------- | ------------------------------------------- | ------------------ | -------------------- | ----- |
-| algorithm=basic_sfm_dataset=dataset_A_experiment=comparison_2025 | START_to_camera_initialization              | 725.65             | 145.13               | 5     |
-| algorithm=basic_sfm_dataset=dataset_A_experiment=comparison_2025 | camera_initialization_to_feature_extraction | 4234.56            | 846.91               | 5     |
+Stage exports contain labels, scope, `Interval Name`, `Total Duration(ms)`, `Average Duration(ms)`, and `Count`, retaining experiment dimensions in batch runs.
 
-### CSV Header Description
+Repeated occurrences of an `A_to_B` interval accumulate their durations and increment `Count`. The average is total interval duration divided by the number of occurrences.
 
-#### Main Statistics File Headers
-- **Dynamic Structured Label Columns** (e.g., algorithm, dataset, experiment): User-defined structured labels
-- **Label**: Profiling label (structured label combination or user-set string)
-- **Session Count**: Total number of sessions for this label
-- **Profiling Threads**: Number of different threads participating in profiling
-- **Total Time(ms)**: Total time for all sessions (milliseconds)
-- **Average Time(ms)**: Average time per session (milliseconds)
-- **Min Time(ms)**: Shortest session time (milliseconds)
-- **Max Time(ms)**: Longest session time (milliseconds)
-- **Peak Memory(MB)**: Peak memory increment (MB, relative to start)
-- **Average CPU(%)**: Average CPU usage rate (%, may exceed 100%)
-- **Process Peak Threads**: Process peak thread count
-- **Total Subprocesses**: Total number of detected subprocesses
-- **Peak Subprocesses**: Peak subprocess count
+### Choose the measurement scope
 
-#### Stage Statistics File Headers
-- **Label**: Profiling label
-- **Interval Name**: Interval name (e.g., START_to_stage1, stage1_to_stage2)
-- **Total Duration(ms)**: Total duration for this interval (accumulated across all sessions)
-- **Average Duration(ms)**: Average duration for this interval
-- **Count**: Number of statistics for this interval
-
-## Important Notes
-
-### Memory Statistics Description
-- **Peak memory is now incremental statistics**, not absolute memory value
-- Calculation method: `Peak Memory = max(memory during monitoring) - memory at start`
-- More suitable for analyzing actual algorithm memory consumption, excluding program base memory impact
-
-### Performance Overhead
-- Slight performance overhead when all metrics are enabled (usually <1-2%)
-- Subprocess monitoring adds additional overhead
-- Recommend disabling detailed monitoring in release versions
-
-### Platform Compatibility
-- All features fully supported on macOS and Linux
-- Windows platform has limited CPU monitoring functionality
-- Subprocess monitoring implementation differs across platforms but interface is consistent
-
-### Usage Recommendations
-1. **Development Phase**: Use `PROFILER_START_AUTO` + complete metric monitoring (optimized, subprocess monitoring disabled by default)
-2. **Performance Tuning**: Use `PROFILER_STAGE` for fine-grained analysis
-3. **Experiment Comparison**: Use structured labels + CSV export
-4. **Production Environment**: Selectively enable key metrics, avoid comprehensive monitoring
-5. **External Tool Calls**: Use `POSDK_SYSTEM` to automatically enable subprocess monitoring for complete resource statistics
-
-By properly using these performance profiling tools, developers can effectively identify performance bottlenecks, optimize algorithm implementations, and conduct scientific experiment comparison analysis.
+Use the default time metric for timing comparisons. Enable memory, CPU, thread, or subprocess sampling when those measurements are needed. Keep metric settings identical across algorithm comparisons and use the GUI's separately measured wall time for end-to-end timing.

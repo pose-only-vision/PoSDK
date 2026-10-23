@@ -1,0 +1,22 @@
+{
+  "dataset": "eth3d",
+  "scene": "relief",
+  "platform": "PoMVG",
+  "points": 90596,
+  "ply_sha256": "77f85bf8505ca1bcb4e1a00232f05bf92d627105ea3dfa89dd30db513cc686d2",
+  "original_video_sha256": "05d130695265c910217dbe5cd461a2e550ce387db1e1c8a356f5210aabc85039",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 571,
+    "fps": 30.0,
+    "duration_seconds": 19.033333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 571,
+    "fps": 30.0,
+    "duration_seconds": 19.033333
+  }
+}

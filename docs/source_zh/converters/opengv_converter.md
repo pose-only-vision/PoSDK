@@ -1,7 +1,7 @@
 # OpenGV 数据转换器
 (opengv-converter)=
 
-OpenGV数据转换器提供PoSDK与OpenGV库之间的数据转换，用于几何视觉算法和相对位姿估计。
+OpenGV数据转换器提供PoMVG与OpenGV库之间的数据转换，用于几何视觉算法和相对位姿估计。
 
 ---
 
@@ -12,10 +12,10 @@ OpenGV数据转换器提供PoSDK与OpenGV库之间的数据转换，用于几何
 
 | 转换方向           | 数据类型                      | 用途           | 转换函数                                                              |
 | ------------------ | ----------------------------- | -------------- | --------------------------------------------------------------------- |
-| **PoSDK → OpenGV** | 匹配 → Bearing向量            | 相对位姿估计   | [`MatchesToBearingVectors`](matches-to-bearing-vectors)               |
-| **PoSDK → OpenGV** | BearingPairs → BearingVectors | OpenGV算法输入 | [`BearingPairsToBearingVectors`](bearing-pairs-to-bearing-vectors)    |
-| **OpenGV → PoSDK** | 变换矩阵 → 相对位姿           | 位姿结果提取   | [`OpenGVPose2RelativePose`](opengv-pose-to-relative-pose)             |
-| **PoSDK → OpenGV** | 相机模型 → 内参矩阵           | 算法初始化     | [`CameraModel2OpenGVCalibration`](camera-model-to-opengv-calibration) |
+| **PoMVG → OpenGV** | 匹配 → Bearing向量            | 相对位姿估计   | [`MatchesToBearingVectors`](matches-to-bearing-vectors)               |
+| **PoMVG → OpenGV** | BearingPairs → BearingVectors | OpenGV算法输入 | [`BearingPairsToBearingVectors`](bearing-pairs-to-bearing-vectors)    |
+| **OpenGV → PoMVG** | 变换矩阵 → 相对位姿           | 位姿结果提取   | [`OpenGVPose2RelativePose`](opengv-pose-to-relative-pose)             |
+| **PoMVG → OpenGV** | 相机模型 → 内参矩阵           | 算法初始化     | [`CameraModel2OpenGVCalibration`](camera-model-to-opengv-calibration) |
 
 ---
 
@@ -25,7 +25,7 @@ OpenGV数据转换器提供PoSDK与OpenGV库之间的数据转换，用于几何
 ### `MatchesToBearingVectors` (匹配转换)
 (matches-to-bearing-vectors)=
 
-将PoSDK匹配和特征数据转换为OpenGV的bearing vectors
+将PoMVG匹配和特征数据转换为OpenGV的bearing vectors
 
 **函数签名**:
 ```cpp
@@ -53,11 +53,11 @@ static bool MatchesToBearingVectors(
 **转换流程**:
 ```
 1. 从matches获取特征点对索引
-   ↓
+   |
 2. 从features_info获取像素坐标
-   ↓
+   |
 3. 使用camera_models去畸变并归一化
-   ↓
+   |
 4. 转换为3D单位向量（bearing vectors）
 ```
 
@@ -97,7 +97,7 @@ if (success) {
 
 ### `MatchesToBearingVectors` (样本转换)
 
-将PoSDK匹配样本转换为OpenGV的bearing vectors（用于RANSAC）
+将PoMVG匹配样本转换为OpenGV的bearing vectors（用于RANSAC）
 
 **函数签名**:
 ```cpp
@@ -155,8 +155,10 @@ static void BearingPairsToBearingVectors(
 
 **数据格式说明**:
 ```cpp
-// BearingPairs: std::vector<std::pair<Vector3d, Vector3d>>
-// BearingVectors: std::vector<Vector3d>
+// BearingPairs: std::vector<Eigen::Matrix<double, 6, 1>>
+//   每个元素是6x1向量，前3个分量是第一个bearing vector，后3个是第二个
+// BearingVectors: Eigen::Matrix<double, 3, Eigen::Dynamic>
+//   3xN矩阵，每列是一个3D bearing vector
 ```
 
 **使用示例**:
@@ -187,7 +189,7 @@ static void BearingVectorsToBearingPairs(
     BearingPairs &bearing_pairs);
 ```
 
-**使用场景**: OpenGV结果转回PoSDK格式
+**使用场景**: OpenGV结果转回PoMVG格式
 
 ---
 
@@ -209,7 +211,7 @@ static bool OpenGVPose2RelativePose(
 **参数说明**:
 | 参数            | 类型                              | 说明                         |
 | --------------- | --------------------------------- | ---------------------------- |
-| `T`             | `const opengv::transformation_t&` | [输入] OpenGV变换矩阵（4×4） |
+| `T`             | `const opengv::transformation_t&` | [输入] OpenGV变换矩阵（3×4） |
 | `relative_pose` | `RelativePose&`                   | [输出] PoMVG相对位姿         |
 
 **返回值**: `bool` - 转换是否成功
@@ -320,11 +322,11 @@ static opengv::bearingVector_t PixelToBearingVector(
 **转换流程**:
 ```
 像素坐标 (u, v)
-    ↓ 去畸变
+    | 去畸变
 归一化坐标 (x, y)
-    ↓ 添加z=1
+    | 添加z=1
 3D坐标 (x, y, 1)
-    ↓ 归一化
+    | 归一化
 单位向量 (x/||·||, y/||·||, 1/||·||)
 ```
 
@@ -489,8 +491,6 @@ LOG_INFO_ZH << "三角化了 " << points_3d.size() << " 个3D点";
 | **P3P（Gao）**   | `p3p_gao`   | 3        | 更快版本     |
 | **EPnP**         | `epnp`      | ≥4       | 非迭代，快速 |
 | **UPnP**         | `upnp`      | ≥4       | 未标定相机   |
-
----
 
 ---
 

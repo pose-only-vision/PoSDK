@@ -1,13 +1,13 @@
-# PoSDK Core Data Types
+# PoMVG Core Data Types
 
-This document provides detailed information about various core data types used in PoSDK, covering fundamental types, camera models, features and matching, tracks and observations, pose representation, and other key concepts. These types form the fundamental data structures of the entire PoSDK system.
+This document provides detailed information about various core data types used in PoMVG, covering fundamental types, camera models, features and matching, tracks and observations, pose representation, and other key concepts. These types form the fundamental data structures of the entire PoMVG system.
 
 
 ---
 
 ## Modular File Structure
 
-PoSDK adopts a modular type system design for better code organization and maintenance.
+PoMVG adopts a modular type system design for better code organization and maintenance.
 
 ### File Organization
 (file-organization)=
@@ -17,12 +17,17 @@ types/
 ├── types.hpp              # Main entry file, contains complex global pose types
 ├── base.hpp/cpp           # Fundamental types and environment variable management
 ├── camera_model.hpp/cpp   # Camera model related types and implementation
-├── features.hpp/cpp       # Feature detection and management related types
+├── features.hpp           # Feature system main entry (includes sub-modules below)
+│   ├── features/feature_base.hpp    # Feature point abstract base class
+│   ├── features/descriptors.hpp     # Descriptor abstract base class
+│   ├── features/image_feature_info.hpp  # Image feature information container
+│   └── features/features_info.hpp   # Image feature collection
 ├── matches.hpp/cpp        # Matching relationships and bearing vector types
 ├── tracks.hpp/cpp         # Track observation and management related types
 ├── relative_poses.hpp/cpp # Relative pose and relative rotation types
 ├── global_poses.hpp/cpp   # Global pose fundamental types and estimation state
 ├── world_3dpoints.hpp/cpp # 3D point cloud and world coordinate point information
+├── similarity_transform.hpp # Similarity transform computation utilities
 └── image.hpp              # Image related type definitions
 ```
 
@@ -60,7 +65,8 @@ types/
 
 - **Camera Models**: [`CameraModel`](camera-model) | [`CameraModels`](camera-models) | [`CameraIntrinsics`](camera-intrinsics)
 - **Distortion Types**: [`DistortionType`](distortion-type) | [`NO_DISTORTION`](no-distortion) | [`RADIAL_K3`](radial-k3) | [`BROWN_CONRADY`](brown-conrady)
-- **Projection Models**: [`CameraModelType`](camera-model-type) | [`PINHOLE`](pinhole) | [`FISHEYE`](fisheye) | [`SPHERICAL`](spherical)
+- **Classic / Generic Models**: [`ClassicCameraModelType`](classic-camera-model-type) | [`GenericCameraModelType`](generic-camera-model-type) | [`PrimaryCameraRepresentation`](primary-camera-representation)
+- **Compatibility Model Enum**: [`CameraModelType`](camera-model-type) | [`PINHOLE`](pinhole) | [`FISHEYE`](fisheye) | [`SPHERICAL`](spherical)
 - **Intrinsic Matrices**: [`KMats`](k-mats) | [`KMatsPtr`](k-mats-ptr)
 
 ### Image Management Quick Navigation
@@ -72,7 +78,7 @@ types/
 ### Feature System Quick Navigation
 (feature-system-navigation)=
 
-- **Feature Types**: [`Feature`](feature) | [`FeaturePoint`](feature-point) | [`Descriptor`](descriptor)
+- **Feature Types**: [`Feature`](feature) | [`FeaturePoints`](featurepoints-class) | [`Descriptors`](descriptorssoa-class)
 - **Image Features**: [`ImageFeatureInfo`](image-feature-info) | [`FeaturesInfo`](features-info) | [`FeaturesInfoPtr`](features-info-ptr)
 
 ### Matching System Quick Navigation
@@ -287,15 +293,14 @@ if (camera) {
 (radial-k1)=
 (radial-k3)=
 (brown-conrady)=
-Camera distortion type enumeration supporting multiple distortion models
+Camera distortion model enumeration.
 
-**Enumeration Definitions**:
-| Type            | Definition                                      | Default Value | Purpose                                                            |
-| --------------- | ----------------------------------------------- | ------------- | ------------------------------------------------------------------ |
-| `NO_DISTORTION` | No distortion enumeration value                 | -             | Ideal pinhole camera model, no lens distortion                     |
-| `RADIAL_K1`     | First-order radial distortion enumeration value | -             | Simple radial distortion model, suitable for slight distortion     |
-| `RADIAL_K3`     | Third-order radial distortion enumeration value | -             | Complete radial distortion model, suitable for moderate distortion |
-| `BROWN_CONRADY` | Brown-Conrady distortion enumeration value      | -             | Complete distortion model including tangential distortion          |
+| Type | Purpose |
+| --- | --- |
+| `NO_DISTORTION` | Idealized lens without distortion |
+| `RADIAL_K1` | First-order radial distortion |
+| `RADIAL_K3` | Three-coefficient radial distortion |
+| `BROWN_CONRADY` | Radial + tangential distortion model |
 
 ### `CameraModelType`
 (camera-model-type)=
@@ -303,218 +308,174 @@ Camera distortion type enumeration supporting multiple distortion models
 (fisheye)=
 (spherical)=
 (omnidirectional)=
-Camera model type enumeration defining different camera projection models
+Legacy compatibility enumeration retained for older code paths.
 
-**Enumeration Definitions**:
-| Type              | Definition                                     | Default Value | Purpose                                                            |
-| ----------------- | ---------------------------------------------- | ------------- | ------------------------------------------------------------------ |
-| `PINHOLE`         | Pinhole camera model enumeration value         | -             | Standard projection camera model, suitable for conventional lenses |
-| `FISHEYE`         | Fisheye camera model enumeration value         | -             | Wide-angle lens model, suitable for large field-of-view cameras    |
-| `SPHERICAL`       | Spherical camera model enumeration value       | -             | Spherical projection model, suitable for panoramic cameras         |
-| `OMNIDIRECTIONAL` | Omnidirectional camera model enumeration value | -             | Full-range projection model, suitable for 360-degree cameras       |
+| Type | Purpose |
+| --- | --- |
+| `PINHOLE` | Standard perspective camera |
+| `FISHEYE` | Wide field-of-view lens |
+| `SPHERICAL` | Spherical or panoramic projection |
+| `OMNIDIRECTIONAL` | Omnidirectional projection |
+| `CENTRAL_GENERIC` | Legacy alias for central generic cameras |
+| `NONCENTRAL_GENERIC` | Legacy alias for non-central generic cameras |
+
+### `ClassicCameraModelType`
+(classic-camera-model-type)=
+Enumeration for the classic intrinsic branch stored in `CameraIntrinsics`.
+
+### `GenericCameraModelType`
+(generic-camera-model-type)=
+Enumeration for generic camera payloads.
+
+- `CENTRAL`
+- `NONCENTRAL`
+
+### `PrimaryCameraRepresentation`
+(primary-camera-representation)=
+Selects which representation is considered the primary one in a `CameraModel`.
+
+- `CLASSIC`
+- `GENERIC`
+
+### `ObservationRay`
+(observation-ray)=
+Full observation ray returned by generic unprojection style workflows.
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `origin` | `Vector3d` | Ray origin |
+| `direction` | `Vector3d` | Ray direction |
+
+### `GenericCameraPayload`
+(generic-camera-payload)=
+Payload used by generic and hybrid camera models.
+
+Important fields:
+
+- `model_type`
+- `native_model_name`
+- `native_parameters`
+- `has_use_equidistant_projection`
+- `use_equidistant_projection`
+- `has_calibration_bounds`
+- `calibration_min_x`, `calibration_min_y`, `calibration_max_x`, `calibration_max_y`
+- `grid_width`, `grid_height`
+- `central_ray_grid`
+- `point_grid`
+- `direction_grid`
+
+Use this payload when the camera cannot be represented purely by the classic intrinsic + distortion model.
 
 ### `CameraIntrinsics`
 (camera-intrinsics)=
-Camera intrinsic data structure (encapsulated class design, private member variables + public access interface)
+Encapsulated classic camera intrinsic parameters with a stable PIMPL-based ABI.
 
-**Implementation Details**:
-- **PIMPL Pattern**: Uses `std::unique_ptr<Impl>` to hide implementation details, providing stable ABI
-- **Memory Alignment**: Uses `alignas(8)` to optimize memory layout, double types prioritized for alignment
-- **Default Construction**: Focal length fx/fy defaults to 1.0, principal point cx/cy defaults to 0.0, image size defaults to 0
+Current responsibilities:
 
-**Internal Data Structure** (hidden through PIMPL):
-| Name                   | Type                                   | Default Value | Purpose                                       |
-| ---------------------- | -------------------------------------- | ------------- | --------------------------------------------- |
-| fx_                    | `double`                               | 1.0           | x-direction focal length parameter            |
-| fy_                    | `double`                               | 1.0           | y-direction focal length parameter            |
-| cx_                    | `double`                               | 0.0           | x-direction principal point offset coordinate |
-| cy_                    | `double`                               | 0.0           | y-direction principal point offset coordinate |
-| width_                 | `uint32_t`                             | 0             | Image resolution width                        |
-| height_                | `uint32_t`                             | 0             | Image resolution height                       |
-| model_type_            | [`CameraModelType`](camera-model-type) | PINHOLE       | Camera model type identifier                  |
-| distortion_type_       | [`DistortionType`](distortion-type)    | NO_DISTORTION | Camera distortion type identifier             |
-| radial_distortion_     | `std::vector<double>`                  | Empty vector  | Radial distortion coefficient array           |
-| tangential_distortion_ | `std::vector<double>`                  | Empty vector  | Tangential distortion coefficient array       |
+- focal length and principal point
+- image width / height
+- classic model family
+- distortion model and coefficients
+- compatibility accessors for the legacy `CameraModelType`
+- parameter-array helpers for optimization backends
 
-**Available Methods**:
-- <span style="color:#1976d2;font-weight:bold;">CameraIntrinsics</span> - Default constructor
-- <span style="color:#1976d2;font-weight:bold;">GetFx</span> - Get x-direction focal length
-- <span style="color:#1976d2;font-weight:bold;">GetFy</span> - Get y-direction focal length
-- <span style="color:#1976d2;font-weight:bold;">GetCx</span> - Get x-direction principal point offset
-- <span style="color:#1976d2;font-weight:bold;">GetCy</span> - Get y-direction principal point offset
-- <span style="color:#1976d2;font-weight:bold;">GetWidth</span> - Get image width
-- <span style="color:#1976d2;font-weight:bold;">GetHeight</span> - Get image height
-- <span style="color:#1976d2;font-weight:bold;">GetModelType</span> - Get camera model type
-- <span style="color:#1976d2;font-weight:bold;">GetDistortionType</span> - Get distortion type
-- <span style="color:#1976d2;font-weight:bold;">GetRadialDistortion</span> - Get radial distortion parameters
-- <span style="color:#1976d2;font-weight:bold;">GetTangentialDistortion</span> - Get tangential distortion parameters
-- <span style="color:#1976d2;font-weight:bold;">SetFx</span> - Set x-direction focal length
-  - fx `double`: Focal length value
-- <span style="color:#1976d2;font-weight:bold;">SetFy</span> - Set y-direction focal length
-  - fy `double`: Focal length value
-- <span style="color:#1976d2;font-weight:bold;">SetCx</span> - Set x-direction principal point offset
-  - cx `double`: Principal point offset value
-- <span style="color:#1976d2;font-weight:bold;">SetCy</span> - Set y-direction principal point offset
-  - cy `double`: Principal point offset value
-- <span style="color:#1976d2;font-weight:bold;">SetWidth</span> - Set image width
-  - width `uint32_t`: Image width
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">SetHeight</span> - Set image height
-  - height `uint32_t`: Image height
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">SetImageSize</span> - Batch set image size
-  - width `uint32_t`: Image width
-  - height `uint32_t`: Image height
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">SetModelType</span> - Set camera model type
-  - type `CameraModelType`: Camera model type
-- <span style="color:#1976d2;font-weight:bold;">SetDistortionType</span> - Set distortion type
-  - type `DistortionType`: Distortion type
-- <span style="color:#1976d2;font-weight:bold;">GetKMat</span> - Get camera intrinsic matrix (efficient version)
-  - K `Matrix3d &`: Output 3x3 intrinsic matrix reference
-- <span style="color:#1976d2;font-weight:bold;">GetKMat</span> - Get camera intrinsic matrix (convenient version)
-  - Returns `Matrix3d`: 3x3 intrinsic matrix
-- <span style="color:#1976d2;font-weight:bold;">SetKMat</span> - Set camera intrinsic matrix
-  - K `const Matrix3d &`: Input 3x3 intrinsic matrix constant reference
-- <span style="color:#1976d2;font-weight:bold;">SetCameraIntrinsics</span> - Set camera intrinsic data (method 1)
-  - intrinsics `const CameraIntrinsics &`: Camera intrinsic structure
-- <span style="color:#1976d2;font-weight:bold;">SetCameraIntrinsics</span> - Set camera intrinsic data (method 2)
-  - fx `const double`: x-direction focal length
-  - fy `const double`: y-direction focal length
-  - cx `const double`: x-direction principal point offset
-  - cy `const double`: y-direction principal point offset
-- <span style="color:#1976d2;font-weight:bold;">SetCameraIntrinsics</span> - Set camera intrinsic data (method 3)
-  - fx `const double`: x-direction focal length
-  - fy `const double`: y-direction focal length
-  - width `const uint32_t`: Image width
-  - height `const uint32_t`: Image height
-- <span style="color:#1976d2;font-weight:bold;">SetCameraIntrinsics</span> - Set camera intrinsic data (method 4)
-  - fx `const double`: x-direction focal length
-  - fy `const double`: y-direction focal length
-  - cx `const double`: x-direction principal point offset
-  - cy `const double`: y-direction principal point offset
-  - width `const uint32_t`: Image width
-  - height `const uint32_t`: Image height
-- <span style="color:#1976d2;font-weight:bold;">SetCameraIntrinsics</span> - Set camera intrinsic data (method 5, complete parameters)
-  - fx `const double`: x-direction focal length
-  - fy `const double`: y-direction focal length
-  - cx `const double`: x-direction principal point offset
-  - cy `const double`: y-direction principal point offset
-  - width `const uint32_t`: Image width
-  - height `const uint32_t`: Image height
-  - radial_distortion `const std::vector<double> &`: Radial distortion parameters
-  - tangential_distortion `const std::vector<double> &`: Tangential distortion parameters (optional, default empty)
-  - model_type `const CameraModelType`: Camera model type (default [pinhole camera](pinhole))
-- <span style="color:#1976d2;font-weight:bold;">SetDistortionParams</span> - Set distortion parameters
-  - distortion_type `DistortionType`: Distortion type
-  - radial_distortion `const std::vector<double> &`: Radial distortion parameters
-  - tangential_distortion `const std::vector<double> &`: Tangential distortion parameters
-- <span style="color:#1976d2;font-weight:bold;">InitDistortionParams</span> - Initialize distortion parameters to zero
-- <span style="color:#1976d2;font-weight:bold;">GetFocalLengthPtr</span> - Get focal length parameter pointer (for Ceres optimization)
-- <span style="color:#1976d2;font-weight:bold;">GetPrincipalPointPtr</span> - Get principal point parameter pointer (for Ceres optimization)
-- <span style="color:#1976d2;font-weight:bold;">GetDistortionPtr</span> - Get distortion parameter pointer (for Ceres optimization)
-- <span style="color:#1976d2;font-weight:bold;">CopyToParamArray</span> - Copy parameters to array (for Ceres optimization)
-  - params `double*`: Output parameter array
-  - include_distortion `bool`: Whether to include distortion parameters (default true)
-- <span style="color:#1976d2;font-weight:bold;">SetFromParamArray</span> - Set parameters from array (for Ceres optimization)
-  - params `const double*`: Input parameter array
-  - include_distortion `bool`: Whether to include distortion parameters (default true)
+Common API groups:
+
+- Matrix access:
+  - `GetKMat()`
+  - `SetKMat(...)`
+- Intrinsic setters:
+  - `SetCameraIntrinsics(...)`
+  - `SetImageSize(...)`
+- Model family:
+  - `GetClassicModelType()`
+  - `SetClassicModelType(...)`
+  - `GetModelType()` / `SetModelType(...)` for legacy compatibility
+- Distortion:
+  - `GetDistortionType()`
+  - `SetDistortionType(...)`
+  - `SetDistortionParams(...)`
+  - `InitDistortionParams()`
+- Optimization helpers:
+  - `GetFocalLengthPtr()`
+  - `GetPrincipalPointPtr()`
+  - `GetDistortionPtr()`
+  - `CopyToParamArray(...)`
+  - `SetFromParamArray(...)`
 
 ### `CameraModel`
 (camera-model)=
-Complete camera model definition including intrinsics and metadata information (encapsulated class design, private member variables + public access interface)
+The current `CameraModel` can represent classic, generic, or hybrid cameras.
 
-**Implementation Details**:
-- **PIMPL Pattern**: Uses `std::unique_ptr<Impl>` to hide implementation details, providing stable ABI
-- **Memory Alignment**: Uses `EIGEN_MAKE_ALIGNED_OPERATOR_NEW` macro to ensure correct alignment of Eigen types
+Core concepts:
 
-**Internal Data Structure** (hidden through PIMPL):
-| Name             | Type                                    | Default Value | Purpose                         |
-| ---------------- | --------------------------------------- | ------------- | ------------------------------- |
-| `intrinsics_`    | [`CameraIntrinsics`](camera-intrinsics) | Default value | Camera intrinsic data structure |
-| `camera_make_`   | `std::string`                           | ""            | Camera manufacturer name        |
-| `camera_model_`  | `std::string`                           | ""            | Camera model identifier         |
-| `serial_number_` | `std::string`                           | ""            | Camera serial number            |
+- **Classic representation**: stored as `CameraIntrinsics`
+- **Generic representation**: stored as `GenericCameraPayload`
+- **Primary representation**: selected with `PrimaryCameraRepresentation`
+- **Hybrid cameras**: both branches may coexist in the same object
 
-**Available Methods**:
-- <span style="color:#1976d2;font-weight:bold;">GetIntrinsics</span> - Get camera intrinsics reference (const version)
-  - Returns `const CameraIntrinsics&`: Intrinsics constant reference
-- <span style="color:#1976d2;font-weight:bold;">GetIntrinsics</span> - Get camera intrinsics reference (non-const version)
-  - Returns `CameraIntrinsics&`: Intrinsics reference
-- <span style="color:#1976d2;font-weight:bold;">GetCameraMake</span> - Get camera manufacturer
-  - Returns `const std::string&`: Manufacturer name
-- <span style="color:#1976d2;font-weight:bold;">GetCameraModel</span> - Get camera model name
-  - Returns `const std::string&`: Camera model name (e.g., "EOS 5D Mark IV")
-- <span style="color:#1976d2;font-weight:bold;">GetSerialNumber</span> - Get serial number
-  - Returns `const std::string&`: Serial number
-- <span style="color:#1976d2;font-weight:bold;">SetCameraMake</span> - Set camera manufacturer
-  - make `const std::string&`: Manufacturer name
-- <span style="color:#1976d2;font-weight:bold;">SetCameraModelName</span> - Set camera model name
-  - model `const std::string&`: Camera model name
-- <span style="color:#1976d2;font-weight:bold;">SetSerialNumber</span> - Set serial number
-  - serial `const std::string&`: Serial number
-- <span style="color:#1976d2;font-weight:bold;">PixelToNormalized</span> - Pixel coordinate to normalized coordinate (single point conversion)
-  - pixel_coord `const Vector2d &`: Pixel coordinate
-  - Returns `Vector2d`: Normalized coordinate
-- <span style="color:#1976d2;font-weight:bold;">NormalizedToPixel</span> - Normalized coordinate to pixel coordinate (single point conversion)
-  - normalized_coord `const Vector2d &`: Normalized coordinate
-  - Returns `Vector2d`: Pixel coordinate
-- <span style="color:#1976d2;font-weight:bold;">PixelToNormalizedBatch</span> - Batch pixel coordinate to normalized coordinate (vectorized)
-  - pixel_coords `const Eigen::Ref<const Eigen::Matrix<double, 2, Eigen::Dynamic>>&`: 2×N pixel coordinate matrix
-  - Returns `Eigen::Matrix<double, 2, Eigen::Dynamic>`: 2×N normalized coordinate matrix
-  - Note: SIMD-friendly batch operation, better performance than loop calling single point conversion
-- <span style="color:#1976d2;font-weight:bold;">NormalizedToPixelBatch</span> - Batch normalized coordinate to pixel coordinate (vectorized)
-  - normalized_coords `const Eigen::Ref<const Eigen::Matrix<double, 2, Eigen::Dynamic>>&`: 2×N normalized coordinate matrix
-  - Returns `Eigen::Matrix<double, 2, Eigen::Dynamic>`: 2×N pixel coordinate matrix
-  - Note: SIMD-friendly batch operation, better performance than loop calling single point conversion
-- <span style="color:#1976d2;font-weight:bold;">SetKMat</span> - Set camera intrinsic matrix
-  - K `const Matrix3d &`: Input 3x3 intrinsic matrix
-- <span style="color:#1976d2;font-weight:bold;">GetKMat</span> - Get camera intrinsic matrix (efficient version)
-  - K `Matrix3d &`: Output 3x3 intrinsic matrix reference
-- <span style="color:#1976d2;font-weight:bold;">GetKMat</span> - Get camera intrinsic matrix (convenient version)
-  - Returns `Matrix3d`: 3x3 intrinsic matrix
-- <span style="color:#1976d2;font-weight:bold;">SetDistortionParams</span> - Set distortion type and parameters
-  - distortion_type `const DistortionType &`: Distortion type
-  - radial_distortion `const std::vector<double> &`: Radial distortion parameters
-  - tangential_distortion `const std::vector<double> &`: Tangential distortion parameters
-- <span style="color:#1976d2;font-weight:bold;">SetModelType</span> - Set camera model type
-  - model_type `const CameraModelType &`: Camera model type
-- <span style="color:#1976d2;font-weight:bold;">SetCameraInfo</span> - Set camera metadata information
-  - camera_make `const std::string &`: Camera manufacturer
-  - camera_model `const std::string &`: Camera model
-  - serial_number `const std::string &`: Serial number
-- Other SetCameraIntrinsics methods - Multiple overloaded methods same as [`CameraIntrinsics`](camera-intrinsics) class
-- <span style="color:#1976d2;font-weight:bold;">GetFocalLengthPtr</span> - Get focal length parameter pointer (for Ceres optimization)
-- <span style="color:#1976d2;font-weight:bold;">GetPrincipalPointPtr</span> - Get principal point parameter pointer (for Ceres optimization)
-- <span style="color:#1976d2;font-weight:bold;">GetDistortionPtr</span> - Get distortion parameter pointer (for Ceres optimization)
-- <span style="color:#1976d2;font-weight:bold;">CopyToParamArray</span> - Copy parameters to array (for Ceres optimization)
-  - params `double*`: Output parameter array
-  - include_distortion `bool`: Whether to include distortion parameters (default true)
-- <span style="color:#1976d2;font-weight:bold;">SetFromParamArray</span> - Set parameters from array (for Ceres optimization)
-  - params `const double*`: Input parameter array
-  - include_distortion `bool`: Whether to include distortion parameters (default true)
+Common API groups:
+
+- Representation selection:
+  - `GetPrimaryRepresentation()`
+  - `SetPrimaryRepresentation(...)`
+  - `HasClassicIntrinsics()`
+  - `HasGenericPayload()`
+  - `IsHybrid()`
+- Classic branch:
+  - `GetClassicIntrinsics()`
+  - `MutableClassicIntrinsics()`
+  - `SetClassicIntrinsics(...)`
+  - `ClearClassicIntrinsics()`
+- Generic branch:
+  - `GetGenericPayload()`
+  - `MutableGenericPayload()`
+  - `SetGenericPayload(...)`
+  - `ClearGenericPayload()`
+- Compatibility accessors:
+  - `GetIntrinsics()`
+  - `SetIntrinsics(...)`
+  - `GetModelType()` / `SetModelType(...)`
+- Metadata:
+  - `SetCameraMake(...)`
+  - `SetCameraModelName(...)`
+  - `SetSerialNumber(...)`
+- Coordinate transforms:
+  - `PixelToNormalized(...)`
+  - `NormalizedToPixel(...)`
+  - batch variants for matrix inputs
 
 ### `CameraModels`
 (camera-models)=
-Intelligent camera model container class supporting single and multi-camera configurations, inherits from std::vector<[`CameraModel`](camera-model)>
+Container of `CameraModel` instances plus view-to-camera mapping state.
 
-**Available Methods**:
-- <span style="color:#1976d2;font-weight:bold;">operator[]</span> - Intelligent index access to camera model (non-const version)
-  - view_id `ViewId`: View identifier
-  - Returns `CameraModel*`: Camera model pointer, returns nullptr on access failure
-- <span style="color:#1976d2;font-weight:bold;">operator[]</span> - Intelligent index access to camera model (const version)
-  - view_id `ViewId`: View identifier
-  - Returns `const CameraModel*`: Camera model constant pointer, returns nullptr on access failure
-- <span style="color:#1976d2;font-weight:bold;">at</span> - Intelligent index access to camera model (non-const version, with bounds checking)
-  - view_id `ViewId`: View identifier
-  - Returns `CameraModel&`: Camera model reference
-  - Throws exception: `std::out_of_range` (when access is invalid)
-- <span style="color:#1976d2;font-weight:bold;">at</span> - Intelligent index access to camera model (const version, with bounds checking)
-  - view_id `ViewId`: View identifier
-  - Returns `const CameraModel&`: Camera model constant reference
-  - Throws exception: `std::out_of_range` (when access is invalid)
-- All standard container methods inherited from `std::vector<CameraModel>` (`size`, `empty`, `push_back`, `clear`, etc.)
+Core features:
 
+- multiple views can share one camera model
+- explicit `ViewId -> camera_id` mapping
+- single-camera convenience mode
+- safe smart indexing through `operator[]` and `at(...)`
+
+Common API groups:
+
+- Camera storage:
+  - `AddCamera(...)`
+  - all standard `std::vector<CameraModel>` operations
+- Mapping management:
+  - `SetViewCameraMapping(...)`
+  - `SetViewCameraMappings(...)`
+  - `GetViewCameraMappings()`
+  - `ClearViewCameraMappings()`
+  - `GetCameraId(...)`
+- Query helpers:
+  - `IsSingleCameraMode()`
+  - `IsMultiCameraMode()`
+  - `GetNumCameras()`
+  - `GetNumViewMappings()`
+  - `InvalidIndex()`
+- Access:
+  - `operator[](view_id)`
+  - `at(view_id)`
 
 ### Camera Model Related Type Definitions
 (camera-model-related-types)=
@@ -523,13 +484,12 @@ Intelligent camera model container class supporting single and multi-camera conf
 (k-mats)=
 (k-mats-ptr)=
 
-**Type Definitions**:
-| Type              | Definition                                                                                  | Default Value | Purpose                                                     |
-| ----------------- | ------------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------------- |
-| `CameraModelPtr`  | `std::shared_ptr<`[`CameraModel`](camera-model)`>`                                          | nullptr       | Camera model smart pointer type                             |
-| `CameraModelsPtr` | `std::shared_ptr<`[`CameraModels`](camera-models)`>`                                        | nullptr       | Camera model collection smart pointer type                  |
-| `KMats`           | `std::vector<`[`Matrix3d`](matrix3d)`, Eigen::aligned_allocator<`[`Matrix3d`](matrix3d)`>>` | Empty vector  | Intrinsic matrix sequence container using aligned allocator |
-| `KMatsPtr`        | `std::shared_ptr<`[`KMats`](k-mats)`>`                                                      | nullptr       | Intrinsic matrix sequence smart pointer                     |
+| Type | Definition | Purpose |
+| --- | --- | --- |
+| `CameraModelPtr` | `std::shared_ptr<CameraModel>` | Smart pointer to one camera model |
+| `CameraModelsPtr` | `std::shared_ptr<CameraModels>` | Smart pointer to a camera-model collection |
+| `KMats` | `std::vector<Matrix3d, Eigen::aligned_allocator<Matrix3d>>` | Intrinsic matrix collection |
+| `KMatsPtr` | `std::shared_ptr<KMats>` | Smart pointer to intrinsic matrices |
 
 ---
 
@@ -550,17 +510,17 @@ Intelligent camera model container class supporting single and multi-camera conf
 
 ## Features (types/features.hpp)
 
-The feature system adopts SIMD-optimized SOA (Structure of Arrays) design, providing high-performance feature data management.
+The feature system adopts an abstract base class with cached pointer dispatch zero-overhead design, supporting CPU and GPU multi-backend, providing high-performance feature data management.
 
 ### Core Features and Usage Patterns
 
-**SIMD-Optimized SOA Design Advantages**:
-- **SOA Memory Layout**: Data stored grouped by type, improving cache locality and SIMD vectorization efficiency
+**Abstract Base Class + Multi-Backend Design Advantages**:
+- **Zero-Overhead Dispatch**: Cached pointers set once in constructor, no repeated cast for subsequent access (~0.5ns overhead)
+- **Multi-Backend Support**: Supports CPU, GPU_CUDA, GPU_METAL backends, created via factory methods
+- **SOA Memory Layout**: CPU backend data stored grouped by type, improving cache locality and SIMD vectorization efficiency
 - **AVX2/AVX-512 Support**: Batch operations fully vectorized, significantly improving performance
-- **Natural Alignment Optimization**: Removes excessive 64-byte alignment, reducing 90%+ memory usage
 - **Batch-First API**: Provides efficient batch operation interfaces (SetSizesBlock, SetAnglesBlock, etc.)
-- **Zero-Copy Compatibility**: Zero-copy compatible with cv::Mat and protobuf, 8-9x faster conversion
-- **Compact Layout**: Single continuous memory allocation, reducing memory fragmentation
+- **Type-Safe Casting**: `AsCPU()` and `AsGPUCUDA()` provide safe backend conversion
 
 ### Typical Usage Examples
 
@@ -568,68 +528,57 @@ The feature system adopts SIMD-optimized SOA (Structure of Arrays) design, provi
 ```cpp
 using namespace PoSDK::types;
 
-// Create feature point collection (recommended to reserve capacity)
-FeaturePoints features(1000);  // Reserve 1000 feature points
+// Create feature point collection via factory method (CPU backend)
+auto features = FeaturePoints::CreateCPU();
+features->reserve(1000);  // Reserve 1000 feature points
 
 // Batch add features (efficient)
 Eigen::Matrix<double, 2, Eigen::Dynamic> coords_block(2, 100);
 std::vector<float> sizes_block(100, 5.0f);
 std::vector<float> angles_block(100, 0.0f);
 // ... Fill coords_block, sizes_block, angles_block ...
-features.AddFeaturesBlock(coords_block, sizes_block.data(), angles_block.data());
+features->AddFeaturesBlock(coords_block, sizes_block.data(), angles_block.data());
 
-// Access individual feature point
-Feature coord = features.GetCoord(0);
-float size = features.GetSize(0);
-float angle = features.GetAngle(0);
+// Access individual feature point (non-virtual, ~0.5ns overhead)
+Feature coord = features->GetCoord(0);
+float size = features->GetSize(0);
+float angle = features->GetAngle(0);
 
 // Batch set attributes (SIMD optimized)
-features.SetSizesBlock(0, 100, sizes_block.data());
-features.SetAnglesBlock(0, 100, angles_block.data());
+features->SetSizesBlock(0, 100, sizes_block.data());
+features->SetAnglesBlock(0, 100, angles_block.data());
 
 // Batch statistical operations (SIMD optimized)
-features.IncrementTotalCountsBlock(0, 100);
-features.IncrementOutlierCountsBlock(0, 50);
+features->IncrementTotalCountsBlock(0, 100);
+features->IncrementOutlierCountsBlock(0, 50);
 
-// Zero counters (SIMD optimized)
-features.ZeroCounters();
+// Zero counters
+features->ZeroCounters();
 
-// Get valid feature count (SIMD optimized)
-Size valid_count = features.GetNumValid();
+// Get valid feature count
+Size valid_count = features->GetNumValid();
 
-// Iterator access
-for (auto&& feat_proxy : features) {
-    if (feat_proxy.IsUsed()) {
-        Feature coord = feat_proxy.GetCoord();
-        // Process feature
-    }
-}
+// Convenience wrappers: direct access to CPU backend data (zero overhead)
+auto& coords_ref = features->GetCoordsRef();  // Auto-cast to CPU backend
+auto& sizes_ref = features->GetSizesRef();
 ```
 
-#### Descriptor Management (SOA Format)
+#### Descriptor Management
 ```cpp
-// Create SOA descriptor container (high performance)
-DescriptorsSOA descs_soa(1000, 128);  // 1000 features, 128-dimensional SIFT descriptor
+// Create descriptors via factory method (CPU backend)
+auto descs = Descriptors::CreateCPU(1000, 128);  // 1000 features, 128-dimensional SIFT descriptor
 
 // Set single descriptor
 float descriptor_data[128];
 // ... Fill descriptor_data ...
-descs_soa.SetDescriptor(0, descriptor_data);
+descs->SetDescriptor(0, descriptor_data);
 
-// Direct access to descriptor data (zero-copy)
-float* desc_ptr = descs_soa[0];  // Pointer to the 0th descriptor
+// Direct access to descriptor data (non-virtual, ~0.5ns overhead)
+float* desc_ptr = (*descs)[0];  // Pointer to the 0th descriptor
 
-// Batch copy (SIMD optimized)
-float* all_descs = descs_soa.data();  // Raw data pointer
-size_t total_size = descs_soa.total_size();  // Total number of elements
-
-// Convert from old AOS format (automatic)
-Descs old_format_descs;  // std::vector<std::vector<float>>
-descs_soa.FromDescs(old_format_descs);
-
-// Convert back to AOS format (compatibility)
-Descs converted_descs;
-descs_soa.ToDescs(converted_descs);
+// Batch copy
+float* all_descs = descs->data();  // Raw data pointer
+size_t total_size = descs->total_size();  // Total number of elements
 ```
 
 #### Image Feature Information Management
@@ -650,7 +599,7 @@ std::vector<float> angles_block(100, 0.0f);
 // ... Fill data ...
 image_features.AddFeaturesBlock(coords_block, sizes_block.data(), angles_block.data());
 
-// Access feature point collection (direct access to underlying FeaturePoints)
+// Access feature point collection (via abstract interface)
 FeaturePoints& features = image_features.GetFeaturePoints();
 Size num_features = features.size();
 
@@ -659,7 +608,7 @@ auto feat_proxy = image_features.GetFeature(0);
 Feature coord = feat_proxy.GetCoord();
 float size = feat_proxy.GetSize();
 
-// Zero feature counters (SIMD optimized)
+// Zero feature counters
 image_features.ZeroFeatureCounters();
 
 // Get valid feature count
@@ -669,16 +618,16 @@ Size valid_features = image_features.GetNumValidFeatures();
 image_features.ClearUnusedFeatures();
 
 // Descriptor management
-auto descs_soa = std::make_shared<DescriptorsSOA>(1000, 128);
-image_features.SetDescriptorsSOA(descs_soa);  // Set SOA format descriptor
+auto descs = Descriptors::CreateCPU(1000, 128);
+image_features.SetDescriptors(descs);  // Set descriptors
 
-if (image_features.HasDescriptorsSOA()) {
-    auto& desc_ref = image_features.GetDescriptorsSOAPtr();
+if (image_features.HasDescriptors()) {
+    auto& desc_ref = image_features.GetDescriptorsPtr();
     // Use descriptor...
 }
 
 // Check descriptor reference count (memory debugging)
-long soa_ref_count = image_features.GetDescriptorsSOARefCount();
+long ref_count = image_features.GetDescriptorsRefCount();
 ```
 
 #### Feature Collection Management
@@ -690,15 +639,15 @@ FeaturesInfo features_info;
 features_info.AddImageFeatures("image1.jpg", true);
 features_info.AddImageFeatures("image2.jpg", true);
 
-// Intelligent access to image features
-ImageFeatureInfo* img_feat = features_info[0];  // Returns pointer, need to check nullptr
+// Intelligent access to image features (returns pointer, check nullptr)
+ImageFeatureInfo* img_feat = features_info[0];
 if (img_feat) {
-    img_feat->AddFeature(FeaturePoint(10.0f, 20.0f));
+    img_feat->AddFeature(Feature(10.0, 20.0));
     std::string path = img_feat->GetImagePath();
 }
 
-// Safe access to image features
-const ImageFeatureInfo* safe_img_feat = features_info.GetImageFeaturePtr(1);
+// Safe access via operator[]
+const ImageFeatureInfo* safe_img_feat = features_info[1];
 if (safe_img_feat) {
     Size num_features = safe_img_feat->GetNumFeatures();
 }
@@ -707,6 +656,7 @@ if (safe_img_feat) {
 Size valid_images = features_info.GetNumValidImages();
 features_info.ClearUnusedImages();
 features_info.ClearAllUnusedFeatures();
+features_info.Print();  // Print summary information
 ```
 
 ### Fundamental Feature Types
@@ -720,189 +670,215 @@ features_info.ClearAllUnusedFeatures();
 (feature-points-ptr)=
 
 **Type Definitions**:
-| Type               | Definition                                  | Default Value | Purpose                                                              |
-| ------------------ | ------------------------------------------- | ------------- | -------------------------------------------------------------------- |
-| `Feature`          | `Eigen::Matrix<double, 2, 1>`               | Zero vector   | Basic 2D feature point, contains only position information           |
-| `Descriptor`       | `std::vector<float>`                        | Empty vector  | Legacy AOS format descriptor (backward compatible)                   |
-| `Descs`            | `std::vector<`[`Descriptor`](descriptor)`>` | Empty vector  | Legacy AOS format descriptor collection (backward compatible)        |
-| `DescriptorsSOA`   | SOA format descriptor container class       | -             | High-performance SOA format descriptor, SIMD optimized               |
-| `DescsSOA`         | `DescriptorsSOA`                            | -             | Type alias for DescriptorsSOA                                        |
-| `DescsSOAPtr`      | `Ptr<DescriptorsSOA>`                       | nullptr       | Smart pointer for DescriptorsSOA                                     |
-| `FeaturePoints`    | SOA format feature point container class    | -             | High-performance SOA format feature point collection, SIMD optimized |
-| `FeaturePointsPtr` | `Ptr<FeaturePoints>`                        | nullptr       | Smart pointer for FeaturePoints                                      |
+| Type                     | Definition                    | Default Value | Purpose                                                                          |
+| ------------------------ | ----------------------------- | ------------- | -------------------------------------------------------------------------------- |
+| `Feature`                | `Eigen::Matrix<double, 2, 1>` | Zero vector   | Basic 2D feature point, contains only position information                       |
+| `BackendType`            | Enum class                    | -             | Feature point backend type (CPU, GPU_CUDA, GPU_METAL)                            |
+| `FeaturePoints`          | Abstract base class           | -             | Feature point abstract base class, cached pointer dispatch, zero-overhead design |
+| `FeaturePointsPtr`       | `Ptr<FeaturePoints>`          | nullptr       | Smart pointer for FeaturePoints                                                  |
+| `DescriptorBackendType`  | Enum class                    | -             | Descriptor backend type (CPU, GPU_CUDA, GPU_METAL)                               |
+| `Descriptors`            | Abstract base class           | -             | Descriptor abstract base class, cached pointer dispatch, zero-overhead design    |
+| `Descs`                  | `Descriptors`                 | -             | Type alias for Descriptors                                                       |
+| `DescsPtr`               | `Ptr<Descriptors>`            | nullptr       | Smart pointer for Descriptors                                                    |
 
-### `DescriptorsSOA` (Recommended)
+### `Descriptors` (Recommended)
 (descriptorssoa-class)=
-SIMD-optimized descriptor container using SOA (Structure of Arrays) format, providing zero-copy compatibility and 8-9x faster CV↔PoSDK conversion
+Descriptor abstract base class with cached pointer dispatch zero-overhead design, supporting CPU and GPU backends
 
 **Key Features**:
-- **Single Memory Allocation**: All descriptors in one contiguous memory block (vs 10K scattered allocations)
-- **SIMD-Friendly**: Supports AVX2/AVX-512 batch operations
-- **Zero-Copy Compatibility**: Seamless integration with cv::Mat and protobuf
-- **Compact Layout**: num_features × descriptor_dim × sizeof(float)
+- **Zero-Overhead Design**: Cached pointers set once in constructor, no repeated cast for subsequent access
+- **Multi-Backend Support**: Supports CPU, GPU_CUDA, GPU_METAL backends
+- **Virtual Interface**: Only essential polymorphic operations use virtual functions (container, batch)
+- **Non-Virtual Accessors**: Direct accessors dispatch via cached pointer (~0.5ns overhead)
+- **Factory Methods**: Create instances via `CreateCPU()` and `CreateGPUCUDA()`
+- **Type-Safe Casting**: `AsCPU()` and `AsGPUCUDA()` provide safe backend conversion
 
-**Memory Layout**:
-```
-[desc0[0], desc0[1], ..., desc0[dim-1], desc1[0], desc1[1], ..., desc1[dim-1], ...]
-```
+**Performance Characteristics**:
+- `operator[]/data()`: ~0.5ns (cached pointer check, no repeated cast)
+- `resize()`: Virtual dispatch (non-critical path)
+- Memory: +16 bytes per object (two cached pointers)
 
 **Available Methods**:
-- <span style="color:#1976d2;font-weight:bold;">DescriptorsSOA</span> - Default constructor
-- <span style="color:#1976d2;font-weight:bold;">DescriptorsSOA</span> - Parameterized constructor
+- <span style="color:#1976d2;font-weight:bold;">CreateCPU</span> - Create CPU backend instance (static factory method)
+  - Returns `Ptr<Descriptors>`: CPU backend descriptor smart pointer
+- <span style="color:#1976d2;font-weight:bold;">CreateCPU</span> - Create CPU backend instance with initial size (static factory method)
   - num_features `size_t`: Number of features
   - descriptor_dim `size_t`: Descriptor dimension
-- <span style="color:#1976d2;font-weight:bold;">resize</span> - Resize
-  - num_features `size_t`: Number of features
-  - descriptor_dim `size_t`: Descriptor dimension
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">reserve</span> - Reserve capacity
-  - num_features `size_t`: Number of features
-  - descriptor_dim `size_t`: Descriptor dimension
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">clear</span> - Clear data
-  - Returns `void`
+  - Returns `Ptr<Descriptors>`: CPU backend descriptor smart pointer
+- <span style="color:#1976d2;font-weight:bold;">CreateGPUCUDA</span> - Create GPU CUDA backend instance (static factory method)
+  - Returns `Ptr<Descriptors>`: GPU CUDA backend descriptor smart pointer
+- <span style="color:#1976d2;font-weight:bold;">GetBackendType</span> - Get backend type
+  - Returns `DescriptorBackendType`: Backend type
 - <span style="color:#1976d2;font-weight:bold;">size</span> - Get number of features
   - Returns `size_t`: Number of features
 - <span style="color:#1976d2;font-weight:bold;">dim</span> - Get descriptor dimension
   - Returns `size_t`: Descriptor dimension
 - <span style="color:#1976d2;font-weight:bold;">total_size</span> - Get total data size
-  - Returns `size_t`: Total data size (num_features × descriptor_dim)
+  - Returns `size_t`: Total data size (num_features x descriptor_dim)
 - <span style="color:#1976d2;font-weight:bold;">empty</span> - Check if empty
   - Returns `bool`: Whether empty
-- <span style="color:#1976d2;font-weight:bold;">data</span> - Get raw data pointer (batch operations)
+- <span style="color:#1976d2;font-weight:bold;">resize</span> - Resize
+  - num_features `size_t`: Number of features
+  - descriptor_dim `size_t`: Descriptor dimension
+- <span style="color:#1976d2;font-weight:bold;">reserve</span> - Reserve capacity
+  - num_features `size_t`: Number of features
+  - descriptor_dim `size_t`: Descriptor dimension
+- <span style="color:#1976d2;font-weight:bold;">clear</span> - Clear data
+- <span style="color:#1976d2;font-weight:bold;">data</span> - Get raw data pointer (non-virtual, auto-dispatch)
   - Returns `float*` / `const float*`: Raw data pointer
-- <span style="color:#1976d2;font-weight:bold;">operator[]</span> - Get descriptor pointer
+- <span style="color:#1976d2;font-weight:bold;">operator[]</span> - Direct access by index (non-virtual, auto-dispatch)
   - feature_idx `size_t`: Feature index
   - Returns `float*` / `const float*`: Pointer to descriptor_dim floats
 - <span style="color:#1976d2;font-weight:bold;">SetDescriptor</span> - Set single descriptor (SIMD optimized)
   - feature_idx `size_t`: Feature index
   - descriptor_data `const float*`: Descriptor data pointer
-  - Returns `void`
 - <span style="color:#1976d2;font-weight:bold;">GetDescriptor</span> - Get single descriptor (SIMD optimized)
   - feature_idx `size_t`: Feature index
   - descriptor_out `float*`: Output buffer
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">FromDescs</span> - Convert from legacy AOS format
-  - descs `const Descs&`: Legacy descriptor vector
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">ToDescs</span> - Convert to legacy AOS format
-  - descs `Descs&`: Output legacy descriptor vector
-  - Returns `void`
+- <span style="color:#1976d2;font-weight:bold;">AsCPU</span> - Cast to CPU implementation
+  - Returns `CPUDescriptors*` / `const CPUDescriptors*`
+- <span style="color:#1976d2;font-weight:bold;">AsGPUCUDA</span> - Cast to GPU CUDA implementation
+  - Returns `GPUDescriptors*` / `const GPUDescriptors*`
 
 ### `FeaturePoints` (Recommended)
 (featurepoints-class)=
-SIMD-optimized SOA feature point container with natural alignment, providing batch-first API
+Feature point abstract base class with cached pointer dispatch zero-overhead design, supporting CPU and GPU backends
 
 **Key Features**:
-- **SOA Memory Layout**: Coordinates, sizes, and angles stored separately, SIMD-friendly
-- **Natural Alignment**: Reduces 90%+ memory usage, improves cache efficiency
-- **Batch Operations**: Fully vectorized batch set/update operations (AVX2/AVX-512)
-- **Iterator Support**: Provides STL-style iterators and range-based for loops
+- **Zero-Overhead Design**: Cached pointers set once in constructor, no repeated cast for subsequent access
+- **Multi-Backend Support**: Supports CPU, GPU_CUDA, GPU_METAL backends
+- **Virtual Interface**: Only essential polymorphic operations use virtual functions (container, batch)
+- **Non-Virtual Accessors**: Single-point accessors dispatch via cached pointer (~0.5ns overhead)
+- **Factory Methods**: Create instances via `CreateCPU()` and `CreateGPUCUDA()`
+- **Convenience Wrappers**: `GetCoordsRef()` etc. auto-cast to CPU backend for direct access
+
+**Performance Characteristics**:
+- `GetCoord/GetSize`: ~0.5ns (cached pointer check, no repeated cast)
+- `GetCoordsRef`: 0ns overhead (direct access)
+- Memory: +16 bytes per object (two cached pointers)
 
 **Available Methods**:
-- <span style="color:#1976d2;font-weight:bold;">FeaturePoints</span> - Default constructor
-- <span style="color:#1976d2;font-weight:bold;">FeaturePoints</span> - Constructor with reserved capacity
-  - reserve_size `Size`: Reserved size
-- <span style="color:#1976d2;font-weight:bold;">reserve</span> - Reserve capacity
-  - capacity `Size`: Reserved size
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">resize</span> - Resize
-  - new_size `Size`: New size
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">clear</span> - Clear data
-  - Returns `void`
+
+*Factory Methods*:
+- <span style="color:#1976d2;font-weight:bold;">CreateCPU</span> - Create CPU backend instance (static factory method)
+  - Returns `Ptr<FeaturePoints>`: CPU backend feature points smart pointer
+- <span style="color:#1976d2;font-weight:bold;">CreateGPUCUDA</span> - Create GPU CUDA backend instance (static factory method)
+  - Returns `Ptr<FeaturePoints>`: GPU CUDA backend feature points smart pointer
+
+*Virtual Interface (Container Operations)*:
+- <span style="color:#1976d2;font-weight:bold;">GetBackendType</span> - Get backend type
+  - Returns `BackendType`: Backend type
 - <span style="color:#1976d2;font-weight:bold;">size</span> - Get number of features
   - Returns `Size`: Number of features
 - <span style="color:#1976d2;font-weight:bold;">empty</span> - Check if empty
   - Returns `bool`: Whether empty
-- <span style="color:#1976d2;font-weight:bold;">GetSize</span> - Get single feature size
-  - idx `Size`: Feature index
-  - Returns `float&` / `const float&`: Feature size reference
-- <span style="color:#1976d2;font-weight:bold;">GetAngle</span> - Get single feature angle
-  - idx `Size`: Feature index
-  - Returns `float&` / `const float&`: Feature angle reference
-- <span style="color:#1976d2;font-weight:bold;">IsUsed</span> - Get single feature usage status
-  - idx `Size`: Feature index
-  - Returns `uint8_t&` / `const uint8_t&`: Usage status reference
+- <span style="color:#1976d2;font-weight:bold;">clear</span> - Clear data
+- <span style="color:#1976d2;font-weight:bold;">reserve</span> - Reserve capacity
+  - capacity `Size`: Reserved size
+- <span style="color:#1976d2;font-weight:bold;">resize</span> - Resize
+  - new_size `Size`: New size
+
+*Virtual Interface (Batch Operations)*:
+- <span style="color:#1976d2;font-weight:bold;">AddFeature</span> - Add single feature
+  - coord `const Feature&`: Coordinate
+  - size `float`: Size (default 0.0f)
+  - angle `float`: Angle (default 0.0f)
+- <span style="color:#1976d2;font-weight:bold;">AddFeaturesBlock</span> - Batch add features (SIMD optimized)
+  - coords_block `const Eigen::Ref<const Eigen::Matrix<double, 2, Eigen::Dynamic>>&`: Coordinate block
+  - sizes_block `const float*`: Size data pointer (optional)
+  - angles_block `const float*`: Angle data pointer (optional)
+  - colors_block `const std::array<uint8_t, 3>*`: Color data pointer (optional)
+- <span style="color:#1976d2;font-weight:bold;">SetSizesBlock</span> - Batch set sizes (SIMD optimized)
+  - start `Size`: Start index
+  - count `Size`: Count
+  - data `const float*`: Size data pointer
+- <span style="color:#1976d2;font-weight:bold;">SetAnglesBlock</span> - Batch set angles (SIMD optimized)
+  - start `Size`: Start index
+  - count `Size`: Count
+  - data `const float*`: Angle data pointer
+- <span style="color:#1976d2;font-weight:bold;">IncrementTotalCountsBlock</span> - Batch increment total counts (SIMD optimized)
+  - start `Size`: Start index
+  - count `Size`: Count
+- <span style="color:#1976d2;font-weight:bold;">IncrementOutlierCountsBlock</span> - Batch increment outlier counts (SIMD optimized)
+  - start `Size`: Start index
+  - count `Size`: Count
+- <span style="color:#1976d2;font-weight:bold;">GetNumValid</span> - Get valid feature count
+  - Returns `Size`: Valid feature count
+- <span style="color:#1976d2;font-weight:bold;">RemoveUnused</span> - Remove unused features
+- <span style="color:#1976d2;font-weight:bold;">ZeroCounters</span> - Batch zero counters
+
+*Non-Virtual Accessors (Auto-Dispatch, ~0.5ns Overhead)*:
 - <span style="color:#1976d2;font-weight:bold;">GetCoord</span> - Get single feature coordinate
   - idx `Size`: Feature index
   - Returns `Feature`: Feature coordinate
 - <span style="color:#1976d2;font-weight:bold;">SetCoord</span> - Set single feature coordinate
   - idx `Size`: Feature index
   - coord `const Feature&`: Coordinate
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">GetCoordsRef</span> - Get coordinate matrix reference (batch operations)
+- <span style="color:#1976d2;font-weight:bold;">GetSize</span> - Get single feature size
+  - idx `Size`: Feature index
+  - Returns `float`: Feature size
+- <span style="color:#1976d2;font-weight:bold;">SetSize</span> - Set single feature size
+  - idx `Size`: Feature index
+  - size `float`: Size
+- <span style="color:#1976d2;font-weight:bold;">GetAngle</span> - Get single feature angle
+  - idx `Size`: Feature index
+  - Returns `float`: Feature angle
+- <span style="color:#1976d2;font-weight:bold;">SetAngle</span> - Set single feature angle
+  - idx `Size`: Feature index
+  - angle `float`: Angle
+- <span style="color:#1976d2;font-weight:bold;">IsUsed</span> - Get single feature usage status
+  - idx `Size`: Feature index
+  - Returns `bool`: Usage status
+- <span style="color:#1976d2;font-weight:bold;">SetUsed</span> - Set single feature usage status
+  - idx `Size`: Feature index
+  - used `bool`: Whether used
+- <span style="color:#1976d2;font-weight:bold;">GetTotalCount</span> - Get total count
+  - idx `Size`: Feature index
+  - Returns `IndexT`: Total count
+- <span style="color:#1976d2;font-weight:bold;">SetTotalCount</span> - Set total count
+  - idx `Size`: Feature index
+  - count `IndexT`: Count value
+- <span style="color:#1976d2;font-weight:bold;">GetOutlierCount</span> - Get outlier count
+  - idx `Size`: Feature index
+  - Returns `IndexT`: Outlier count
+- <span style="color:#1976d2;font-weight:bold;">SetOutlierCount</span> - Set outlier count
+  - idx `Size`: Feature index
+  - count `IndexT`: Count value
+- <span style="color:#1976d2;font-weight:bold;">GetColorRGB</span> - Get RGB color
+  - idx `Size`: Feature index
+  - Returns `std::array<uint8_t, 3>`: RGB color array
+- <span style="color:#1976d2;font-weight:bold;">SetColorRGB</span> - Set RGB color
+  - idx `Size`: Feature index
+  - r `uint8_t`: Red component
+  - g `uint8_t`: Green component
+  - b `uint8_t`: Blue component
+
+*Convenience Wrappers (Auto-Cast to CPU Backend)*:
+- <span style="color:#1976d2;font-weight:bold;">GetCoordsRef</span> - Get coordinate matrix reference
   - Returns `Eigen::Matrix<double, 2, Eigen::Dynamic>&`
-- <span style="color:#1976d2;font-weight:bold;">GetSizesRef</span> - Get size vector reference (batch operations)
+- <span style="color:#1976d2;font-weight:bold;">GetSizesRef</span> - Get size vector reference
   - Returns `std::vector<float>&`
-- <span style="color:#1976d2;font-weight:bold;">GetAnglesRef</span> - Get angle vector reference (batch operations)
+- <span style="color:#1976d2;font-weight:bold;">GetAnglesRef</span> - Get angle vector reference
   - Returns `std::vector<float>&`
-- <span style="color:#1976d2;font-weight:bold;">GetIsUsedRef</span> - Get usage flag vector reference (batch operations)
+- <span style="color:#1976d2;font-weight:bold;">GetIsUsedRef</span> - Get usage flag vector reference
   - Returns `std::vector<uint8_t>&`
-- <span style="color:#1976d2;font-weight:bold;">GetTotalCountsRef</span> - Get total count vector reference (batch operations)
+- <span style="color:#1976d2;font-weight:bold;">GetTotalCountsRef</span> - Get total count vector reference
   - Returns `std::vector<IndexT>&`
-- <span style="color:#1976d2;font-weight:bold;">GetOutlierCountsRef</span> - Get outlier count vector reference (batch operations)
+- <span style="color:#1976d2;font-weight:bold;">GetOutlierCountsRef</span> - Get outlier count vector reference
   - Returns `std::vector<IndexT>&`
-- <span style="color:#1976d2;font-weight:bold;">SetCoordsBlock</span> - Batch set coordinates (SIMD optimized)
-  - start `Size`: Start index
-  - count `Size`: Count
-  - coords_block `const Eigen::Ref<const Eigen::Matrix<double, 2, Eigen::Dynamic>>&`: Coordinate block
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">SetSizesBlock</span> - Batch set sizes (SIMD optimized)
-  - start `Size`: Start index
-  - count `Size`: Count
-  - sizes_block `const float*`: Size data pointer
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">SetAnglesBlock</span> - Batch set angles (SIMD optimized)
-  - start `Size`: Start index
-  - count `Size`: Count
-  - angles_block `const float*`: Angle data pointer
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">SetIsUsedBlock</span> - Batch set usage flags (SIMD optimized)
-  - start `Size`: Start index
-  - count `Size`: Count
-  - flags `const uint8_t*`: Flag data pointer
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">IncrementTotalCountsBlock</span> - Batch increment total counts (SIMD optimized)
-  - start `Size`: Start index
-  - count `Size`: Count
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">IncrementOutlierCountsBlock</span> - Batch increment outlier counts (SIMD optimized)
-  - start `Size`: Start index
-  - count `Size`: Count
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">GetNumValid</span> - Get valid feature count (SIMD optimized)
-  - Returns `Size`: Valid feature count
-- <span style="color:#1976d2;font-weight:bold;">GetOutlierRatiosBlock</span> - Batch get outlier ratios (SIMD optimized)
-  - start `Size`: Start index
-  - count `Size`: Count
-  - ratios_out `double*`: Output buffer
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">AddFeature</span> - Add single feature (method 1)
-  - coord `const Feature&`: Coordinate
-  - size `float`: Size (default 0.0f)
-  - angle `float`: Angle (default 0.0f)
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">AddFeature</span> - Add single feature (method 2)
-  - x `float`: x coordinate
-  - y `float`: y coordinate
-  - size `float`: Size (default 0.0f)
-  - angle `float`: Angle (default 0.0f)
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">AddFeaturesBlock</span> - Batch add features (SIMD optimized)
-  - coords_block `const Eigen::Ref<const Eigen::Matrix<double, 2, Eigen::Dynamic>>&`: Coordinate block
-  - sizes_block `const float*`: Size data pointer (optional)
-  - angles_block `const float*`: Angle data pointer (optional)
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">RemoveUnused</span> - Remove unused features
-  - Returns `void`
-- <span style="color:#1976d2;font-weight:bold;">ZeroCounters</span> - Batch zero counters (SIMD optimized)
-  - Returns `void`
+- <span style="color:#1976d2;font-weight:bold;">GetColorsRGBRef</span> - Get color vector reference
+  - Returns `std::vector<std::array<uint8_t, 3>>&`
+
+*Type-Safe Casting*:
+- <span style="color:#1976d2;font-weight:bold;">AsCPU</span> - Cast to CPU implementation
+  - Returns `CPUFeaturePoints*` / `const CPUFeaturePoints*`
+- <span style="color:#1976d2;font-weight:bold;">AsGPUCUDA</span> - Cast to GPU CUDA implementation
+  - Returns `GPUFeaturePoints*` / `const GPUFeaturePoints*`
+
+*Proxy Access*:
 - <span style="color:#1976d2;font-weight:bold;">operator[]</span> - Array-style access (returns proxy object)
   - index `Size`: Feature index
-  - Returns `FeaturePointProxy`: Proxy object
-- <span style="color:#1976d2;font-weight:bold;">begin</span>, <span style="color:#1976d2;font-weight:bold;">end</span> - STL-style iterators
-  - Returns `SimpleIterator`: Iterator object
+  - Returns `FeaturePointProxyBase`: Proxy object
 
 ```{tip}
 **Performance Tips | 性能建议**
@@ -910,7 +886,7 @@ SIMD-optimized SOA feature point container with natural alignment, providing bat
 1. **Prioritize Batch Operations**: Use batch APIs like `AddFeaturesBlock`, `SetSizesBlock`, etc., to fully utilize SIMD acceleration
 2. **Reserve Capacity**: Use `reserve()` to avoid multiple memory reallocations
 3. **Direct Access**: Use reference interfaces like `GetCoordsRef()` for batch processing
-4. **SOA Descriptors**: Prefer `DescriptorsSOA` over legacy `Descs` for 8-9x speedup
+4. **Use Descriptors**: Use `Descriptors::CreateCPU()` factory method to create descriptor instances
 ```
 
 ### `FeaturePoint` (Legacy, Retained for Compatibility)
@@ -920,23 +896,22 @@ Legacy feature point class (replaced by FeaturePoints, retained for compatibilit
 ```{warning}
 **Deprecated | 已弃用**
 
-The `FeaturePoint` class has been replaced by the high-performance `FeaturePoints` SOA container. New code should directly use `FeaturePoints` and its proxy object `FeaturePointProxy`.
+The `FeaturePoint` class has been replaced by the `FeaturePoints` abstract base class. New code should create instances via `FeaturePoints::CreateCPU()` factory method and use its proxy object `FeaturePointProxyBase` for feature access.
 
 The legacy `FeaturePoint` is retained only for backward compatibility and is not recommended for use in new code.
 ```
 
 ### `ImageFeatureInfo`
 (image-feature-info)=
-Single image feature information encapsulation class with SIMD-optimized SOA design, including optional descriptor management
+Single image feature information encapsulation class, using abstract FeaturePoints interface for backend flexibility, including optional descriptor management
 
 **Private Member Variables**:
-| Name                   | Type                                        | Default Value | Purpose                                                          |
-| ---------------------- | ------------------------------------------- | ------------- | ---------------------------------------------------------------- |
-| `image_path_`          | `std::string`                               | ""            | Image file path string                                           |
-| `features_`            | [`FeaturePoints`](featurepoints-class)      | Default value | Feature point collection (SOA format, SIMD optimized)            |
-| `is_used_`             | `bool`                                      | true          | Usage status of this image feature information                   |
-| `descriptors_ptr_`     | `Ptr<`[`Descs`](descs)`>`                   | nullptr       | Legacy AOS descriptor pointer (backward compatible, optional)    |
-| `descriptors_soa_ptr_` | `Ptr<`[`DescriptorsSOA`](descriptorssoa)`>` | nullptr       | SOA descriptor pointer (high performance, optional, recommended) |
+| Name               | Type                                                    | Default Value | Purpose                                              |
+| ------------------ | ------------------------------------------------------- | ------------- | ---------------------------------------------------- |
+| `image_path_`      | `std::string`                                           | ""            | Image file path string                               |
+| `features_`        | `Ptr<`[`FeaturePoints`](featurepoints-class)`>`         | Default value | Feature point collection (shared ownership, abstract interface) |
+| `is_used_`         | `bool`                                                  | true          | Usage status of this image feature information       |
+| `descriptors_ptr_` | `Ptr<`[`Descriptors`](descriptorssoa-class)`>`          | nullptr       | Descriptor pointer (optional)                        |
 
 **Available Methods**:
 - <span style="color:#1976d2;font-weight:bold;">ImageFeatureInfo</span> - Default constructor
@@ -955,7 +930,7 @@ Single image feature information encapsulation class with SIMD-optimized SOA des
 - <span style="color:#1976d2;font-weight:bold;">GetFeaturePoints</span> - Get feature point collection (const version)
   - Returns `const FeaturePoints&`: Feature point collection const reference
 - <span style="color:#1976d2;font-weight:bold;">GetNumFeatures</span> - Get feature point count
-- <span style="color:#1976d2;font-weight:bold;">GetNumValidFeatures</span> - Get valid feature point count (SIMD optimized)
+- <span style="color:#1976d2;font-weight:bold;">GetNumValidFeatures</span> - Get valid feature point count
 - <span style="color:#1976d2;font-weight:bold;">AddFeature</span> - Add single feature (method 1)
   - coord `const Feature&`: Coordinate
   - size `float`: Size (default 0.0f)
@@ -965,35 +940,27 @@ Single image feature information encapsulation class with SIMD-optimized SOA des
   - y `float`: y coordinate
   - size `float`: Size (default 0.0f)
   - angle `float`: Angle (default 0.0f)
-- <span style="color:#1976d2;font-weight:bold;">AddFeaturesBlock</span> - Batch add features (SIMD optimized)
+- <span style="color:#1976d2;font-weight:bold;">AddFeaturesBlock</span> - Batch add features
   - coords_block `const Eigen::Ref<const Eigen::Matrix<double, 2, Eigen::Dynamic>>&`: Coordinate block
   - sizes_block `const float*`: Size data pointer (optional)
   - angles_block `const float*`: Angle data pointer (optional)
+  - colors_block `const std::array<uint8_t, 3>*`: Color data pointer (optional)
 - <span style="color:#1976d2;font-weight:bold;">ClearUnusedFeatures</span> - Clear unused feature points
 - <span style="color:#1976d2;font-weight:bold;">ClearAllFeatures</span> - Clear all feature points
 - <span style="color:#1976d2;font-weight:bold;">ReserveFeatures</span> - Reserve feature point capacity
   - capacity `Size`: Reserved capacity
-- <span style="color:#1976d2;font-weight:bold;">ZeroFeatureCounters</span> - Zero feature counters (SIMD optimized)
+- <span style="color:#1976d2;font-weight:bold;">ZeroFeatureCounters</span> - Zero feature counters
 - <span style="color:#1976d2;font-weight:bold;">empty</span> - Check if empty
 - <span style="color:#1976d2;font-weight:bold;">size</span> - Get feature point count
-- <span style="color:#1976d2;font-weight:bold;">begin</span>, <span style="color:#1976d2;font-weight:bold;">end</span> - Iterator access
-- <span style="color:#1976d2;font-weight:bold;">HasDescriptors</span> - Check if descriptors are stored (AOS or SOA)
-- <span style="color:#1976d2;font-weight:bold;">HasDescriptorsSOA</span> - Check if SOA descriptors are stored
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsPtr</span> - Get legacy AOS descriptor pointer (const version)
-  - Returns `const Ptr<Descs>&`
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsPtr</span> - Get legacy AOS descriptor pointer (non-const version)
-  - Returns `Ptr<Descs>&`
-- <span style="color:#1976d2;font-weight:bold;">SetDescriptors</span> - Set legacy AOS descriptors
-  - descs_ptr `const Ptr<Descs>&`: Descriptor pointer
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsSOAPtr</span> - Get SOA descriptor pointer (const version) (recommended)
-  - Returns `const Ptr<DescriptorsSOA>&`
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsSOAPtr</span> - Get SOA descriptor pointer (non-const version) (recommended)
-  - Returns `Ptr<DescriptorsSOA>&`
-- <span style="color:#1976d2;font-weight:bold;">SetDescriptorsSOA</span> - Set SOA descriptors (recommended)
-  - descs_soa_ptr `const Ptr<DescriptorsSOA>&`: SOA descriptor pointer
+- <span style="color:#1976d2;font-weight:bold;">HasDescriptors</span> - Check if descriptors are stored
+- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsPtr</span> - Get descriptor pointer (const version)
+  - Returns `const Ptr<Descriptors>&`
+- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsPtr</span> - Get descriptor pointer (non-const version)
+  - Returns `Ptr<Descriptors>&`
+- <span style="color:#1976d2;font-weight:bold;">SetDescriptors</span> - Set descriptors
+  - descs_ptr `const Ptr<Descriptors>&`: Descriptor pointer
 - <span style="color:#1976d2;font-weight:bold;">ClearDescriptors</span> - Clear descriptors and release memory
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsRefCount</span> - Get AOS descriptor reference count (for debugging)
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsSOARefCount</span> - Get SOA descriptor reference count (for debugging)
+- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsRefCount</span> - Get descriptor reference count (for debugging)
 - <span style="color:#1976d2;font-weight:bold;">GetFeature</span> - Get feature proxy object (compatibility method)
   - index `Size`: Feature index
   - Returns `FeatureProxy`: Feature proxy object
@@ -1009,12 +976,6 @@ Feature information collection for all images, enhanced container class inheriti
 - <span style="color:#1976d2;font-weight:bold;">operator[]</span> - Array-style access (const version)
   - index `Size`: Image index
   - Returns `const ImageFeatureInfo*`: Image feature information const pointer, returns nullptr if out of bounds
-- <span style="color:#1976d2;font-weight:bold;">GetImageFeaturePtr</span> - Safely get image feature information pointer (non-const version)
-  - index `Size`: Image index
-  - Returns `ImageFeatureInfo*`: Image feature information pointer, returns nullptr if out of bounds
-- <span style="color:#1976d2;font-weight:bold;">GetImageFeaturePtr</span> - Safely get image feature information pointer (const version)
-  - index `Size`: Image index
-  - Returns `const ImageFeatureInfo*`: Image feature information const pointer, returns nullptr if out of bounds
 - <span style="color:#1976d2;font-weight:bold;">AddImageFeatures</span> - Add image feature information
   - image_path `const std::string &`: Image path
   - is_used `bool`: Usage flag (default true)
@@ -1022,6 +983,7 @@ Feature information collection for all images, enhanced container class inheriti
 - <span style="color:#1976d2;font-weight:bold;">ClearUnusedImages</span> - Clear unused images
 - <span style="color:#1976d2;font-weight:bold;">ClearAllUnusedFeatures</span> - Clear all unused feature points
 - <span style="color:#1976d2;font-weight:bold;">Print</span> - Print feature information details
+  - print_unused `bool`: Whether to print unused entries (default false)
   - print_unused `bool`: Whether to print unused features (default false)
 
 ### Feature-Related Type Definitions
@@ -2060,6 +2022,26 @@ for (size_t i = 0; i < global_poses.Size(); ++i) {
 
 ---
 
+## Structure Information (types.hpp)
+
+### `StructureInfo`
+(structure-info)=
+Aggregate struct containing complete 3D reconstruction results (rotations, translations, 3D points)
+
+**Member Variables**:
+| Name           | Type                                                | Default Value | Purpose                          |
+| -------------- | --------------------------------------------------- | ------------- | -------------------------------- |
+| `rotations`    | [`GlobalRotations`](global-rotations)               | Empty         | Global rotation matrix sequence  |
+| `translations` | [`GlobalTranslations`](global-translations)         | Empty         | Global translation vector sequence |
+| `points`       | [`Points3d`](points3d)                              | Empty         | 3D point cloud matrix            |
+
+**Related Types**:
+| Type                | Definition                              | Default Value | Purpose                              |
+| ------------------- | --------------------------------------- | ------------- | ------------------------------------ |
+| `StructureInfoPtr`  | `Ptr<StructureInfo>`                    | nullptr       | Smart pointer type for StructureInfo |
+
+---
+
 ## 3D Point Cloud Types (types/world_3dpoints.hpp)
 
 ### Basic 3D Point Type Definitions
@@ -2319,6 +2301,3 @@ Ceres cost function for similarity transform optimization
 - <span style="color:#1976d2;font-weight:bold;">ParamsToRelativePose</span> - Convert parameter vector to relative pose
   - params `const Eigen::Matrix<double, 6, 1> &`: 6D parameter vector (first 3 dimensions are Cayley parameters, last 3 are translation)
   - Returns `RelativePose`: Relative pose
-
----
-

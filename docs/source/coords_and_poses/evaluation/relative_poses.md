@@ -1,6 +1,6 @@
 # Relative Pose Evaluation (RelativePoses Evaluation)
 
-Relative pose evaluation is used to measure the accuracy of relative pose estimation between two camera views. In PoSDK, relative poses are defined by rotation matrix $R_{ij}$ and translation vector $\mathbf{t}_{ij}$.
+Relative pose evaluation is used to measure the accuracy of relative pose estimation between two camera views. In PoMVG, relative poses are defined by rotation matrix $R_{ij}$ and translation vector $\mathbf{t}_{ij}$.
 
 ## Mathematical Definition
 
@@ -20,7 +20,7 @@ where:
 
 For ground truth rotation $R_{ij}^{gt}$ and estimated rotation $R_{ij}^{est}$, rotation error is calculated as:
 
-$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{ij}^{gt\,T} R_{ij}^{est}) - 1}{2}\right) \times \frac{180°}{\pi}$$
+$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{ij}^{gt\,T} R_{ij}^{est}) - 1}{2}\right) \times \frac{180^\circ}{\pi}$$
 
 **Physical Meaning**: Minimum rotation angle between two rotation matrices, in degrees.
 
@@ -28,7 +28,7 @@ $$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{ij}^{gt\,T} R_{ij}^
 
 For ground truth translation $\mathbf{t}_{ij}^{gt}$ and estimated translation $\mathbf{t}_{ij}^{est}$, translation angular error is calculated as:
 
-$$\text{Translation Error} = \arccos\left(\frac{\mathbf{t}_{ij}^{gt\,T} \mathbf{t}_{ij}^{est}}{||\mathbf{t}_{ij}^{gt}|| \cdot ||\mathbf{t}_{ij}^{est}||}\right) \times \frac{180°}{\pi}$$
+$$\text{Translation Error} = \arccos\left(\frac{\mathbf{t}_{ij}^{gt\,T} \mathbf{t}_{ij}^{est}}{||\mathbf{t}_{ij}^{gt}|| \cdot ||\mathbf{t}_{ij}^{est}||}\right) \times \frac{180^\circ}{\pi}$$
 
 **Physical Meaning**: Angle between two translation directions, in degrees. Note that this evaluates direction rather than scale, as translation scale is arbitrary in two-view geometry.
 
@@ -216,6 +216,6 @@ const double MAX_TRANSLATION_ERROR = 180.0;  // degrees
 ---
 
 **Related References**:
-- [PoSDK Pose Conventions](../conventions/posdk.md)
+- [PoMVG Pose Conventions](../conventions/posdk.md)
 - [Global Pose Evaluation](global_poses.md)
 - [Evaluation System Overview](index.md)

@@ -1,29 +1,34 @@
-# PoSDK 核心数据类型
+# PoMVG 核心数据类型
 
-本文档详细介绍了PoSDK中使用的各种核心数据类型，涵盖基础类型、相机模型、特征与匹配、轨迹与观测、位姿表示等关键概念。这些类型构成了整个PoSDK系统的基础数据结构。
+本文档详细介绍了PoMVG中使用的各种核心数据类型，涵盖基础类型、相机模型、特征与匹配、轨迹与观测、位姿表示等关键概念。这些类型构成了整个PoMVG系统的基础数据结构。
 
 
 ---
 
 ## 模块化文件结构
 
-为了更好的代码组织和维护，PoSDK采用了模块化的类型系统设计。
+为了更好的代码组织和维护，PoMVG采用了模块化的类型系统设计。
 
 ### 文件组织
 (file-organization)=
 
 ```
 types/
-├── types.hpp              # 主入口文件，包含复杂全局位姿类型
-├── base.hpp/cpp           # 基础类型和环境变量管理
-├── camera_model.hpp/cpp   # 相机模型相关类型和实现
-├── features.hpp/cpp       # 特征检测和管理相关类型
-├── matches.hpp/cpp        # 匹配关系和视线向量类型
-├── tracks.hpp/cpp         # 轨迹观测和管理相关类型
-├── relative_poses.hpp/cpp # 相对位姿和相对旋转类型
-├── global_poses.hpp/cpp   # 全局位姿基础类型和估计状态
-├── world_3dpoints.hpp/cpp # 3D点云和世界坐标点信息
-└── image.hpp              # 图像相关类型定义
++-- types.hpp              # 主入口文件，包含复杂全局位姿类型
++-- base.hpp/cpp           # 基础类型和环境变量管理
++-- camera_model.hpp/cpp   # 相机模型相关类型和实现
++-- features.hpp           # 特征系统主入口（包含以下子模块）
+|   +-- features/feature_base.hpp    # 特征点抽象基类
+|   +-- features/descriptors.hpp     # 描述子抽象基类
+|   +-- features/image_feature_info.hpp  # 图像特征信息容器
+|   +-- features/features_info.hpp   # 图像特征集合
++-- matches.hpp/cpp        # 匹配关系和视线向量类型
++-- tracks.hpp/cpp         # 轨迹观测和管理相关类型
++-- relative_poses.hpp/cpp # 相对位姿和相对旋转类型
++-- global_poses.hpp/cpp   # 全局位姿基础类型和估计状态
++-- world_3dpoints.hpp/cpp # 3D点云和世界坐标点信息
++-- similarity_transform.hpp # 相似变换计算工具
+-- image.hpp              # 图像相关类型定义
 ```
 
 ### 模块职责分工
@@ -72,7 +77,7 @@ types/
 ### 特征系统快速导航
 (feature-system-navigation)=
 
-- **特征类型**: [`Feature`](feature) | [`FeaturePoint`](feature-point) | [`Descriptor`](descriptor)
+- **特征类型**: [`Feature`](feature) | [`FeaturePoints`](featurepoints-class) | [`Descriptors`](descriptorssoa-class)
 - **图像特征**: [`ImageFeatureInfo`](image-feature-info) | [`FeaturesInfo`](features-info) | [`FeaturesInfoPtr`](features-info-ptr)
 
 ### 匹配系统快速导航
@@ -496,12 +501,55 @@ if (camera) {
 
 ### `CameraModels`
 (camera-models)=
-智能相机模型容器类，支持单相机和多相机配置，继承自std::vector<[`CameraModel`](camera-model)>
+智能相机模型容器类，支持COLMAP风格的view_id到camera_id映射，继承自std::vector<[`CameraModel`](camera-model)>
+
+**核心特性**:
+- **COLMAP风格映射**: 多个视图可以共享同一个相机模型（类似COLMAP的view_id到camera_id映射）
+- **向后兼容**: 如果没有设置映射，使用旧模式（单相机模式或按索引直接访问）
+- **智能索引**: operator[]自动使用映射（如果已设置），否则回退到旧模式
 
 **可用方法**:
+
+*视图到相机映射管理*:
+- <span style="color:#1976d2;font-weight:bold;">AddCamera</span> - 添加相机模型并返回其camera_id
+  - camera `const CameraModel&`：要添加的相机模型
+  - 返回 `IndexT`：相机ID（相机模型列表中的索引）
+- <span style="color:#1976d2;font-weight:bold;">SetViewCameraMapping</span> - 设置view_id到camera_id的映射
+  - view_id `ViewId`：视图ID
+  - camera_id `IndexT`：相机ID（相机模型列表中的索引）
+  - 返回 `bool`：成功返回true，camera_id无效返回false
+- <span style="color:#1976d2;font-weight:bold;">GetCameraId</span> - 获取给定view_id对应的camera_id
+  - view_id `ViewId`：视图ID
+  - 返回 `IndexT`：相机ID，未找到返回InvalidIndex()
+- <span style="color:#1976d2;font-weight:bold;">SetSingleCameraMode</span> - 设置单相机模式（所有视图映射到相机0）
+  - view_ids `const std::vector<ViewId>&`：视图ID列表
+- <span style="color:#1976d2;font-weight:bold;">SetViewCameraMappings</span> - 批量设置视图到相机映射
+  - mappings `const std::unordered_map<ViewId, IndexT>&`：view_id到camera_id的映射表
+- <span style="color:#1976d2;font-weight:bold;">GetViewCameraMappings</span> - 获取所有视图到相机映射（const版本）
+  - 返回 `const std::unordered_map<ViewId, IndexT>&`：映射表的常量引用
+- <span style="color:#1976d2;font-weight:bold;">GetViewCameraMappings</span> - 获取所有视图到相机映射（非const版本）
+  - 返回 `std::unordered_map<ViewId, IndexT>&`：映射表的可变引用
+- <span style="color:#1976d2;font-weight:bold;">HasViewCameraMapping</span> - 检查是否启用了视图到相机映射
+  - 返回 `bool`：启用返回true
+- <span style="color:#1976d2;font-weight:bold;">ClearViewCameraMappings</span> - 清除所有视图到相机映射
+
+*查询方法*:
+- <span style="color:#1976d2;font-weight:bold;">IsSingleCameraMode</span> - 检查是否为单相机模式
+  - 返回 `bool`：如果只有一个相机模型则返回true
+- <span style="color:#1976d2;font-weight:bold;">IsMultiCameraMode</span> - 检查是否为多相机模式
+  - 返回 `bool`：如果有多个相机模型则返回true
+- <span style="color:#1976d2;font-weight:bold;">GetNumCameras</span> - 获取唯一相机数量
+  - 返回 `size_t`：相机模型数量
+- <span style="color:#1976d2;font-weight:bold;">GetNumViewMappings</span> - 获取视图映射数量
+  - 返回 `size_t`：视图到相机映射的数量
+- <span style="color:#1976d2;font-weight:bold;">InvalidIndex</span> - 获取无效索引值（静态方法）
+  - 返回 `IndexT`：IndexT最大值表示无效
+
+*智能索引访问*:
 - <span style="color:#1976d2;font-weight:bold;">operator[]</span> - 智能索引访问相机模型（非const版本）
   - view_id `ViewId`：视图标识符
   - 返回 `CameraModel*`：相机模型指针，访问失败时返回nullptr
+  - 说明：如果设置了映射则使用映射，否则使用旧模式
 - <span style="color:#1976d2;font-weight:bold;">operator[]</span> - 智能索引访问相机模型（const版本）
   - view_id `ViewId`：视图标识符
   - 返回 `const CameraModel*`：相机模型常量指针，访问失败时返回nullptr
@@ -550,17 +598,17 @@ if (camera) {
 
 ## 特征 (types/features.hpp)
 
-特征系统采用SIMD优化的SOA (Structure of Arrays) 设计，提供高性能的特征数据管理。
+特征系统采用抽象基类+缓存指针分发的零开销设计，支持CPU和GPU多后端，提供高性能的特征数据管理。
 
 ### 核心特性与使用模式
 
-**SIMD优化的SOA设计优势**:
-- **SOA内存布局**: 数据按类型分组存储，提高缓存局部性和SIMD向量化效率
+**抽象基类+多后端设计优势**:
+- **零开销分发**: 缓存指针在构造时设置一次，后续访问无需重复cast（~0.5ns开销）
+- **多后端支持**: 支持CPU、GPU_CUDA、GPU_METAL后端，通过工厂方法创建
+- **SOA内存布局**: CPU后端数据按类型分组存储，提高缓存局部性和SIMD向量化效率
 - **AVX2/AVX-512支持**: 批量操作完全向量化，显著提升性能
-- **自然对齐优化**: 移除过度64字节对齐，减少90%+内存占用
 - **批量优先API**: 提供高效的批量操作接口（SetSizesBlock, SetAnglesBlock等）
-- **零拷贝兼容**: 与cv::Mat和protobuf零拷贝兼容，8-9x加速转换
-- **紧凑布局**: 单次连续内存分配，减少内存碎片
+- **类型安全转换**: `AsCPU()`和`AsGPUCUDA()`提供安全的后端转换
 
 ### 典型使用示例
 
@@ -568,68 +616,57 @@ if (camera) {
 ```cpp
 using namespace PoSDK::types;
 
-// 创建特征点集合（推荐预留容量）
-FeaturePoints features(1000);  // 预留1000个特征点
+// 通过工厂方法创建特征点集合（CPU后端）
+auto features = FeaturePoints::CreateCPU();
+features->reserve(1000);  // 预留1000个特征点
 
 // 批量添加特征（高效）
 Eigen::Matrix<double, 2, Eigen::Dynamic> coords_block(2, 100);
 std::vector<float> sizes_block(100, 5.0f);
 std::vector<float> angles_block(100, 0.0f);
 // ... 填充coords_block, sizes_block, angles_block ...
-features.AddFeaturesBlock(coords_block, sizes_block.data(), angles_block.data());
+features->AddFeaturesBlock(coords_block, sizes_block.data(), angles_block.data());
 
-// 访问单个特征点
-Feature coord = features.GetCoord(0);
-float size = features.GetSize(0);
-float angle = features.GetAngle(0);
+// 访问单个特征点（非虚函数，~0.5ns开销）
+Feature coord = features->GetCoord(0);
+float size = features->GetSize(0);
+float angle = features->GetAngle(0);
 
 // 批量设置属性（SIMD优化）
-features.SetSizesBlock(0, 100, sizes_block.data());
-features.SetAnglesBlock(0, 100, angles_block.data());
+features->SetSizesBlock(0, 100, sizes_block.data());
+features->SetAnglesBlock(0, 100, angles_block.data());
 
 // 批量统计操作（SIMD优化）
-features.IncrementTotalCountsBlock(0, 100);
-features.IncrementOutlierCountsBlock(0, 50);
+features->IncrementTotalCountsBlock(0, 100);
+features->IncrementOutlierCountsBlock(0, 50);
 
-// 清零计数器（SIMD优化）
-features.ZeroCounters();
+// 清零计数器
+features->ZeroCounters();
 
-// 获取有效特征数量（SIMD优化）
-Size valid_count = features.GetNumValid();
+// 获取有效特征数量
+Size valid_count = features->GetNumValid();
 
-// 迭代器访问
-for (auto&& feat_proxy : features) {
-    if (feat_proxy.IsUsed()) {
-        Feature coord = feat_proxy.GetCoord();
-        // 处理特征
-    }
-}
+// 便利包装器：直接访问CPU后端数据（零开销）
+auto& coords_ref = features->GetCoordsRef();  // 自动cast到CPU后端
+auto& sizes_ref = features->GetSizesRef();
 ```
 
-#### 描述子管理（SOA格式）
+#### 描述子管理
 ```cpp
-// 创建SOA描述子容器（高性能）
-DescriptorsSOA descs_soa(1000, 128);  // 1000个特征，128维SIFT描述子
+// 通过工厂方法创建描述子（CPU后端）
+auto descs = Descriptors::CreateCPU(1000, 128);  // 1000个特征，128维SIFT描述子
 
 // 设置单个描述子
 float descriptor_data[128];
 // ... 填充descriptor_data ...
-descs_soa.SetDescriptor(0, descriptor_data);
+descs->SetDescriptor(0, descriptor_data);
 
-// 直接访问描述子数据（零拷贝）
-float* desc_ptr = descs_soa[0];  // 指向第0个描述子的指针
+// 直接访问描述子数据（非虚函数，~0.5ns开销）
+float* desc_ptr = (*descs)[0];  // 指向第0个描述子的指针
 
-// 批量拷贝（SIMD优化）
-float* all_descs = descs_soa.data();  // 原始数据指针
-size_t total_size = descs_soa.total_size();  // 总元素数
-
-// 从旧版AOS格式转换（自动）
-Descs old_format_descs;  // std::vector<std::vector<float>>
-descs_soa.FromDescs(old_format_descs);
-
-// 转回AOS格式（兼容性）
-Descs converted_descs;
-descs_soa.ToDescs(converted_descs);
+// 批量拷贝
+float* all_descs = descs->data();  // 原始数据指针
+size_t total_size = descs->total_size();  // 总元素数
 ```
 
 #### 图像特征信息管理
@@ -650,7 +687,7 @@ std::vector<float> angles_block(100, 0.0f);
 // ... 填充数据 ...
 image_features.AddFeaturesBlock(coords_block, sizes_block.data(), angles_block.data());
 
-// 访问特征点集合（直接访问底层FeaturePoints）
+// 访问特征点集合（通过抽象接口）
 FeaturePoints& features = image_features.GetFeaturePoints();
 Size num_features = features.size();
 
@@ -659,7 +696,7 @@ auto feat_proxy = image_features.GetFeature(0);
 Feature coord = feat_proxy.GetCoord();
 float size = feat_proxy.GetSize();
 
-// 清零特征计数器（SIMD优化）
+// 清零特征计数器
 image_features.ZeroFeatureCounters();
 
 // 获取有效特征数量
@@ -669,16 +706,16 @@ Size valid_features = image_features.GetNumValidFeatures();
 image_features.ClearUnusedFeatures();
 
 // 描述子管理
-auto descs_soa = std::make_shared<DescriptorsSOA>(1000, 128);
-image_features.SetDescriptorsSOA(descs_soa);  // 设置SOA格式描述子
+auto descs = Descriptors::CreateCPU(1000, 128);
+image_features.SetDescriptors(descs);  // 设置描述子
 
-if (image_features.HasDescriptorsSOA()) {
-    auto& desc_ref = image_features.GetDescriptorsSOAPtr();
+if (image_features.HasDescriptors()) {
+    auto& desc_ref = image_features.GetDescriptorsPtr();
     // 使用描述子...
 }
 
 // 检查描述子引用计数（内存调试）
-long soa_ref_count = image_features.GetDescriptorsSOARefCount();
+long ref_count = image_features.GetDescriptorsRefCount();
 ```
 
 #### 特征集合管理
@@ -690,15 +727,15 @@ FeaturesInfo features_info;
 features_info.AddImageFeatures("image1.jpg", true);
 features_info.AddImageFeatures("image2.jpg", true);
 
-// 智能访问图像特征
-ImageFeatureInfo* img_feat = features_info[0];  // 返回指针，需检查nullptr
+// 智能访问图像特征（返回指针，需检查nullptr）
+ImageFeatureInfo* img_feat = features_info[0];
 if (img_feat) {
-    img_feat->AddFeature(FeaturePoint(10.0f, 20.0f));
+    img_feat->AddFeature(Feature(10.0, 20.0));
     std::string path = img_feat->GetImagePath();
 }
 
-// 安全访问图像特征
-const ImageFeatureInfo* safe_img_feat = features_info.GetImageFeaturePtr(1);
+// 通过operator[]安全访问
+const ImageFeatureInfo* safe_img_feat = features_info[1];
 if (safe_img_feat) {
     Size num_features = safe_img_feat->GetNumFeatures();
 }
@@ -707,6 +744,7 @@ if (safe_img_feat) {
 Size valid_images = features_info.GetNumValidImages();
 features_info.ClearUnusedImages();
 features_info.ClearAllUnusedFeatures();
+features_info.Print();  // 打印摘要信息
 ```
 
 ### 基础特征类型
@@ -720,189 +758,215 @@ features_info.ClearAllUnusedFeatures();
 (feature-points-ptr)=
 
 **类型定义**:
-| 类型               | 定义                                        | 默认值  | 用途                              |
-| ------------------ | ------------------------------------------- | ------- | --------------------------------- |
-| `Feature`          | `Eigen::Matrix<double, 2, 1>`               | 零向量  | 基础2D特征点，仅包含位置信息      |
-| `Descriptor`       | `std::vector<float>`                        | 空向量  | 旧版AOS格式描述子（向后兼容）     |
-| `Descs`            | `std::vector<`[`Descriptor`](descriptor)`>` | 空向量  | 旧版AOS格式描述子集合（向后兼容） |
-| `DescriptorsSOA`   | SOA格式描述子容器类                         | -       | 高性能SOA格式描述子，SIMD优化     |
-| `DescsSOA`         | `DescriptorsSOA`                            | -       | DescriptorsSOA的类型别名          |
-| `DescsSOAPtr`      | `Ptr<DescriptorsSOA>`                       | nullptr | DescriptorsSOA的智能指针          |
-| `FeaturePoints`    | SOA格式特征点容器类                         | -       | 高性能SOA格式特征点集合，SIMD优化 |
-| `FeaturePointsPtr` | `Ptr<FeaturePoints>`                        | nullptr | FeaturePoints的智能指针           |
+| 类型               | 定义                          | 默认值  | 用途                                                       |
+| ------------------ | ----------------------------- | ------- | ---------------------------------------------------------- |
+| `Feature`          | `Eigen::Matrix<double, 2, 1>` | 零向量  | 基础2D特征点，仅包含位置信息                               |
+| `BackendType`      | 枚举类                        | -       | 特征点后端类型（CPU, GPU_CUDA, GPU_METAL）                 |
+| `FeaturePoints`    | 抽象基类                      | -       | 特征点抽象基类，缓存指针分发，零开销设计                   |
+| `FeaturePointsPtr` | `Ptr<FeaturePoints>`          | nullptr | FeaturePoints的智能指针                                    |
+| `DescriptorBackendType` | 枚举类                   | -       | 描述子后端类型（CPU, GPU_CUDA, GPU_METAL）                 |
+| `Descriptors`      | 抽象基类                      | -       | 描述子抽象基类，缓存指针分发，零开销设计                   |
+| `Descs`            | `Descriptors`                 | -       | Descriptors的类型别名                                      |
+| `DescsPtr`         | `Ptr<Descriptors>`            | nullptr | Descriptors的智能指针                                      |
 
-### `DescriptorsSOA` (推荐使用)
+### `Descriptors` (推荐使用)
 (descriptorssoa-class)=
-SIMD优化的描述子容器，使用SOA (Structure of Arrays) 格式，提供零拷贝兼容和8-9x加速的CV↔PoSDK转换
+描述子抽象基类，采用缓存指针分发的零开销设计，支持CPU和GPU后端
 
 **关键特性**:
-- **单次内存分配**: 所有描述子在一个连续内存块中（vs 10K次分散分配）
-- **SIMD友好**: 支持AVX2/AVX-512批量操作
-- **零拷贝兼容**: 与cv::Mat和protobuf无缝对接
-- **紧凑布局**: num_features × descriptor_dim × sizeof(float)
+- **零开销设计**: 缓存指针在构造时设置一次，后续访问无需重复cast
+- **多后端支持**: 支持CPU、GPU_CUDA、GPU_METAL后端
+- **虚函数接口**: 仅必要的多态操作使用虚函数（容器、批量操作）
+- **非虚函数访问器**: 直接访问器通过缓存指针分发（~0.5ns开销）
+- **工厂方法**: 通过`CreateCPU()`和`CreateGPUCUDA()`创建实例
+- **类型安全转换**: `AsCPU()`和`AsGPUCUDA()`提供安全的后端转换
 
-**内存布局**:
-```
-[desc0[0], desc0[1], ..., desc0[dim-1], desc1[0], desc1[1], ..., desc1[dim-1], ...]
-```
+**性能特性**:
+- `operator[]/data()`: ~0.5ns（缓存指针检查，无重复cast）
+- `resize()`: 虚函数分发（非性能关键路径）
+- 内存: 每对象 +16 字节（两个缓存指针）
 
 **可用方法**:
-- <span style="color:#1976d2;font-weight:bold;">DescriptorsSOA</span> - 默认构造函数
-- <span style="color:#1976d2;font-weight:bold;">DescriptorsSOA</span> - 带参数构造函数
+- <span style="color:#1976d2;font-weight:bold;">CreateCPU</span> - 创建CPU后端实例（静态工厂方法）
+  - 返回 `Ptr<Descriptors>`：CPU后端描述子智能指针
+- <span style="color:#1976d2;font-weight:bold;">CreateCPU</span> - 创建CPU后端实例并初始化大小（静态工厂方法）
   - num_features `size_t`：特征数量
   - descriptor_dim `size_t`：描述子维度
-- <span style="color:#1976d2;font-weight:bold;">resize</span> - 调整大小
-  - num_features `size_t`：特征数量
-  - descriptor_dim `size_t`：描述子维度
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">reserve</span> - 预留容量
-  - num_features `size_t`：特征数量
-  - descriptor_dim `size_t`：描述子维度
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">clear</span> - 清空数据
-  - 返回 `void`
+  - 返回 `Ptr<Descriptors>`：CPU后端描述子智能指针
+- <span style="color:#1976d2;font-weight:bold;">CreateGPUCUDA</span> - 创建GPU CUDA后端实例（静态工厂方法）
+  - 返回 `Ptr<Descriptors>`：GPU CUDA后端描述子智能指针
+- <span style="color:#1976d2;font-weight:bold;">GetBackendType</span> - 获取后端类型
+  - 返回 `DescriptorBackendType`：后端类型
 - <span style="color:#1976d2;font-weight:bold;">size</span> - 获取特征数量
   - 返回 `size_t`：特征数量
 - <span style="color:#1976d2;font-weight:bold;">dim</span> - 获取描述子维度
   - 返回 `size_t`：描述子维度
 - <span style="color:#1976d2;font-weight:bold;">total_size</span> - 获取总数据大小
-  - 返回 `size_t`：总数据大小（num_features × descriptor_dim）
+  - 返回 `size_t`：总数据大小（num_features x descriptor_dim）
 - <span style="color:#1976d2;font-weight:bold;">empty</span> - 判断是否为空
   - 返回 `bool`：是否为空
-- <span style="color:#1976d2;font-weight:bold;">data</span> - 获取原始数据指针（批量操作）
+- <span style="color:#1976d2;font-weight:bold;">resize</span> - 调整大小
+  - num_features `size_t`：特征数量
+  - descriptor_dim `size_t`：描述子维度
+- <span style="color:#1976d2;font-weight:bold;">reserve</span> - 预留容量
+  - num_features `size_t`：特征数量
+  - descriptor_dim `size_t`：描述子维度
+- <span style="color:#1976d2;font-weight:bold;">clear</span> - 清空数据
+- <span style="color:#1976d2;font-weight:bold;">data</span> - 获取原始数据指针（非虚函数，自动分发）
   - 返回 `float*` / `const float*`：原始数据指针
-- <span style="color:#1976d2;font-weight:bold;">operator[]</span> - 获取描述子指针
+- <span style="color:#1976d2;font-weight:bold;">operator[]</span> - 通过索引直接访问（非虚函数，自动分发）
   - feature_idx `size_t`：特征索引
   - 返回 `float*` / `const float*`：指向descriptor_dim个浮点数的指针
 - <span style="color:#1976d2;font-weight:bold;">SetDescriptor</span> - 设置单个描述子（SIMD优化）
   - feature_idx `size_t`：特征索引
   - descriptor_data `const float*`：描述子数据指针
-  - 返回 `void`
 - <span style="color:#1976d2;font-weight:bold;">GetDescriptor</span> - 获取单个描述子（SIMD优化）
   - feature_idx `size_t`：特征索引
   - descriptor_out `float*`：输出缓冲区
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">FromDescs</span> - 从旧版AOS格式转换
-  - descs `const Descs&`：旧版描述子向量
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">ToDescs</span> - 转换为旧版AOS格式
-  - descs `Descs&`：输出旧版描述子向量
-  - 返回 `void`
+- <span style="color:#1976d2;font-weight:bold;">AsCPU</span> - 转换到CPU实现
+  - 返回 `CPUDescriptors*` / `const CPUDescriptors*`
+- <span style="color:#1976d2;font-weight:bold;">AsGPUCUDA</span> - 转换到GPU CUDA实现
+  - 返回 `GPUDescriptors*` / `const GPUDescriptors*`
 
 ### `FeaturePoints` (推荐使用)
 (featurepoints-class)=
-SIMD优化的SOA特征点容器，采用自然对齐，提供批量优先API
+特征点抽象基类，采用缓存指针分发的零开销设计，支持CPU和GPU后端
 
 **关键特性**:
-- **SOA内存布局**: 坐标、大小、角度分别存储，SIMD友好
-- **自然对齐**: 减少90%+内存占用，提高缓存效率
-- **批量操作**: 完全向量化的批量设置/更新（AVX2/AVX-512）
-- **迭代器支持**: 提供STL风格的迭代器和范围for循环
+- **零开销设计**: 缓存指针在构造时设置一次，后续访问无需重复cast
+- **多后端支持**: 支持CPU、GPU_CUDA、GPU_METAL后端
+- **虚函数接口**: 仅必要的多态操作使用虚函数（容器、批量操作）
+- **非虚函数访问器**: 单点访问器通过缓存指针分发（~0.5ns开销）
+- **工厂方法**: 通过`CreateCPU()`和`CreateGPUCUDA()`创建实例
+- **便利包装器**: `GetCoordsRef()`等方法自动cast到CPU后端提供直接访问
+
+**性能特性**:
+- `GetCoord/GetSize`: ~0.5ns（缓存指针检查，无重复cast）
+- `GetCoordsRef`: 0ns 开销（直接访问）
+- 内存: 每对象 +16 字节（两个缓存指针）
 
 **可用方法**:
-- <span style="color:#1976d2;font-weight:bold;">FeaturePoints</span> - 默认构造函数
-- <span style="color:#1976d2;font-weight:bold;">FeaturePoints</span> - 带预留容量构造
-  - reserve_size `Size`：预留大小
-- <span style="color:#1976d2;font-weight:bold;">reserve</span> - 预留容量
-  - capacity `Size`：预留大小
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">resize</span> - 调整大小
-  - new_size `Size`：新大小
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">clear</span> - 清空数据
-  - 返回 `void`
+
+*工厂方法*:
+- <span style="color:#1976d2;font-weight:bold;">CreateCPU</span> - 创建CPU后端实例（静态工厂方法）
+  - 返回 `Ptr<FeaturePoints>`：CPU后端特征点智能指针
+- <span style="color:#1976d2;font-weight:bold;">CreateGPUCUDA</span> - 创建GPU CUDA后端实例（静态工厂方法）
+  - 返回 `Ptr<FeaturePoints>`：GPU CUDA后端特征点智能指针
+
+*虚函数接口（容器操作）*:
+- <span style="color:#1976d2;font-weight:bold;">GetBackendType</span> - 获取后端类型
+  - 返回 `BackendType`：后端类型
 - <span style="color:#1976d2;font-weight:bold;">size</span> - 获取特征数量
   - 返回 `Size`：特征数量
 - <span style="color:#1976d2;font-weight:bold;">empty</span> - 判断是否为空
   - 返回 `bool`：是否为空
-- <span style="color:#1976d2;font-weight:bold;">GetSize</span> - 获取单个特征大小
-  - idx `Size`：特征索引
-  - 返回 `float&` / `const float&`：特征大小引用
-- <span style="color:#1976d2;font-weight:bold;">GetAngle</span> - 获取单个特征角度
-  - idx `Size`：特征索引
-  - 返回 `float&` / `const float&`：特征角度引用
-- <span style="color:#1976d2;font-weight:bold;">IsUsed</span> - 获取单个特征使用状态
-  - idx `Size`：特征索引
-  - 返回 `uint8_t&` / `const uint8_t&`：使用状态引用
+- <span style="color:#1976d2;font-weight:bold;">clear</span> - 清空数据
+- <span style="color:#1976d2;font-weight:bold;">reserve</span> - 预留容量
+  - capacity `Size`：预留大小
+- <span style="color:#1976d2;font-weight:bold;">resize</span> - 调整大小
+  - new_size `Size`：新大小
+
+*虚函数接口（批量操作）*:
+- <span style="color:#1976d2;font-weight:bold;">AddFeature</span> - 添加单个特征
+  - coord `const Feature&`：坐标
+  - size `float`：大小（默认0.0f）
+  - angle `float`：角度（默认0.0f）
+- <span style="color:#1976d2;font-weight:bold;">AddFeaturesBlock</span> - 批量添加特征（SIMD优化）
+  - coords_block `const Eigen::Ref<const Eigen::Matrix<double, 2, Eigen::Dynamic>>&`：坐标块
+  - sizes_block `const float*`：大小数据指针（可选）
+  - angles_block `const float*`：角度数据指针（可选）
+  - colors_block `const std::array<uint8_t, 3>*`：颜色数据指针（可选）
+- <span style="color:#1976d2;font-weight:bold;">SetSizesBlock</span> - 批量设置大小（SIMD优化）
+  - start `Size`：起始索引
+  - count `Size`：数量
+  - data `const float*`：大小数据指针
+- <span style="color:#1976d2;font-weight:bold;">SetAnglesBlock</span> - 批量设置角度（SIMD优化）
+  - start `Size`：起始索引
+  - count `Size`：数量
+  - data `const float*`：角度数据指针
+- <span style="color:#1976d2;font-weight:bold;">IncrementTotalCountsBlock</span> - 批量增加总计数（SIMD优化）
+  - start `Size`：起始索引
+  - count `Size`：数量
+- <span style="color:#1976d2;font-weight:bold;">IncrementOutlierCountsBlock</span> - 批量增加异常计数（SIMD优化）
+  - start `Size`：起始索引
+  - count `Size`：数量
+- <span style="color:#1976d2;font-weight:bold;">GetNumValid</span> - 获取有效特征数量
+  - 返回 `Size`：有效特征数量
+- <span style="color:#1976d2;font-weight:bold;">RemoveUnused</span> - 移除未使用的特征
+- <span style="color:#1976d2;font-weight:bold;">ZeroCounters</span> - 批量清零计数器
+
+*非虚函数访问器（自动分发，~0.5ns开销）*:
 - <span style="color:#1976d2;font-weight:bold;">GetCoord</span> - 获取单个特征坐标
   - idx `Size`：特征索引
   - 返回 `Feature`：特征坐标
 - <span style="color:#1976d2;font-weight:bold;">SetCoord</span> - 设置单个特征坐标
   - idx `Size`：特征索引
   - coord `const Feature&`：坐标
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">GetCoordsRef</span> - 获取坐标矩阵引用（批量操作）
+- <span style="color:#1976d2;font-weight:bold;">GetSize</span> - 获取单个特征大小
+  - idx `Size`：特征索引
+  - 返回 `float`：特征大小
+- <span style="color:#1976d2;font-weight:bold;">SetSize</span> - 设置单个特征大小
+  - idx `Size`：特征索引
+  - size `float`：大小
+- <span style="color:#1976d2;font-weight:bold;">GetAngle</span> - 获取单个特征角度
+  - idx `Size`：特征索引
+  - 返回 `float`：特征角度
+- <span style="color:#1976d2;font-weight:bold;">SetAngle</span> - 设置单个特征角度
+  - idx `Size`：特征索引
+  - angle `float`：角度
+- <span style="color:#1976d2;font-weight:bold;">IsUsed</span> - 获取单个特征使用状态
+  - idx `Size`：特征索引
+  - 返回 `bool`：使用状态
+- <span style="color:#1976d2;font-weight:bold;">SetUsed</span> - 设置单个特征使用状态
+  - idx `Size`：特征索引
+  - used `bool`：是否使用
+- <span style="color:#1976d2;font-weight:bold;">GetTotalCount</span> - 获取总计数
+  - idx `Size`：特征索引
+  - 返回 `IndexT`：总计数
+- <span style="color:#1976d2;font-weight:bold;">SetTotalCount</span> - 设置总计数
+  - idx `Size`：特征索引
+  - count `IndexT`：计数值
+- <span style="color:#1976d2;font-weight:bold;">GetOutlierCount</span> - 获取异常计数
+  - idx `Size`：特征索引
+  - 返回 `IndexT`：异常计数
+- <span style="color:#1976d2;font-weight:bold;">SetOutlierCount</span> - 设置异常计数
+  - idx `Size`：特征索引
+  - count `IndexT`：计数值
+- <span style="color:#1976d2;font-weight:bold;">GetColorRGB</span> - 获取RGB颜色
+  - idx `Size`：特征索引
+  - 返回 `std::array<uint8_t, 3>`：RGB颜色数组
+- <span style="color:#1976d2;font-weight:bold;">SetColorRGB</span> - 设置RGB颜色
+  - idx `Size`：特征索引
+  - r `uint8_t`：红色分量
+  - g `uint8_t`：绿色分量
+  - b `uint8_t`：蓝色分量
+
+*便利包装器（自动cast到CPU后端）*:
+- <span style="color:#1976d2;font-weight:bold;">GetCoordsRef</span> - 获取坐标矩阵引用
   - 返回 `Eigen::Matrix<double, 2, Eigen::Dynamic>&`
-- <span style="color:#1976d2;font-weight:bold;">GetSizesRef</span> - 获取大小向量引用（批量操作）
+- <span style="color:#1976d2;font-weight:bold;">GetSizesRef</span> - 获取大小向量引用
   - 返回 `std::vector<float>&`
-- <span style="color:#1976d2;font-weight:bold;">GetAnglesRef</span> - 获取角度向量引用（批量操作）
+- <span style="color:#1976d2;font-weight:bold;">GetAnglesRef</span> - 获取角度向量引用
   - 返回 `std::vector<float>&`
-- <span style="color:#1976d2;font-weight:bold;">GetIsUsedRef</span> - 获取使用标志向量引用（批量操作）
+- <span style="color:#1976d2;font-weight:bold;">GetIsUsedRef</span> - 获取使用标志向量引用
   - 返回 `std::vector<uint8_t>&`
-- <span style="color:#1976d2;font-weight:bold;">GetTotalCountsRef</span> - 获取总计数向量引用（批量操作）
+- <span style="color:#1976d2;font-weight:bold;">GetTotalCountsRef</span> - 获取总计数向量引用
   - 返回 `std::vector<IndexT>&`
-- <span style="color:#1976d2;font-weight:bold;">GetOutlierCountsRef</span> - 获取异常计数向量引用（批量操作）
+- <span style="color:#1976d2;font-weight:bold;">GetOutlierCountsRef</span> - 获取异常计数向量引用
   - 返回 `std::vector<IndexT>&`
-- <span style="color:#1976d2;font-weight:bold;">SetCoordsBlock</span> - 批量设置坐标（SIMD优化）
-  - start `Size`：起始索引
-  - count `Size`：数量
-  - coords_block `const Eigen::Ref<const Eigen::Matrix<double, 2, Eigen::Dynamic>>&`：坐标块
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">SetSizesBlock</span> - 批量设置大小（SIMD优化）
-  - start `Size`：起始索引
-  - count `Size`：数量
-  - sizes_block `const float*`：大小数据指针
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">SetAnglesBlock</span> - 批量设置角度（SIMD优化）
-  - start `Size`：起始索引
-  - count `Size`：数量
-  - angles_block `const float*`：角度数据指针
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">SetIsUsedBlock</span> - 批量设置使用标志（SIMD优化）
-  - start `Size`：起始索引
-  - count `Size`：数量
-  - flags `const uint8_t*`：标志数据指针
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">IncrementTotalCountsBlock</span> - 批量增加总计数（SIMD优化）
-  - start `Size`：起始索引
-  - count `Size`：数量
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">IncrementOutlierCountsBlock</span> - 批量增加异常计数（SIMD优化）
-  - start `Size`：起始索引
-  - count `Size`：数量
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">GetNumValid</span> - 获取有效特征数量（SIMD优化）
-  - 返回 `Size`：有效特征数量
-- <span style="color:#1976d2;font-weight:bold;">GetOutlierRatiosBlock</span> - 批量获取异常比率（SIMD优化）
-  - start `Size`：起始索引
-  - count `Size`：数量
-  - ratios_out `double*`：输出缓冲区
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">AddFeature</span> - 添加单个特征（方式1）
-  - coord `const Feature&`：坐标
-  - size `float`：大小（默认0.0f）
-  - angle `float`：角度（默认0.0f）
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">AddFeature</span> - 添加单个特征（方式2）
-  - x `float`：x坐标
-  - y `float`：y坐标
-  - size `float`：大小（默认0.0f）
-  - angle `float`：角度（默认0.0f）
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">AddFeaturesBlock</span> - 批量添加特征（SIMD优化）
-  - coords_block `const Eigen::Ref<const Eigen::Matrix<double, 2, Eigen::Dynamic>>&`：坐标块
-  - sizes_block `const float*`：大小数据指针（可选）
-  - angles_block `const float*`：角度数据指针（可选）
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">RemoveUnused</span> - 移除未使用的特征
-  - 返回 `void`
-- <span style="color:#1976d2;font-weight:bold;">ZeroCounters</span> - 批量清零计数器（SIMD优化）
-  - 返回 `void`
+- <span style="color:#1976d2;font-weight:bold;">GetColorsRGBRef</span> - 获取颜色向量引用
+  - 返回 `std::vector<std::array<uint8_t, 3>>&`
+
+*类型安全转换*:
+- <span style="color:#1976d2;font-weight:bold;">AsCPU</span> - 转换到CPU实现
+  - 返回 `CPUFeaturePoints*` / `const CPUFeaturePoints*`
+- <span style="color:#1976d2;font-weight:bold;">AsGPUCUDA</span> - 转换到GPU CUDA实现
+  - 返回 `GPUFeaturePoints*` / `const GPUFeaturePoints*`
+
+*代理访问*:
 - <span style="color:#1976d2;font-weight:bold;">operator[]</span> - 数组式访问（返回代理对象）
   - index `Size`：特征索引
-  - 返回 `FeaturePointProxy`：代理对象
-- <span style="color:#1976d2;font-weight:bold;">begin</span>, <span style="color:#1976d2;font-weight:bold;">end</span> - STL风格迭代器
-  - 返回 `SimpleIterator`：迭代器对象
+  - 返回 `FeaturePointProxyBase`：代理对象
 
 ```{tip}
 **性能建议 | Performance Tips**
@@ -910,7 +974,7 @@ SIMD优化的SOA特征点容器，采用自然对齐，提供批量优先API
 1. **批量操作优先**: 使用`AddFeaturesBlock`、`SetSizesBlock`等批量API，充分利用SIMD加速
 2. **预留容量**: 使用`reserve()`避免多次内存重分配
 3. **直接访问**: 使用`GetCoordsRef()`等引用接口进行批量处理
-4. **SOA描述子**: 优先使用`DescriptorsSOA`而非旧版`Descs`，获得8-9x加速
+4. **使用Descriptors**: 使用`Descriptors::CreateCPU()`工厂方法创建描述子实例
 ```
 
 ### `FeaturePoint` （旧版，保留兼容性）
@@ -920,23 +984,22 @@ SIMD优化的SOA特征点容器，采用自然对齐，提供批量优先API
 ```{warning}
 **已弃用 | Deprecated**
 
-`FeaturePoint`类已被高性能的`FeaturePoints` SOA容器替代。新代码建议直接使用`FeaturePoints`及其代理对象`FeaturePointProxy`。
+`FeaturePoint`类已被`FeaturePoints`抽象基类替代。新代码建议通过`FeaturePoints::CreateCPU()`工厂方法创建实例，并使用其代理对象`FeaturePointProxyBase`访问特征。
 
 旧版`FeaturePoint`仅保留用于向后兼容，不推荐在新代码中使用。
 ```
 
 ### `ImageFeatureInfo`
 (image-feature-info)=
-单张图像的特征信息封装类，采用SIMD优化的SOA设计，包含可选的描述子管理
+单张图像的特征信息封装类，使用抽象FeaturePoints接口以提供后端灵活性，包含可选的描述子管理
 
 **私有成员变量**:
-| 名称                   | 类型                                        | 默认值  | 用途                                |
-| ---------------------- | ------------------------------------------- | ------- | ----------------------------------- |
-| `image_path_`          | `std::string`                               | ""      | 图像文件路径字符串                  |
-| `features_`            | [`FeaturePoints`](featurepoints-class)      | 默认值  | 特征点集合（SOA格式，SIMD优化）     |
-| `is_used_`             | `bool`                                      | true    | 该图像特征信息的使用状态            |
-| `descriptors_ptr_`     | `Ptr<`[`Descs`](descs)`>`                   | nullptr | 旧版AOS描述子指针（向后兼容，可选） |
-| `descriptors_soa_ptr_` | `Ptr<`[`DescriptorsSOA`](descriptorssoa)`>` | nullptr | SOA描述子指针（高性能，可选，推荐） |
+| 名称               | 类型                                                  | 默认值  | 用途                                          |
+| ------------------ | ----------------------------------------------------- | ------- | --------------------------------------------- |
+| `image_path_`      | `std::string`                                         | ""      | 图像文件路径字符串                            |
+| `features_`        | `Ptr<`[`FeaturePoints`](featurepoints-class)`>`       | 默认值  | 特征点集合（共享所有权，抽象接口）            |
+| `is_used_`         | `bool`                                                | true    | 该图像特征信息的使用状态                      |
+| `descriptors_ptr_` | `Ptr<`[`Descriptors`](descriptorssoa-class)`>`        | nullptr | 描述子指针（可选）                            |
 
 **可用方法**:
 - <span style="color:#1976d2;font-weight:bold;">ImageFeatureInfo</span> - 默认构造函数
@@ -976,24 +1039,15 @@ SIMD优化的SOA特征点容器，采用自然对齐，提供批量优先API
 - <span style="color:#1976d2;font-weight:bold;">ZeroFeatureCounters</span> - 清零特征计数器（SIMD优化）
 - <span style="color:#1976d2;font-weight:bold;">empty</span> - 判断是否为空
 - <span style="color:#1976d2;font-weight:bold;">size</span> - 获取特征点数量
-- <span style="color:#1976d2;font-weight:bold;">begin</span>, <span style="color:#1976d2;font-weight:bold;">end</span> - 迭代器访问
-- <span style="color:#1976d2;font-weight:bold;">HasDescriptors</span> - 检查是否存储了描述子（AOS或SOA）
-- <span style="color:#1976d2;font-weight:bold;">HasDescriptorsSOA</span> - 检查是否存储了SOA描述子
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsPtr</span> - 获取旧版AOS描述子指针（const版本）
-  - 返回 `const Ptr<Descs>&`
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsPtr</span> - 获取旧版AOS描述子指针（非const版本）
-  - 返回 `Ptr<Descs>&`
-- <span style="color:#1976d2;font-weight:bold;">SetDescriptors</span> - 设置旧版AOS描述子
-  - descs_ptr `const Ptr<Descs>&`：描述子指针
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsSOAPtr</span> - 获取SOA描述子指针（const版本）(推荐)
-  - 返回 `const Ptr<DescriptorsSOA>&`
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsSOAPtr</span> - 获取SOA描述子指针（非const版本）(推荐)
-  - 返回 `Ptr<DescriptorsSOA>&`
-- <span style="color:#1976d2;font-weight:bold;">SetDescriptorsSOA</span> - 设置SOA描述子 (推荐)
-  - descs_soa_ptr `const Ptr<DescriptorsSOA>&`：SOA描述子指针
+- <span style="color:#1976d2;font-weight:bold;">HasDescriptors</span> - 检查是否存储了描述子
+- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsPtr</span> - 获取描述子指针（const版本）
+  - 返回 `const Ptr<Descriptors>&`
+- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsPtr</span> - 获取描述子指针（非const版本）
+  - 返回 `Ptr<Descriptors>&`
+- <span style="color:#1976d2;font-weight:bold;">SetDescriptors</span> - 设置描述子
+  - descs_ptr `const Ptr<Descriptors>&`：描述子指针
 - <span style="color:#1976d2;font-weight:bold;">ClearDescriptors</span> - 清除描述子并释放内存
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsRefCount</span> - 获取AOS描述子引用计数（调试用）
-- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsSOARefCount</span> - 获取SOA描述子引用计数（调试用）
+- <span style="color:#1976d2;font-weight:bold;">GetDescriptorsRefCount</span> - 获取描述子引用计数（调试用）
 - <span style="color:#1976d2;font-weight:bold;">GetFeature</span> - 获取特征代理对象（兼容性方法）
   - index `Size`：特征索引
   - 返回 `FeatureProxy`：特征代理对象
@@ -1007,12 +1061,6 @@ SIMD优化的SOA特征点容器，采用自然对齐，提供批量优先API
   - index `Size`：图像索引
   - 返回 `ImageFeatureInfo*`：图像特征信息指针，越界时返回nullptr
 - <span style="color:#1976d2;font-weight:bold;">operator[]</span> - 数组式访问（const版本）
-  - index `Size`：图像索引
-  - 返回 `const ImageFeatureInfo*`：图像特征信息常量指针，越界时返回nullptr
-- <span style="color:#1976d2;font-weight:bold;">GetImageFeaturePtr</span> - 安全获取图像特征信息指针（非const版本）
-  - index `Size`：图像索引
-  - 返回 `ImageFeatureInfo*`：图像特征信息指针，越界时返回nullptr
-- <span style="color:#1976d2;font-weight:bold;">GetImageFeaturePtr</span> - 安全获取图像特征信息指针（const版本）
   - index `Size`：图像索引
   - 返回 `const ImageFeatureInfo*`：图像特征信息常量指针，越界时返回nullptr
 - <span style="color:#1976d2;font-weight:bold;">AddImageFeatures</span> - 添加图像特征信息
@@ -2059,6 +2107,26 @@ for (size_t i = 0; i < global_poses.Size(); ++i) {
 
 ---
 
+## 结构信息 (types.hpp)
+
+### `StructureInfo`
+(structure-info)=
+聚合结构体，包含完整的三维重建结果（旋转、平移、3D点）
+
+**成员变量**:
+| 名称           | 类型                                                | 默认值 | 用途               |
+| -------------- | --------------------------------------------------- | ------ | ------------------ |
+| `rotations`    | [`GlobalRotations`](global-rotations)               | 空     | 全局旋转矩阵序列   |
+| `translations` | [`GlobalTranslations`](global-translations)         | 空     | 全局平移向量序列   |
+| `points`       | [`Points3d`](points3d)                              | 空     | 3D点云矩阵         |
+
+**相关类型**:
+| 类型                | 定义                                    | 默认值  | 用途                     |
+| ------------------- | --------------------------------------- | ------- | ------------------------ |
+| `StructureInfoPtr`  | `Ptr<StructureInfo>`                    | nullptr | 结构信息的智能指针类型   |
+
+---
+
 ## 3D点云类型 (types/world_3dpoints.hpp)
 
 ### 基础3D点类型定义
@@ -2321,6 +2389,3 @@ if (success) {
 - <span style="color:#1976d2;font-weight:bold;">ParamsToRelativePose</span> - 将参数向量转换为相对位姿
   - params `const Eigen::Matrix<double, 6, 1> &`：6维参数向量（前3维为Cayley参数，后3维为平移）
   - 返回 `RelativePose`：相对位姿
-
----
-

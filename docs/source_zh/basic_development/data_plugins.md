@@ -9,12 +9,17 @@
 ```{important}
 每个数据插件必须实现以下核心接口，这些接口是插件能够正常工作的基础：
 
-- ** `virtual const std::string& GetType() const override;`**
+- **`virtual const std::string& GetType() const override;`**
   - 返回插件的唯一类型字符串标识
   - 只需在头文件中**声明**，由`REGISTRATION_PLUGIN`宏自动实现
   - **示例**: `"data_images"`, `"data_tracks"`
 - **`virtual void* GetData() override;`**
   - 返回指向插件内部核心数据存储的 `void*` 指针。用户在使用 `GetDataPtr<T>` 时进行类型智能转换。
+- **`virtual DataDetails Details() const override;`**
+  - 返回数据插件的元数据信息，用于强类型代码生成和 UI 展示。
+  - 返回一个 `DataDetails` 结构体，包含以下字段：
+    - `coreTypeName`：可用于模板的 C++ 核心类型名（如 `"Tracks"`, `"Package"`）
+    - `readme`：人类可读的用途说明
 ```
 
 ### 可选重载接口
@@ -48,6 +53,14 @@ FUNC_INTERFACE_END()
 
 - **`virtual DataPtr CopyData() const override;`**
   - 实现数据的深拷贝逻辑，输出的DataPtr与原本DataPtr指向数据内容一样，地址无关。
+
+- **`virtual EvaluatorStatus Evaluate(DataPtr gt_data) override;`**
+  - 实现自定义数据的精度评估，返回评估状态与指标。用于自动评估的自定义数据还需实现 `CopyData()`。
+
+- **`virtual std::vector<std::string> GetSupportedOutputTypes() const;`**
+  - 返回该数据插件支持的输出文件扩展名列表。
+  - 默认实现返回 `{".pb"}`。
+  - 可重载以声明额外的格式支持，例如 `{".pb", ".g2o", ".ply"}`。
 
 ## 可选派生方式
 
@@ -98,7 +111,10 @@ public:
     void* GetData() override {
         return static_cast<void*>(&data_);
     }
-    // 可选：实现 Save/Load/Call/CopyData
+    DataDetails Details() const override {
+        return {"CustomData", "包含 id 和 values 的自定义数据。"};
+    }
+    // 可选：实现 Save/Load/Call/CopyData/GetSupportedOutputTypes
 };
 } // namespace MyPlugin
 
@@ -112,7 +128,7 @@ namespace MyPlugin {
 
 } // namespace MyPlugin
 
-// ✅ 插件注册 - 自动从CMake读取PLUGIN_NAME
+// Plugin registration 插件注册 - 自动从CMake读取PLUGIN_NAME
 // 插件类型："my_custom_data"（来自CMake）
 // 文件名：posdk_plugin_my_custom_data.{so|dylib|dll}
 REGISTRATION_PLUGIN(MyPlugin::MyDataPlugin)
@@ -130,12 +146,7 @@ if (custom_data) {
     custom_data->values = {1.0, 2.0, 3.0};
 }
 
-// 保存数据
-data->Save("/path/to/folder", "my_data");
-
-// 加载数据
-auto loaded_data = FactoryData::Create("my_custom_data");
-loaded_data->Load("/path/to/folder/my_data.dat");
+// 本例仅实现内存访问；保存与加载需先实现 Save/Load。
 ```
 
 ## 数据配置
@@ -173,15 +184,15 @@ loaded_data->Load("/path/to/folder/my_data.dat");
 
 4.  **直接成员函数调用**: 用户可以在创建实例后直接调用其公有成员函数来获取核心数据来进行算法设计。
     ```cpp
-    auto camera_data = FactoryData::Create("data_camera_model");
+    auto camera_data = FactoryData::Create("data_camera_models");
     auto camera_models = GetDataPtr<CameraModels>(camera_data);
     if (camera_models) {
         CameraModel cam; 
-        cam.SetCameraIntrinsics(/*...*/);
+        cam.SetCameraIntrinsics(1000.0, 1000.0, 640.0, 480.0);
         camera_models->push_back(cam);
     }
     ```
 
 ## 核心数据类型
 
-核心库提供了多种预定义的数据类型，可以直接在插件中使用或作为参考（详见 **核心数据类型详细说明**：请参阅 [附录A：PoSDK核心数据类型](../appendices/appendix_a_types.md)）
+核心库提供了多种预定义的数据类型，可以直接在插件中使用或作为参考（详见 **核心数据类型详细说明**：请参阅 [附录A：PoMVG核心数据类型](../appendices/appendix_a_types.md)）

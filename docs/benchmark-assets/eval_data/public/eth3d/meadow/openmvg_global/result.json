@@ -1,0 +1,90 @@
+{
+  "dataset": "eth3d",
+  "scene": "meadow",
+  "arm": "openmvg_global",
+  "label": "OpenMVG Global",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 15,
+  "registered_views": 4,
+  "points": 383,
+  "accuracy": {
+    "own": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "center_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "rotation_deg": {
+        "count": 4,
+        "min": 0.004222953445471652,
+        "max": 0.0063013706740424735,
+        "mean": 0.005326628280645798,
+        "median": 0.0053910945015345334,
+        "std_dev": 0.0007456329555638319
+      },
+      "center": {
+        "count": 4,
+        "min": 0.0005893029092844343,
+        "max": 0.001471782409230721,
+        "mean": 0.0010786750371536062,
+        "median": 0.001126807415049635,
+        "std_dev": 0.00032415089984771364
+      }
+    },
+    "common": {
+      "available": true,
+      "rotation_available": true,
+      "center_available": true,
+      "rotation_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "center_view_ids": [
+        1,
+        2,
+        3,
+        12
+      ],
+      "rotation_deg": {
+        "count": 4,
+        "min": 0.004222953445471652,
+        "max": 0.0063013706740424735,
+        "mean": 0.005326628280645798,
+        "median": 0.0053910945015345334,
+        "std_dev": 0.0007456329555638319
+      },
+      "center": {
+        "count": 4,
+        "min": 0.0005893029092844343,
+        "max": 0.001471782409230721,
+        "mean": 0.0010786750371536062,
+        "median": 0.001126807415049635,
+        "std_dev": 0.00032415089984771364
+      }
+    }
+  },
+  "timing": {
+    "backend": 0.8558332920074463,
+    "frontend": 27.57167670922354,
+    "pipeline": 28.474979500984773
+  },
+  "downloads": {
+    "ply": "public/eth3d/meadow/openmvg_global/points.ply",
+    "g2o": "public/eth3d/meadow/openmvg_global/poses.g2o",
+    "metadata": "public/eth3d/meadow/openmvg_global/result.json",
+    "accuracy": "public/eth3d/meadow/openmvg_global/evaluation.json"
+  }
+}

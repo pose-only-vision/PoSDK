@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Tower_of_London",
+  "arm": "openmvg_stellar",
+  "label": "OpenMVG Stellar",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 508,
+  "registered_views": 454,
+  "points": 208465,
+  "accuracy": {},
+  "timing": {
+    "backend": 42.38797570695169,
+    "frontend": 14.198828000109643,
+    "pipeline": 67.63333395705558
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 4580541874.591434,
+    "median": 3.4813024272209243,
+    "observations": 989985,
+    "points": 208465,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Tower_of_London/openmvg_stellar/points.ply",
+    "g2o": "public/onedsfm/Tower_of_London/openmvg_stellar/poses.g2o",
+    "metadata": "public/onedsfm/Tower_of_London/openmvg_stellar/result.json",
+    "reprojection": "public/onedsfm/Tower_of_London/openmvg_stellar/reprojection.json"
+  }
+}

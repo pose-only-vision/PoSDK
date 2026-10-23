@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Yorkminster",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 458,
+  "registered_views": 434,
+  "points": 86685,
+  "accuracy": {},
+  "timing": {
+    "backend": 119.07246745796874,
+    "frontend": 9.628427583025768,
+    "pipeline": 130.56033441610634
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 1.0805230793670388,
+    "median": 0.7062254045483172,
+    "observations": 578627,
+    "points": 86685,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Yorkminster/glomap/points.ply",
+    "g2o": "public/onedsfm/Yorkminster/glomap/poses.g2o",
+    "metadata": "public/onedsfm/Yorkminster/glomap/result.json",
+    "reprojection": "public/onedsfm/Yorkminster/glomap/reprojection.json"
+  }
+}

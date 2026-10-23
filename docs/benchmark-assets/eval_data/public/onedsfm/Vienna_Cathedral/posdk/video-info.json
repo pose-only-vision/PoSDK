@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Vienna_Cathedral",
+  "platform": "PoMVG",
+  "points": 294176,
+  "ply_sha256": "fd20be8114b66534b94220444dff9c377bfbb022d049d26339c0bf08b76f8a2b",
+  "original_video_sha256": "73903ef1876a837b61dd1ccf82b722b67f7ffd5bcf6719486db2a295621e7722",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 679,
+    "fps": 30.0,
+    "duration_seconds": 22.633333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 679,
+    "fps": 30.0,
+    "duration_seconds": 22.633333
+  }
+}

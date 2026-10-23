@@ -10,7 +10,7 @@
     -   **Purpose**: Scenarios requiring data serialization/deserialization via Protobuf (saving to files or network transmission).
     -   **Advantages**: Automatic file I/O handling; provides macros to simplify Protobuf field mapping.
     -   **Disadvantages**: Introduces Protobuf dependency; requires defining `.proto` files and configuring CMake code generation.
-    -   **Key Implementation**: Users need to override `CreateProtoMessage`, `ToProto`, `FromProto`. Recommended to use the following helper macros (see `interfaces_preset.hpp` for details) to simplify implementation:
+    -   **Key Implementation**: Users need to override `CreateProtoMessage`, `ToProto`, `FromProto`. Recommended to use the following helper macros (see `pb_dataio.hpp` for details) to simplify implementation:
     ```text
         -   `PROTO_SET_BASIC` / `PROTO_GET_BASIC`: Basic types (int, float, bool, string).
         -   `PROTO_SET_VECTOR2F/D` / `PROTO_GET_VECTOR2F/D`: Eigen::Vector2f/d.
@@ -23,7 +23,7 @@
 -   **`Interface::DataMap<T>`**:
     -   **Template Parameter `T`**: Any default-constructible type.
     -   **Purpose**: Quickly wrap a **single** data object (such as `RelativePose`, `GlobalPoses`, `std::vector`, `std::map`, custom structs, etc.) as `DataPtr`, convenient for passing between methods or as method return values, avoiding creating complete data plugins for simple data structures.
-    -   **Advantages**: Easy integration of existing data into PoSDK framework without declaring and compiling new Data classes.
+    -   **Advantages**: Easy integration of existing data into PoMVG framework without declaring and compiling new Data classes.
     -   **Disadvantages**: Does not directly support serialization (`PbDataIO`); if persistence is needed, requires containing plugins (such as `DataPackage`) or external logic to handle.
     -   **Access**: Use `GetDataPtr<T>(data_map_ptr)` to get pointer to internal data.
     -   **Deep Copy (`CopyData`)**:
@@ -58,7 +58,7 @@
     -   **Purpose**: Dedicated sample data management for robust estimators (e.g., RANSAC, GNC-IRLS). Supports zero-copy (shared memory) random subset and indexed subset generation.
     -   **Advantages**: Efficient subset sampling, avoiding large data copying; provides STL-compatible interface (`begin`, `end`, `operator[]`, `size`, etc.), convenient for accessing sample data (including subsets).
     -   **Disadvantages**: Mainly designed for robust estimation flow, less general than `DataMap` or standard `DataIO`.
-    -   **Key Interfaces**: See `interfaces_robust_estimator.hpp` for `DataSample` definition details
+    -   **Key Interfaces**: See `<po_core/robust/data_sample.hpp>` for `DataSample` definition details
     ```cpp
         GetPopulationPtr(): Get population sample data pointer
         GetPopulationSize(): Get population sample data size
@@ -124,10 +124,10 @@
         -   It uses current method plugin's `GetType()` as `algorithm_name`.
         -   It uses `ProfileCommit` from method configuration (if exists) or "default_commit" as `eval_commit`.
         -   Iterates through `eval_status.eval_results`, for each metric, calls `EvaluatorManager::AddEvaluationResult(eval_type, algorithm_name, eval_commit, metric_name, value)` to add result to global evaluator.
-- **`Interface::RobustEstimator<TSample>`**:
+- **`Interface::RobustEstimator`**:
   - **Purpose**: Implement robust estimation algorithms based on RANSAC or GNC-IRLS, etc.
   - **Advantages**: Provides standardized robust estimation flow; decouples model estimation and cost evaluation.
-  - **Disadvantages**: Only applicable to specific types of robust estimation problems; requires `DataSample<TSample>` input.
+  - **Disadvantages**: Only applicable to specific types of robust estimation problems; requires `DataSample<T>` input.
 
 <!-- 
 ## Behavior Plugins (Behavior Plugin)

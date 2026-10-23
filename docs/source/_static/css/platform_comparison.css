@@ -1,0 +1,61 @@
+/* Page links, rather than scripted panels: usable offline and without JavaScript. */
+.platform-section-tabs {
+    margin: 0 0 28px;
+    border-bottom: 1px solid #d7e2ef;
+}
+.rst-content .platform-section-tabs p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    margin: 0;
+}
+.platform-section-tabs a,
+.platform-section-tabs strong {
+    display: block;
+    padding: 12px 4px;
+    border-bottom: 3px solid transparent;
+    font-size: 16px;
+    line-height: 1.5;
+    text-decoration: none;
+}
+.platform-section-tabs a {
+    color: #52657c;
+}
+.platform-section-tabs a:hover,
+.platform-section-tabs a:focus-visible {
+    color: #2477ed;
+    border-bottom-color: #b9d4f6;
+}
+.platform-section-tabs a:focus-visible {
+    outline: 2px solid #2477ed;
+    outline-offset: 3px;
+}
+.platform-section-tabs strong {
+    color: #176bd5;
+    border-bottom-color: #2477ed;
+    font-weight: 650;
+}
+/* Keep the installation guide's long headings, filenames and tables readable. */
+.rst-content .platform-section-tabs ~ section h2 {
+    white-space: normal !important;
+    max-width: 100% !important;
+}
+.rst-content .platform-section-tabs ~ section table.docutils td,
+.rst-content .platform-section-tabs ~ section table.docutils th {
+    white-space: normal;
+    vertical-align: top;
+    line-height: 1.65;
+}
+.rst-content .platform-section-tabs ~ section table.docutils td:first-child {
+    min-width: 9em;
+}
+.rst-content .platform-section-tabs ~ section table.docutils code,
+.rst-content .platform-section-tabs ~ section table.docutils code .pre {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+@media (max-width: 480px) {
+    .rst-content .platform-section-tabs p {
+        gap: 8px 20px;
+    }
+}

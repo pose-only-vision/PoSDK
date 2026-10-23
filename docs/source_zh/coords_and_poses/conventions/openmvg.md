@@ -48,17 +48,17 @@ OpenMVG (Open Multiple View Geometry) 是一个流行的多视图几何库，常
 所以，相对旋转 $R_{ji}$ (从 $i$ 到 $j$) 是 $R_j R_i^T$，相对平移(相机 $i$ 的原点在相机 $j$ 坐标系下的坐标) $t_{ji}$ 是 $R_j (C_i - C_j)$。
 OpenMVG 通常直接存储和使用这种 $R, C$ 形式的全局位姿。
 
-## 与PoSDK的转换
+## 与PoMVG的转换
 
-PoSDK 使用 $R_{wc}$ (从相机到世界) 和 $t_{wc}$ (相机光心在世界坐标系下的位置) 或 $R_{cw}$ (从世界到相机) 和 $t_{cw}$ (世界原点在相机坐标系下的位置)。
+PoMVG 使用 $R_{wc}$ (从相机到世界) 和 $t_{wc}$ (相机光心在世界坐标系下的位置) 或 $R_{cw}$ (从世界到相机) 和 $t_{cw}$ (世界原点在相机坐标系下的位置)。
 
-如果 PoSDK 使用 $R_{cw}$ 和 $t_{cw}$ (世界原点在相机 $i$ 下的坐标)：
-*   $R_{PoSDK} = R_{OpenMVG}$
-*   $t_{PoSDK} = -R_{OpenMVG} C_{OpenMVG}$
+如果 PoMVG 使用 $R_{cw}$ 和 $t_{cw}$ (世界原点在相机 $i$ 下的坐标)：
+*   $R_{PoMVG} = R_{OpenMVG}$
+*   $t_{PoMVG} = -R_{OpenMVG} C_{OpenMVG}$
 
-如果 PoSDK 使用 $R_{wc}$ 和 $C_{wc}$ (相机中心在世界坐标系中的位置，与OpenMVG的 $C$ 类似，但旋转是 $R_{wc}$):
-*   $R_{PoSDK} = R_{OpenMVG}^T$
-*   $C_{PoSDK} = C_{OpenMVG}$
+如果 PoMVG 使用 $R_{wc}$ 和 $C_{wc}$ (相机中心在世界坐标系中的位置，与OpenMVG的 $C$ 类似，但旋转是 $R_{wc}$):
+*   $R_{PoMVG} = R_{OpenMVG}^T$
+*   $C_{PoMVG} = C_{OpenMVG}$
 
 转换时需要特别注意旋转矩阵的定义方向和是相机中心 $C$ 还是平移向量 $t$。 
 -->

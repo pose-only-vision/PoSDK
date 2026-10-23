@@ -1,7 +1,7 @@
 # OpenGV Data Converter
 (opengv-converter)=
 
-The OpenGV data converter provides data conversion between PoSDK and the OpenGV library for geometric vision algorithms and relative pose estimation.
+The OpenGV data converter provides data conversion between PoMVG and the OpenGV library for geometric vision algorithms and relative pose estimation.
 
 ---
 
@@ -12,10 +12,10 @@ The OpenGV data converter provides data conversion between PoSDK and the OpenGV 
 
 | Conversion Direction | Data Type                             | Purpose                  | Conversion Function                                                   |
 | -------------------- | ------------------------------------- | ------------------------ | --------------------------------------------------------------------- |
-| **PoSDK → OpenGV**   | Matches → Bearing vectors             | Relative pose estimation | [`MatchesToBearingVectors`](matches-to-bearing-vectors)               |
-| **PoSDK → OpenGV**   | BearingPairs → BearingVectors         | OpenGV algorithm input   | [`BearingPairsToBearingVectors`](bearing-pairs-to-bearing-vectors)    |
-| **OpenGV → PoSDK**   | Transformation matrix → Relative pose | Pose result extraction   | [`OpenGVPose2RelativePose`](opengv-pose-to-relative-pose)             |
-| **PoSDK → OpenGV**   | Camera model → Intrinsic matrix       | Algorithm initialization | [`CameraModel2OpenGVCalibration`](camera-model-to-opengv-calibration) |
+| **PoMVG → OpenGV**   | Matches → Bearing vectors             | Relative pose estimation | [`MatchesToBearingVectors`](matches-to-bearing-vectors)               |
+| **PoMVG → OpenGV**   | BearingPairs → BearingVectors         | OpenGV algorithm input   | [`BearingPairsToBearingVectors`](bearing-pairs-to-bearing-vectors)    |
+| **OpenGV → PoMVG**   | Transformation matrix → Relative pose | Pose result extraction   | [`OpenGVPose2RelativePose`](opengv-pose-to-relative-pose)             |
+| **PoMVG → OpenGV**   | Camera model → Intrinsic matrix       | Algorithm initialization | [`CameraModel2OpenGVCalibration`](camera-model-to-opengv-calibration) |
 
 ---
 
@@ -25,7 +25,7 @@ The OpenGV data converter provides data conversion between PoSDK and the OpenGV 
 ### `MatchesToBearingVectors` (Match Conversion)
 (matches-to-bearing-vectors)=
 
-Convert PoSDK matches and feature data to OpenGV bearing vectors
+Convert PoMVG matches and feature data to OpenGV bearing vectors
 
 **Function Signature**:
 ```cpp
@@ -97,7 +97,7 @@ if (success) {
 
 ### `MatchesToBearingVectors` (Sample Conversion)
 
-Convert PoSDK match samples to OpenGV bearing vectors (for RANSAC)
+Convert PoMVG match samples to OpenGV bearing vectors (for RANSAC)
 
 **Function Signature**:
 ```cpp
@@ -155,8 +155,10 @@ static void BearingPairsToBearingVectors(
 
 **Data Format Description**:
 ```cpp
-// BearingPairs: std::vector<std::pair<Vector3d, Vector3d>>
-// BearingVectors: std::vector<Vector3d>
+// BearingPairs: std::vector<Eigen::Matrix<double, 6, 1>>
+//   Each element is a 6x1 vector, first 3 components are the first bearing vector, last 3 are the second
+// BearingVectors: Eigen::Matrix<double, 3, Eigen::Dynamic>
+//   3xN matrix, each column is a 3D bearing vector
 ```
 
 **Usage Example**:
@@ -187,7 +189,7 @@ static void BearingVectorsToBearingPairs(
     BearingPairs &bearing_pairs);
 ```
 
-**Use Case**: Convert OpenGV results back to PoSDK format
+**Use Case**: Convert OpenGV results back to PoMVG format
 
 ---
 
@@ -209,7 +211,7 @@ static bool OpenGVPose2RelativePose(
 **Parameter Description**:
 | Parameter       | Type                              | Description                                |
 | --------------- | --------------------------------- | ------------------------------------------ |
-| `T`             | `const opengv::transformation_t&` | [Input] OpenGV transformation matrix (4×4) |
+| `T`             | `const opengv::transformation_t&` | [Input] OpenGV transformation matrix (3×4) |
 | `relative_pose` | `RelativePose&`                   | [Output] PoMVG relative pose               |
 
 **Return Value**: `bool` - Whether conversion succeeded
@@ -489,8 +491,6 @@ LOG_INFO_ZH << "Triangulated " << points_3d.size() << " 3D points";
 | **P3P (Gao)**   | `p3p_gao`       | 3          | Faster version      |
 | **EPnP**        | `epnp`          | ≥4         | Non-iterative, fast |
 | **UPnP**        | `upnp`          | ≥4         | Uncalibrated camera |
-
----
 
 ---
 

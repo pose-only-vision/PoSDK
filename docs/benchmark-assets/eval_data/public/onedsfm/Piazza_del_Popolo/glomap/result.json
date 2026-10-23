@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Piazza_del_Popolo",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 354,
+  "registered_views": 333,
+  "points": 22435,
+  "accuracy": {},
+  "timing": {
+    "backend": 50.34317216696218,
+    "frontend": 1.9023572488222271,
+    "pipeline": 52.514192373724654
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.9259958479031482,
+    "median": 0.6334677776232812,
+    "observations": 162372,
+    "points": 22435,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Piazza_del_Popolo/glomap/points.ply",
+    "g2o": "public/onedsfm/Piazza_del_Popolo/glomap/poses.g2o",
+    "metadata": "public/onedsfm/Piazza_del_Popolo/glomap/result.json",
+    "reprojection": "public/onedsfm/Piazza_del_Popolo/glomap/reprojection.json"
+  }
+}

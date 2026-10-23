@@ -1,201 +1,102 @@
 # 性能分析器 (Profiler)
 
-PoSDK内置了高性能的代码执行监控工具，帮助开发者找到程序运行中的性能瓶颈。
+## 在 GUI 中查看性能
 
-## 什么是性能标签？
+1. 选中方法节点，在 **Configuration** 中开启 `enable_profiling`。需要核心算法统计时，同时开启该方法提供的 `enable_core_profiling`。
+2. 保存并运行工作流。运行完成后，点击工具栏的 **性能**。
+3. 在左侧选择 **方法时间**、**核心时间** 或 **阶段**。点击列标题排序，用上方的小数位设置调整显示精度。
+4. 点击 **导出** 保存 CSV；从工具栏 **导出 → 性能报告** 查看或导出完整报告。
 
-**标签（Label）** 是程序段的属性标签，用于统计不同函数或代码段的性能表现。就像给代码块贴上名字标签一样，方便后续查看哪个部分运行得快或慢。
+结果保存在当前工程的输出目录中。重新打开工程或切换输出目录时，会读取对应目录最近保存的结果。新一轮运行开始时会清空上一轮显示。
 
-例如：
-- `"特征提取"` - 标记特征检测代码段
-- `"图像匹配"` - 标记图像匹配算法代码段
-- `"三角化重建"` - 标记3D点重建代码段
+## 怎样读这些数值
 
-## 基本使用方法
+| 字段 | 含义 |
+| --- | --- |
+| `Total Time(ms)` | 同一标签所有会话的累计时间，包含子调用。 |
+| `Session Count` | 实际提交的计时会话数。 |
+| `Logical Run Count` | 方法主动登记的逻辑运行次数。 |
+| `Average Time(ms)` | 累计时间除以 `Average Time Count`；有逻辑运行次数时优先用逻辑次数，否则用会话数。 |
+| `Average CPU(%)` | 有效 CPU 测量会话的百分比算术平均值，多线程运行可以超过 100%。 |
+| `CPU Sample Count` | 参与 CPU 平均值的有效会话数。批量运行按此数量加权汇总。 |
+| `Peak Memory(MB)` | 采样期间进程的绝对峰值内存，不是相对开始时的增量。 |
+| 阶段 `Count` | 该命名区间实际出现的次数；同一会话内重复出现也会累加。 |
+| 运行／批次墙钟 | GUI 从启动计算进程到进程结束，或从批次开始到所有任务完成的实际经过时间。 |
 
-### 1. 自动测量函数性能
+方法和核心会话可能嵌套或并行，累计时间会重叠，不能把这些行相加当作工作流的总耗时。未采集的指标显示 `N/A`；数值 `0` 表示采集结果为零。
+
+## 核对工作流墙钟
+
+在每次运行的结果目录中查看：
+
+- `workflow_timing.json`：GUI 记录的计算进程墙钟时间和退出状态。
+- `runner-events.jsonl`：节点开始、完成及运行结束记录；`monotonic_elapsed_ms` 用于计算节点区间耗时。
+
+将互不重叠的节点区间相加，再加上进程启动、节点间评估／结果保存和收尾时间，才能与进程墙钟对应。批次墙钟还包含任务切换和统计汇总时间。方法、核心和阶段统计各自用于定位开销，不要跨表相加。
+
+## 给方法加入计时
+
+在继承 `MethodPreset` 的方法中使用：
 
 ```cpp
-void 特征提取函数()
+DataPtr MyMethod::Run()
 {
-    PROFILER_START_AUTO(true);  // 自动使用函数名作为标签进行性能测量
+    // 使用方法配置的标签，默认只测量时间。
+    PROFILER_START_AUTO(GetOptionAsBool("enable_profiling", false));
 
-    // 你的特征提取代码...
+    PrepareData();
+    PROFILER_STAGE("prepared");
+    Solve();
+    PROFILER_STAGE("solved");
 
     PROFILER_END();
-    PROFILER_PRINT_STATS(true);
+    return result;
 }
 ```
 
-### 2. 测量特定代码段性能
+需要内存、CPU 或线程指标时，将开始语句替换为：
 
 ```cpp
-void 图像处理函数()
+POSDK_START(GetOptionAsBool("enable_profiling", false), "time|memory|cpu|threads");
+```
+
+每个作用域只放一个开始宏。`PROFILER_START_AUTO` 和 `POSDK_START` 使用当前方法的标签，不会自动取 C++ 函数名。普通函数可使用显式标签：
+
+```cpp
+void ProcessData()
 {
-    PROFILER_START_AUTO(true);
-
-    // 测量图像预处理部分
-    InitializeData();
-    PROFILER_STAGE("图像预处理");
-
-    // 测量特征检测部分
-    ExtractFeatures();
-    PROFILER_STAGE("SIFT特征检测");
-
+    PROFILER_START("process_data", true);
+    // 执行处理。
+    PROFILER_STAGE("processed");
     PROFILER_END();
-    PROFILER_PRINT_STATS(true);
 }
 ```
 
-### 3. 启用分析器并查看结果
+只需作用域计时、不需要显式结束宏时，也可以直接创建会话：
 
 ```cpp
-int main()
+#include <po_core/ProfilerManager.hpp>
+
+void ProcessBlock()
 {
-    // 启用性能分析器（对特定方法）
-    PM_SET_PROFILING_ENABLED("my_algorithm", true);
-
-    // 运行你的程序
-    特征提取函数();
-    图像处理函数();
-
-    // 生成性能报告文件
-    PM_EXPORT_TO_CSV("性能报告.csv");
-
-    // 或者直接打印到控制台查看
-    PM_DISPLAY_ALL_PROFILING_DATA();
-
-    return 0;
+    PoSDK::Profiler::ProfilerSession session(
+        "process_block", PoSDK::Profiler::MetricsType::TIME);
+    // 离开作用域时自动提交计时结果。
 }
 ```
 
-## 性能报告输出示例
+## 保存 CSV
 
-运行上述代码后，你会看到类似这样的性能统计表：
-
-### 控制台输出
-```
-=== 特征提取函数 当前会话性能统计 ===
-持续时间: 125.43 ms
-内存增量: 34.2 MB (相对开始时)
-CPU使用率: 187.4%
-线程数 (开始/结束): 1/4
-
-=== 阶段区间统计 ===
-  START_to_图像预处理: 34.21 ms
-  图像预处理_to_SIFT特征检测: 55.46 ms
-  SIFT特征检测_to_END: 35.76 ms
-```
-
-### CSV文件输出 (性能报告.csv)
-
-| 标签名称 (label_str) | 会话次数 | 总执行时间 (ms) | 平均时间 (ms) | 最短时间 (ms) | 最长时间 (ms) | 峰值内存 (MB) | 平均CPU (%) |
-| -------------------- | -------- | --------------- | ------------- | ------------- | ------------- | ------------- | ----------- |
-| 特征提取函数         | 1        | 125.43          | 125.43        | 125.43        | 125.43        | 34.2          | 187.4       |
-| 图像处理函数         | 1        | 89.67           | 89.67         | 89.67         | 89.67         | 28.1          | 156.8       |
-
-**表格说明：**
-- **标签名称**: 就是你在代码中设置的标签字符串（label_str）
-- **会话次数**: 该代码段被执行了多少次
-- **总执行时间**: 该代码段累计运行了多长时间
-- **平均时间**: 平均每次执行的时间
-- **峰值内存**: 该代码段运行期间相对开始时的最大内存增量
-- **平均CPU**: 该代码段的平均CPU使用率
-
-## 进阶使用技巧
-
-### 使用不同性能指标
+GUI 运行会自动收集性能文件。独立 C++ 程序可在会话结束后导出：
 
 ```cpp
-void 数据处理函数()
-{
-    // 只统计时间（最快，适合频繁调用的函数）
-    POSDK_START(true, "time");
-
-    // 时间+内存统计（适合内存敏感的算法）
-    POSDK_START(true, "time|memory");
-
-    // 完整统计（时间+内存+CPU+线程数）
-    POSDK_START(true, "time|memory|cpu");
-
-    // 你的算法代码...
-
-    PROFILER_END();
-    PROFILER_PRINT_STATS(true);
-}
+auto &profiler = PoSDK::Profiler::ProfilerManager::GetInstance();
+profiler.ExportToCSV("profile.csv");
 ```
 
-### 监控外部程序性能
+主表保存在 `profile.csv`，阶段表保存在 `profile_stages.csv`。GUI 导出还会生成保存墙钟时间的 `profile.meta.json`；移动或导入结果时保留这三个文件。批量结果同时保留方法／核心分类和实验维度。
 
-```cpp
-void 调用外部工具()
-{
-    PROFILER_START_AUTO(true);
-
-    // 执行外部程序时自动监控子进程资源使用
-    int result = POSDK_SYSTEM("python train_model.py --epochs 100");
-
-    PROFILER_END();
-    PROFILER_PRINT_STATS(true);  // 会显示包含子进程的总资源消耗
-}
-```
-
-### 实验对比分析
-
-```cpp
-void 算法对比实验()
-{
-    // 实验1：基础算法
-    std::unordered_map<std::string, std::string> 标签1 = {
-        {"算法类型", "基础SfM"},
-        {"数据集", "室内场景"},
-        {"实验批次", "2025年1月"}
-    };
-    PROFILER_START_STRUCTURED(标签1, true);
-    运行基础算法();
-    PROFILER_END();
-
-    // 实验2：改进算法
-    std::unordered_map<std::string, std::string> 标签2 = {
-        {"算法类型", "改进SfM"},
-        {"数据集", "室内场景"},
-        {"实验批次", "2025年1月"}
-    };
-    PROFILER_START_STRUCTURED(标签2, true);
-    运行改进算法();
-    PROFILER_END();
-
-    // 导出对比结果到CSV，方便用Excel分析
-    PM_EXPORT_TO_CSV("算法对比结果.csv");
-}
-```
-
-## 实用建议
-
-1. **给标签起有意义的名字**: 使用描述性的中文名称，如"特征匹配"、"位姿估计"等
-2. **测量关键代码段**: 重点关注可能耗时的算法和循环
-3. **定期查看报告**: 通过性能报告找出程序瓶颈，优化最耗时的部分
-4. **发布时可关闭**: 在最终发布版本中可以通过编译选项关闭性能分析，避免影响运行速度
-5. **选择合适的指标**: 频繁调用的函数只统计时间，内存敏感的算法增加内存监控
-
-## 系统配置
-
-性能分析器默认是禁用状态，需要手动启用：
-
-```cpp
-// 启用特定方法的性能分析器
-PM_SET_PROFILING_ENABLED("my_algorithm", true);
-
-// 检查是否启用
-bool 分析器已启用 = PM_IS_PROFILING_ENABLED("my_algorithm");
-
-// 清空历史统计数据
-PM_CLEAR();
-```
-
-这样，开发者就可以轻松监控代码性能，找出程序运行的瓶颈所在，进而优化代码提升整体性能。
-
----
+旧版 CSV 仍可读取；旧文件未保存的 CPU 样本数按会话数兼容处理，已经丢失的阶段或 CPU 数据需要重新运行才能补齐。
 
 ## 快速功能导航
 
@@ -811,50 +712,11 @@ PM_PRINT_STATS("core_build_time", true);
 
 ## 性能指标说明
 
-### 时间指标 (TIME)
-- **统计内容**: 从 `PROFILER_START` 到 `PROFILER_END` 的墙钟时间
-- **精度**: 毫秒级，使用 `std::chrono::high_resolution_clock`
-- **应用场景**: 算法执行耗时、函数调用时长分析
-
-### 内存指标 (MEMORY) - **重要：现为增量统计**
-- **统计内容**: **相对于开始时的峰值内存增量**（不是绝对内存值）
-- **计算方式**: 
-  ```
-  峰值增量 = max(监控期间观察到的最大内存) - 开始时内存
-  ```
-- **统计范围**: 
-  - 默认：仅当前进程的RSS内存
-  - 启用子进程监控：当前进程 + 所有子进程的内存总和
-- **平台实现**:
-  - **Windows**: `WorkingSetSize` (物理内存)
-  - **macOS**: `resident_size` (RSS内存)
-  - **Linux**: `/proc/self/status` 中的 `VmRSS` (RSS内存)
-
-### CPU指标 (CPU)
-- **统计内容**: 进程CPU时间占用率（用户态+内核态）
-- **计算方式**: 
-  ```
-  CPU使用率 = (结束CPU时间 - 开始CPU时间) / 墙钟时间 × 100%
-  ```
-- **注意**: 多线程程序可能超过100%
-- **平台实现**:
-  - **Windows**: 基于进程句柄的CPU时间（暂时返回0）
-  - **macOS**: `getrusage(RUSAGE_SELF)` 获取用户态+系统态时间
-  - **Linux**: `/proc/self/stat` 中的utime+stime字段
-
-### 线程数指标 (THREADS)
-- **统计内容**: 进程的线程数量（开始/结束/峰值）
-- **平台实现**:
-  - **Windows**: `CreateToolhelp32Snapshot` + `THREADENTRY32`
-  - **macOS**: `task_threads()` 获取准确线程数
-  - **Linux**: `/proc/self/status` 中的 `Threads` 字段
-
-### 子进程监控 (SUBPROCESS)
-- **统计内容**: 当前进程树的所有后代进程的资源使用
-- **应用场景**: 调用外部工具（如COLMAP、GLOMAP）时的完整资源统计
-- **实现方式**:
-  - **Windows**: `CreateToolhelp32Snapshot` 枚举进程树
-  - **macOS/Linux**: `ps` 命令 + `awk` 递归查找后代进程
+- **TIME**：会话起止之间的经过时间；阶段区间按检查点顺序累计。
+- **MEMORY**：采样到的绝对峰值进程内存。启用子进程监控时包含所监控的后代进程；很短的峰值可能落在采样间隔之间。
+- **CPU**：进程 CPU 时间增量与会话经过时间的比值；多个有效会话按 `CPU Sample Count` 汇总，不用逻辑运行次数作分母。
+- **THREADS**：进程线程数及采样到的峰值。
+- **SUBPROCESS**：外部程序的进程树资源监控。调用外部程序时，使用 `POSDK_SYSTEM(command, true)` 开启。
 
 ---
 
@@ -1126,11 +988,11 @@ public:
 
 ### 系统命令宏
 
-#### 8. `POSDK_SYSTEM(command [, enable_profiling])`
+#### 8. `POSDK_SYSTEM(command [, enable_subprocess_monitoring])`
 **功能**: 带性能分析感知的系统命令执行
-**参数**: 
+**参数**:
 - `command`: 要执行的命令字符串
-- `enable_profiling`: 可选，默认为true
+- `enable_subprocess_monitoring`: 可选，是否启用子进程监控（默认为false）
 **特点**: **自动动态启用子进程监控**，进行执行前后采样
 
 ```cpp
@@ -1278,84 +1140,18 @@ public:
 
 ## 性能统计输出说明
 
-### 控制台输出示例
-```
-=== advanced_sfm_v2.1 当前会话性能统计 ===
-持续时间: 2847.32 ms
-内存增量: 156.8 MB (相对开始时)
-CPU使用率: 287.4%
-线程数 (开始/结束): 1/8
-子进程数 (检测到/峰值): 3/5
+### 主表
 
-=== 阶段区间统计 ===
-  START_to_camera_initialization: 145.23 ms
-  camera_initialization_to_feature_extraction: 856.45 ms
-  feature_extraction_to_feature_matching: 1243.67 ms
-  feature_matching_to_external_reconstruction: 445.89 ms
-  external_reconstruction_to_post_processing: 156.08 ms
-  post_processing_to_END: 45.67 ms
-```
+主表包含动态标签列、`Label`、`Profile Scope`、`Average Time Count`、`Total Time(ms)`、`Average Time(ms)`、`Session Count` 和 `Logical Run Count`。按采集配置增加内存、CPU、线程和子进程列。CPU 列同时提供 `CPU Sample Count`。
 
-### CSV导出格式
+`Profile Scope` 保存 `method` 或 `core` 分类；GUI 批量导出还保存 `Experiment Dimensions`。平均耗时使用导出记录的分母，CPU 使用有效采样会话数，峰值指标取最大值。
 
-#### 主文件 (experiment_results.csv)
-| algorithm    | dataset   | experiment      | Label                                                               | Session Count | Profiling Threads | Total Time(ms) | Average Time(ms) | Min Time(ms) | Max Time(ms) | Peak Memory(MB) | Average CPU(%) | Process Peak Threads | Total Subprocesses | Peak Subprocesses |
-| ------------ | --------- | --------------- | ------------------------------------------------------------------- | ------------- | ----------------- | -------------- | ---------------- | ------------ | ------------ | --------------- | -------------- | -------------------- | ------------------ | ----------------- |
-| basic_sfm    | dataset_A | comparison_2025 | algorithm=basic_sfm_dataset=dataset_A_experiment=comparison_2025    | 5             | 2                 | 12847.32       | 2569.46          | 2234.12      | 2847.32      | 156.8           | 245.6          | 8                    | 15                 | 5                 |
-| advanced_sfm | dataset_A | comparison_2025 | algorithm=advanced_sfm_dataset=dataset_A_experiment=comparison_2025 | 5             | 2                 | 11234.67       | 2246.93          | 2156.78      | 2334.12      | 142.3           | 267.8          | 12                   | 18                 | 6                 |
+### 阶段表
 
-#### 阶段文件 (experiment_results_stages.csv) 
-| Label                                                            | Interval Name                               | Total Duration(ms) | Average Duration(ms) | Count |
-| ---------------------------------------------------------------- | ------------------------------------------- | ------------------ | -------------------- | ----- |
-| algorithm=basic_sfm_dataset=dataset_A_experiment=comparison_2025 | START_to_camera_initialization              | 725.65             | 145.13               | 5     |
-| algorithm=basic_sfm_dataset=dataset_A_experiment=comparison_2025 | camera_initialization_to_feature_extraction | 4234.56            | 846.91               | 5     |
+阶段表包含标签、分类、`Interval Name`、`Total Duration(ms)`、`Average Duration(ms)` 和 `Count`，批量运行保留实验维度。
 
-### CSV表头说明
+同一 `A_to_B` 区间出现多次时，累计每次耗时并增加 `Count`；平均值为累计耗时除以实际出现次数。
 
-#### 主统计文件表头
-- **动态结构化标签列** (如 algorithm, dataset, experiment): 用户自定义的结构化标签
-- **Label**: 性能分析标签（结构化标签组合或用户设置的字符串）
-- **Session Count**: 该标签的总会话数
-- **Profiling Threads**: 参与性能分析的不同线程数
-- **Total Time(ms)**: 所有会话的总耗时（毫秒）
-- **Average Time(ms)**: 平均每会话耗时（毫秒）
-- **Min Time(ms)**: 最短会话耗时（毫秒）
-- **Max Time(ms)**: 最长会话耗时（毫秒）
-- **Peak Memory(MB)**: 峰值内存增量（MB，相对开始时）
-- **Average CPU(%)**: 平均CPU使用率（%，可超过100%）
-- **Process Peak Threads**: 进程峰值线程数
-- **Total Subprocesses**: 检测到的子进程总数
-- **Peak Subprocesses**: 峰值子进程数
+### 选择采集范围
 
-#### 阶段统计文件表头
-- **Label**: 性能分析标签
-- **Interval Name**: 区间名称（如 START_to_stage1, stage1_to_stage2）
-- **Total Duration(ms)**: 该区间的总耗时（所有会话累计）
-- **Average Duration(ms)**: 该区间的平均耗时
-- **Count**: 该区间的统计次数
-
-## 重要注意事项
-
-### 内存统计说明
-- **峰值内存现在是增量统计**，不是绝对内存值
-- 计算方式：`峰值内存 = max(监控期间内存) - 开始时内存`
-- 更适合分析算法实际内存消耗，排除程序基础内存影响
-
-### 性能开销
-- 启用全部指标时有轻微性能开销（通常<1-2%）
-- 子进程监控会增加额外开销
-- 建议在发布版本中禁用详细监控
-
-### 平台兼容性
-- 所有功能在 macOS、Linux 上完全支持
-- Windows 平台的 CPU 监控功能有限
-- 子进程监控在不同平台实现方式不同，但接口一致
-
-### 使用建议
-1. **开发阶段**: 使用 `PROFILER_START_AUTO` + 完整指标监控（已优化，默认不启用子进程监控）
-2. **性能调优**: 使用 `PROFILER_STAGE` 进行细粒度分析
-3. **实验对比**: 使用结构化标签 + CSV导出
-4. **生产环境**: 选择性启用关键指标，避免全面监控
-5. **外部工具调用**: 使用 `POSDK_SYSTEM` 自动启用子进程监控，获得完整资源统计
-
-通过合理使用这些性能分析工具，可以有效识别性能瓶颈，优化算法实现，并进行科学的实验对比分析。
+只比较运行时间时，使用默认时间指标。需要资源统计时，再启用内存、CPU、线程或子进程采样。比较两套算法时保持采集配置一致，并用 GUI 单独记录的墙钟时间比较端到端耗时。

@@ -1,7 +1,7 @@
 (prior-and-gt)=
 # 真值设置与评估 | Ground Truth and Evaluation
 
-本文档介绍如何在PoSDK方法插件中设置真值数据（Ground Truth）进行算法评估，以及数据包操作的核心功能。
+本文档介绍如何在PoMVG方法插件中设置真值数据（Ground Truth）进行算法评估，以及数据包操作的核心功能。
 
 ## 快速导航 | Quick Navigation
 
@@ -14,40 +14,34 @@
 #### 必需输入数据包操作 | Required Package Operations
 | 函数名                    | 功能简述                     | 详细链接                      |
 | ------------------------- | ---------------------------- | ----------------------------- |
-| `SetRequiredData()`       | 设置单个必需输入数据         | [详情](#setrequireddata)      |
-| `GetRequiredPackage()`    | 获取必需输入数据包引用       | [详情](#getrequiredpackage)   |
+| `SetRequiredData()`       | 设置单个必需输入数据         | [详情](#prior-setrequireddata)      |
+| `GetRequiredPackage()`    | 获取必需输入数据包引用       | [详情](#prior-getrequiredpackage)   |
 | `SetRequiredPackage()`    | 批量设置必需输入数据包       | [详情](#setrequiredpackage)   |
-| `GetRequiredDataTypes()`  | 获取必需输入数据类型列表     | [详情](#getrequireddatatypes) |
-| `GetRequiredDataPtr<T>()` | 简化获取必需输入数据（推荐） | [详情](#getrequireddataptr)   |
+| `GetRequiredDataTypes()`  | ~~获取必需输入数据类型列表~~ *（已废弃，请用 `GetInputTypes()`）* | [详情](#prior-getrequireddatatypes) |
+| `GetRequiredDataPtr<T>()` | 简化获取必需输入数据（推荐） | [详情](#prior-getrequireddataptr)   |
 
 #### 输出数据包操作 | Output Package Operations
-```{warning}
-**预留接口 | Reserved Interface**
 
-以下输出数据包操作函数为预留接口，当前版本尚未实现。算法应直接通过`Build()`或`Run()`的返回值获取结果数据。
-
-The following output package operations are reserved interfaces and are not yet implemented in the current version. Algorithms should directly obtain result data through the return value of `Build()` or `Run()`.
-```
 
 | 函数名                 | 功能简述             | 详细链接                    | 状态     |
 | ---------------------- | -------------------- | --------------------------- | -------- |
-| `GetOutputPackage()`   | 获取输出数据包指针   | [详情](#getoutputpackage)   | 预留接口 |
-| `AddOutputDataPtr()`   | 添加数据到输出包     | [详情](#addoutputdataptr)   | 预留接口 |
-| `GetOutputDataTypes()` | 获取输出数据类型列表 | [详情](#getoutputdatatypes) | 预留接口 |
-| `ClearOutputPackage()` | 清空输出数据包       | [详情](#clearoutputpackage) | 预留接口 |
+| `GetOutputPackage()`   | 获取输出数据包指针   | [详情](#prior-getoutputpackage)   | 已实现 |
+| `AddOutputDataPtr()`   | 添加数据到输出包     | [详情](#prior-addoutputdataptr)   | 已实现 |
+| `GetOutputDataTypes()` | ~~获取输出数据类型列表~~ *（已废弃，请用 `GetOutputTypes()`）* | [详情](#prior-getoutputdatatypes) | 已实现 |
+| `ClearOutputPackage()` | 清空输出数据包       | [详情](#prior-clearoutputpackage) | 已实现 |
 
 #### 真值数据操作 | Ground Truth Operations
 | 函数名        | 功能简述     | 详情链接           |
 | ------------- | ------------ | ------------------ |
-| `SetGTData()` | 设置真值数据 | [详情](#setgtdata) |
-| `GetGTData()` | 获取真值数据 | [详情](#getgtdata) |
+| `SetGTData()` | 设置真值数据 | [详情](#prior-setgtdata) |
+| `GetGTData()` | 获取真值数据 | [详情](#prior-getgtdata) |
 
 #### 评估器操作 | Evaluator Operations
 | 函数名                    | 功能简述         | 详情链接                       |
 | ------------------------- | ---------------- | ------------------------------ |
-| `SetEvaluatorAlgorithm()` | 设置评估算法名称 | [详情](#setevaluatoralgorithm) |
-| `GetEvaluatorAlgorithm()` | 获取评估算法名称 | [详情](#getevaluatoralgorithm) |
-| `CallEvaluator()`         | 手动调用评估器   | [详情](#callevaluator)         |
+| `SetEvaluatorAlgorithm()` | 设置评估算法名称 | [详情](#prior-setevaluatoralgorithm) |
+| `GetEvaluatorAlgorithm()` | 获取评估算法名称 | [详情](#prior-getevaluatoralgorithm) |
+| `CallEvaluator()`         | 手动调用评估器   | [详情](#prior-callevaluator)         |
 
 ### 操作函数导航
 - [必需输入数据包操作](#required-package-functions)
@@ -64,7 +58,7 @@ The following output package operations are reserved interfaces and are not yet 
 (data-type-classification)=
 ## 数据包管理机制 | Data Package Management
 
-PoSDK的`MethodPreset`类提供了两种核心数据管理机制：
+PoMVG的`MethodPreset`类提供了两种核心数据管理机制：
 
 ### 1. 必需输入数据包 (`required_package_`)
 - 算法**必须**的输入数据
@@ -73,17 +67,13 @@ PoSDK的`MethodPreset`类提供了两种核心数据管理机制：
 - 通过`required_package_["key"]`访问
 
 ### 2. 输出数据包 (`output_package_`)
-```{warning}
-**预留功能 | Reserved Feature**
 
-输出数据包功能为预留接口，当前版本尚未实现。算法应直接通过`Build()`或`Run()`的返回值获取结果数据。
+输出包按需创建；首次调用 `AddOutputDataPtr()` 时建立。尚未添加数据或调用 `ClearOutputPackage()` 后，`GetOutputPackage()` 返回 `nullptr`。需要传给下游时，在 `Run()` 中返回 `GetOutputPackage()`。
 
-Output package functionality is a reserved interface and is not yet implemented in the current version. Algorithms should directly obtain result data through the return value of `Build()` or `Run()`.
-```
-- 算法执行后的**结果数据**（预留）
-- 通过`AddOutputDataPtr()`添加结果（预留）
-- 可包含多种类型的输出数据（预留）
-- 通过`GetOutputPackage()`获取（预留）
+- 算法执行后的**结果数据**
+- 通过`AddOutputDataPtr()`添加结果
+- 可包含多种类型的输出数据
+- 通过`GetOutputPackage()`获取
 
 (gt-evaluation-system)=
 ### 真值评估系统 | Ground Truth Evaluation System
@@ -96,16 +86,16 @@ Output package functionality is a reserved interface and is not yet implemented 
 
 ### 关键区别对比 | Key Differences
 
-| 特性         | 必需输入数据包            | 输出数据包（预留）           | 真值数据      |
+| 特性         | 必需输入数据包            | 输出数据包           | 真值数据      |
 | ------------ | ------------------------- | ---------------------------- | ------------- |
 | **方向**     | 输入                      | 输出                         | 评估          |
-| **是否必需** | **必需**                  | 算法产生（预留）             | 可选          |
-| **用途**     | 算法的核心输入            | 算法的执行结果（预留）       | 精度评估      |
-| **缺失影响** | 算法无法运行              | 无输出结果（预留）           | 仅影响评估    |
-| **典型内容** | 特征、轨迹、相机参数      | 位姿、重建结果（预留）       | 标准答案      |
-| **访问方式** | `GetRequiredDataPtr<T>()` | `AddOutputDataPtr()`（预留） | `SetGTData()` |
-| **设置时机** | 执行前设置                | 执行过程中产生（预留）       | 执行前设置    |
-| **当前状态** | ✓ 已实现                  | ⚠️ 预留接口，未实现           | ✓ 已实现      |
+| **是否必需** | **必需**                  | 算法产生             | 可选          |
+| **用途**     | 算法的核心输入            | 算法的执行结果       | 精度评估      |
+| **缺失影响** | 算法无法运行              | 仍可直接返回单个结果           | 仅影响评估    |
+| **典型内容** | 特征、轨迹、相机参数      | 位姿、重建结果       | 标准答案      |
+| **访问方式** | `GetRequiredDataPtr<T>()` | `AddOutputDataPtr()` | `SetGTData()` |
+| **设置时机** | 执行前设置                | 执行过程中产生       | 执行前设置    |
+| **当前状态** | 是 已实现                  | 已实现           | 是 已实现      |
 
 ---
 
@@ -114,7 +104,7 @@ Output package functionality is a reserved interface and is not yet implemented 
 (required-package-functions)=
 ### 必需输入数据包操作函数 | Required Package Functions
 
-(setrequireddata)=
+(prior-setrequireddata)=
 #### `SetRequiredData()`
 **函数签名 | Function Signature**:
 ```cpp
@@ -124,7 +114,7 @@ bool SetRequiredData(const DataPtr &data_ptr);
 **用途 | Purpose**: 设置单个必需输入数据 | Set a single required input data
 
 **参数 | Parameters**:
-- `data_ptr` [`DataPtr`](../appendices/appendix_a_types.md#ptr-type): 要设置的数据指针 | Data pointer to set
+- `data_ptr` [`DataPtr`](../appendices/appendix_a_types.md): 要设置的数据指针 | Data pointer to set
 
 **返回值 | Return**: `bool` - 是否设置成功 | Whether setting was successful
 
@@ -136,7 +126,7 @@ method_ptr->SetRequiredData(tracks_data);
 
 ---
 
-(getrequiredpackage)=
+(prior-getrequiredpackage)=
 #### `GetRequiredPackage()`
 **函数签名 | Function Signature**:
 ```cpp
@@ -146,7 +136,7 @@ Package& GetRequiredPackage();              // 非const版本
 
 **用途 | Purpose**: 获取必需输入数据包引用 | Get reference to required input package
 
-**返回值 | Return**: [`Package`](../appendices/appendix_a_types.md#package) & - 必需输入数据包的引用 | Reference to required package
+**返回值 | Return**: [`Package`](../appendices/appendix_a_types.md) & - 必需输入数据包的引用 | Reference to required package
 
 **使用示例 | Usage Example**:
 ```cpp
@@ -168,7 +158,7 @@ void SetRequiredPackage(const Package &package);
 **用途 | Purpose**: 批量设置必需输入数据包 | Batch set required input package
 
 **参数 | Parameters**:
-- `package` [`Package`](../appendices/appendix_a_types.md#package): 要设置的数据包 | Package to set
+- `package` [`Package`](../appendices/appendix_a_types.md): 要设置的数据包 | Package to set
 
 **使用示例 | Usage Example**:
 ```cpp
@@ -180,10 +170,15 @@ method_ptr->SetRequiredPackage(input_package);
 
 ---
 
-(getrequireddatatypes)=
-#### `GetRequiredDataTypes()`
+(prior-getrequireddatatypes)=
+#### `GetRequiredDataTypes()` *（已废弃 Deprecated）*
+```{warning}
+此函数已废弃，请使用 `GetInputTypes()` 替代。
+This function is deprecated. Use `GetInputTypes()` instead.
+```
 **函数签名 | Function Signature**:
 ```cpp
+[[deprecated("Use GetInputTypes() instead")]]
 std::vector<std::string> GetRequiredDataTypes() const;
 ```
 
@@ -201,7 +196,7 @@ for (const auto& type : required_types) {
 
 ---
 
-(getrequireddataptr)=
+(prior-getrequireddataptr)=
 #### `GetRequiredDataPtr<T>()`  推荐使用 | Recommended
 **函数签名 | Function Signature**:
 ```cpp
@@ -242,78 +237,75 @@ if (method_preset) {
 (output-package-functions)=
 ### 输出数据包操作函数 | Output Package Functions
 
-```{warning}
-**预留接口 | Reserved Interface**
 
-以下输出数据包操作函数为预留接口，当前版本尚未实现。算法应直接通过`Build()`或`Run()`的返回值获取结果数据。
-
-The following output package operations are reserved interfaces and are not yet implemented in the current version. Algorithms should directly obtain result data through the return value of `Build()` or `Run()`.
-```
-
-(getoutputpackage)=
-#### `GetOutputPackage()` ⚠️ 预留接口
+(prior-getoutputpackage)=
+#### `GetOutputPackage()`
 **函数签名 | Function Signature**:
 ```cpp
 DataPackagePtr GetOutputPackage() const;
 ```
 
-**用途 | Purpose**: 获取输出数据包指针（预留）| Get output data package pointer (reserved)
+**用途 | Purpose**: 获取输出数据包指针 | Get output data package pointer
 
-**返回值 | Return**: [`DataPackagePtr`](../appendices/appendix_a_types.md#data-package-ptr) - 输出数据包的智能指针 | Smart pointer to output package
+**返回值 | Return**: [`DataPackagePtr`](../appendices/appendix_a_types.md) - 输出数据包的智能指针 | Smart pointer to output package
 
-**当前状态 | Current Status**: ⚠️ 预留接口，尚未实现 | Reserved interface, not yet implemented
+**当前状态 | Current Status**: 已实现 | Implemented
 
 ---
 
-(addoutputdataptr)=
-#### `AddOutputDataPtr()` ⚠️ 预留接口
+(prior-addoutputdataptr)=
+#### `AddOutputDataPtr()`
 **函数签名 | Function Signature**:
 ```cpp
 void AddOutputDataPtr(const DataPtr &data_ptr, const std::string &data_name = "");
 ```
 
-**用途 | Purpose**: 添加数据到输出包（预留）| Add data to output package (reserved)
+**用途 | Purpose**: 添加数据到输出包 | Add data to output package
 
 **参数 | Parameters**:
-- `data_ptr` [`DataPtr`](../appendices/appendix_a_types.md#ptr-type): 要添加的数据指针 | Data pointer to add
+- `data_ptr` [`DataPtr`](../appendices/appendix_a_types.md): 要添加的数据指针 | Data pointer to add
 - `data_name` `std::string`: 数据名称（可选，如果为空则使用data_ptr的类型名）| Data name (optional, uses data_ptr type if empty)
 
-**当前状态 | Current Status**: ⚠️ 预留接口，尚未实现 | Reserved interface, not yet implemented
+**当前状态 | Current Status**: 已实现 | Implemented
 
 ---
 
-(getoutputdatatypes)=
-#### `GetOutputDataTypes()` ⚠️ 预留接口
+(prior-getoutputdatatypes)=
+#### `GetOutputDataTypes()` *（已废弃 Deprecated）*
+```{warning}
+此函数已废弃，请使用 `GetOutputTypes()` 替代。
+```
 **函数签名 | Function Signature**:
 ```cpp
+[[deprecated("Use GetOutputTypes() instead")]]
 std::vector<std::string> GetOutputDataTypes() const;
 ```
 
-**用途 | Purpose**: 获取输出数据的类型列表（预留）| Get list of output data types (reserved)
+**用途 | Purpose**: 获取声明的输出类型列表 | Get the declared output type list
 
 **返回值 | Return**: `std::vector<std::string>` - 输出数据类型名称列表 | List of output data type names
 
-**当前状态 | Current Status**: ⚠️ 预留接口，尚未实现 | Reserved interface, not yet implemented
+**当前状态 | Current Status**: 已实现 | Implemented
 
 ---
 
-(clearoutputpackage)=
-#### `ClearOutputPackage()` ⚠️ 预留接口
+(prior-clearoutputpackage)=
+#### `ClearOutputPackage()`
 **函数签名 | Function Signature**:
 ```cpp
 void ClearOutputPackage();
 ```
 
-**用途 | Purpose**: 清空输出数据包（预留）| Clear output data package (reserved)
+**用途 | Purpose**: 清空输出数据包 | Clear output data package
 
-**当前状态 | Current Status**: ⚠️ 预留接口，尚未实现 | Reserved interface, not yet implemented
+**当前状态 | Current Status**: 已实现 | Implemented
 
 ---
 
 (gt-data-functions)=
 ### 真值数据操作函数 | Ground Truth Functions
 
-(setgtdata)=
+(prior-setgtdata)=
 #### `SetGTData()`
 **函数签名 | Function Signature**:
 ```cpp
@@ -323,7 +315,7 @@ void SetGTData(DataPtr &gt_data);
 **用途 | Purpose**: 设置用于评估的真值数据 | Set ground truth data for evaluation
 
 **参数 | Parameters**:
-- `gt_data` [`DataPtr`](../appendices/appendix_a_types.md#ptr-type): 真值数据指针 | Ground truth data pointer
+- `gt_data` [`DataPtr`](../appendices/appendix_a_types.md): 真值数据指针 | Ground truth data pointer
 
 **使用示例 | Usage Example**:
 ```cpp
@@ -337,7 +329,7 @@ auto result = method_ptr->Build(input_data);
 
 ---
 
-(getgtdata)=
+(prior-getgtdata)=
 #### `GetGTData()`
 **函数签名 | Function Signature**:
 ```cpp
@@ -346,7 +338,7 @@ DataPtr GetGTData() const;
 
 **用途 | Purpose**: 获取当前设置的真值数据 | Get currently set ground truth data
 
-**返回值 | Return**: [`DataPtr`](../appendices/appendix_a_types.md#ptr-type) - 真值数据指针 | Ground truth data pointer
+**返回值 | Return**: [`DataPtr`](../appendices/appendix_a_types.md) - 真值数据指针 | Ground truth data pointer
 
 **使用示例 | Usage Example**:
 ```cpp
@@ -361,7 +353,7 @@ if (gt_data) {
 (evaluator-functions)=
 ### 评估器相关函数 | Evaluator Functions
 
-(setevaluatoralgorithm)=
+(prior-setevaluatoralgorithm)=
 #### `SetEvaluatorAlgorithm()`
 **函数签名 | Function Signature**:
 ```cpp
@@ -381,7 +373,7 @@ method_ptr->SetEvaluatorAlgorithm("PoSDK_v2");
 
 ---
 
-(getevaluatoralgorithm)=
+(prior-getevaluatoralgorithm)=
 #### `GetEvaluatorAlgorithm()`
 **函数签名 | Function Signature**:
 ```cpp
@@ -390,11 +382,11 @@ virtual std::string GetEvaluatorAlgorithm() const;
 
 **用途 | Purpose**: 获取评估算法名称 | Get algorithm name for evaluation
 
-**返回值 | Return**: `std::string` - 算法名称（默认返回`GetType()`的值）| Algorithm name (defaults to `GetType()` value)
+**返回值 | Return**: `std::string` - 算法名称（未设置时返回空字符串）| Algorithm name (empty when unset)
 
 ---
 
-(callevaluator)=
+(prior-callevaluator)=
 #### `CallEvaluator()`
 **函数签名 | Function Signature**:
 ```cpp
@@ -404,7 +396,7 @@ bool CallEvaluator(const DataPtr &result_data);
 **用途 | Purpose**: 手动调用评估器进行精度评估 | Manually call evaluator for accuracy evaluation
 
 **参数 | Parameters**:
-- `result_data` [`DataPtr`](../appendices/appendix_a_types.md#ptr-type): 待评估的结果数据 | Result data to evaluate
+- `result_data` [`DataPtr`](../appendices/appendix_a_types.md): 待评估的结果数据 | Result data to evaluate
 
 **返回值 | Return**: `bool` - 评估是否成功 | Whether evaluation was successful
 
@@ -436,6 +428,8 @@ If `enable_evaluator` is `false`, you need to manually call `CallEvaluator()` af
 
 ## 应用示例 | Application Examples
 
+以下为实现片段；`GetType()` 的定义、插件注册及构建见[插件开发快速示例](method_example.md)。`LoadTracks()`、`EstimatePoses()` 等加载与算法函数需由插件自行实现；`FactoryMethod::Create()` 返回基类指针，调用预设或评估接口前需转换为相应派生类型。
+
 (example-basic-package)=
 ### 示例1：基础数据包操作 | Example 1: Basic Package Operations
 
@@ -444,6 +438,7 @@ If `enable_evaluator` is `false`, you need to manually call `CallEvaluator()` af
 ```cpp
 class MyPoseEstimator : public MethodPresetProfiler {
 public:
+    const std::string& GetType() const override;
     MyPoseEstimator() {
         // 声明必需输入数据
         required_package_["data_tracks"] = nullptr;
@@ -457,9 +452,11 @@ public:
 
         // 执行位姿估计算法
         auto result_poses = EstimatePoses(tracks, cameras);
+        auto poses = GetDataPtr<GlobalPoses>(result_poses);
+        if (!poses) return nullptr;
 
-        LOG_INFO_ZH << "位姿估计完成，输出" << result_poses->Size() << "个位姿";
-        LOG_INFO_EN << "Pose estimation completed, output " << result_poses->Size() << " poses";
+        LOG_INFO_ZH << "位姿估计完成，输出" << poses->Size() << "个位姿";
+        LOG_INFO_EN << "Pose estimation completed, output " << poses->Size() << " poses";
 
         // 直接返回结果数据
         return result_poses;
@@ -467,7 +464,9 @@ public:
 };
 
 // 使用方式
-auto estimator = FactoryMethod::Create("my_pose_estimator");
+auto estimator = std::dynamic_pointer_cast<MethodPresetProfiler>(
+    FactoryMethod::Create("my_pose_estimator"));
+if (!estimator) throw std::runtime_error("Plugin is unavailable: my_pose_estimator");
 
 // 设置必需输入
 estimator->SetRequiredData(tracks_data);
@@ -491,17 +490,18 @@ if (result) {
 ```cpp
 class MyBundleAdjustment : public MethodPresetProfiler {
 public:
+    const std::string& GetType() const override;
     MyBundleAdjustment() {
         required_package_["data_tracks"] = nullptr;
         required_package_["data_camera_models"] = nullptr;
-        required_package_["data_initial_poses"] = nullptr;
+        required_package_["data_global_poses"] = nullptr;
     }
 
     DataPtr Run() override {
         // 获取输入数据
         auto tracks = GetRequiredDataPtr<Tracks>("data_tracks");
         auto cameras = GetRequiredDataPtr<CameraModels>("data_camera_models");
-        auto initial_poses = GetRequiredDataPtr<GlobalPoses>("data_initial_poses");
+        auto initial_poses = GetRequiredDataPtr<GlobalPoses>("data_global_poses");
 
         // 执行Bundle Adjustment优化
         auto optimized_poses = OptimizePoses(tracks, cameras, initial_poses);
@@ -517,7 +517,9 @@ public:
 // 完整的评估流程
 int main() {
     // 1. 创建算法实例
-    auto ba_method = FactoryMethod::Create("my_bundle_adjustment");
+    auto ba_method = std::dynamic_pointer_cast<MethodPresetProfiler>(
+    FactoryMethod::Create("my_bundle_adjustment"));
+    if (!ba_method) throw std::runtime_error("Plugin is unavailable: my_bundle_adjustment");
 
     // 2. 设置算法名称标识
     ba_method->SetEvaluatorAlgorithm("PoSDK_BA_v2.1");
@@ -543,9 +545,9 @@ int main() {
     // 6. 执行算法（如果enable_evaluator=true，会自动调用评估器）
     auto result = ba_method->Build();
 
-    // 7. 查看评估结果（评估器会自动输出到控制台和文件）
-    LOG_INFO_ZH << "算法执行完成，评估结果已保存";
-    LOG_INFO_EN << "Algorithm completed, evaluation results saved";
+    // 7. 在 GUI 评估窗口查看结果，按需导出文件
+    LOG_INFO_ZH << "算法执行完成，可查看评估结果";
+    LOG_INFO_EN << "Algorithm completed; evaluation results are available";
 
     // 8. 使用返回的结果数据
     if (result) {
@@ -568,7 +570,8 @@ int main() {
 // 真值位姿数据准备示例
 void PrepareGroundTruthData() {
     // 1. 创建真值位姿
-    auto gt_poses = FactoryData::Create("global_poses");
+    auto gt_poses_data = FactoryData::Create("data_global_poses");
+    auto gt_poses = GetDataPtr<GlobalPoses>(gt_poses_data);
     gt_poses->Init(5);  // 5个相机位姿
 
     // 设置参考相机位姿（通常为单位变换）
@@ -586,7 +589,8 @@ void PrepareGroundTruthData() {
     }
 
     // 2. 创建真值3D点
-    auto gt_points = FactoryData::Create("world_point_info");
+    auto gt_points_data = FactoryData::Create("data_points_3d");
+    auto gt_points = GetDataPtr<WorldPointInfo>(gt_points_data);
     gt_points->resize(1000);  // 1000个3D点
 
     for (size_t i = 0; i < 1000; ++i) {
@@ -596,8 +600,8 @@ void PrepareGroundTruthData() {
     }
 
     // 3. 保存真值数据供算法使用
-    gt_poses->Save("ground_truth_poses.posdk");
-    gt_points->Save("ground_truth_points.posdk");
+    gt_poses_data->Save("ground_truth", "ground_truth_poses", ".pb");
+    gt_points_data->Save("ground_truth", "ground_truth_points", ".pb");
 
     LOG_INFO_ZH << "真值数据准备完成：" << gt_poses->Size() << "个位姿，"
                 << gt_points->getValidPointsCount() << "个3D点";
@@ -616,16 +620,17 @@ void PrepareGroundTruthData() {
 // 推荐：明确区分输入数据，直接返回结果
 class MyAlgorithm : public MethodPresetProfiler {
 public:
+    const std::string& GetType() const override;
     MyAlgorithm() {
         // 必需输入数据声明
         required_package_["data_tracks"] = nullptr;
-        required_package_["data_cameras"] = nullptr;
+        required_package_["data_camera_models"] = nullptr;
     }
 
     DataPtr Run() override {
         // 获取输入数据
         auto tracks = GetRequiredDataPtr<Tracks>("data_tracks");
-        auto cameras = GetRequiredDataPtr<CameraModels>("data_cameras");
+        auto cameras = GetRequiredDataPtr<CameraModels>("data_camera_models");
 
         // 算法处理
         auto result = ProcessData(tracks, cameras);
@@ -637,14 +642,16 @@ public:
 
 // ❌ 不推荐：混淆输入输出管理
 // 不要在构造函数外动态添加required_package_项目
-// ⚠️ 注意：当前版本不支持AddOutputDataPtr()，应直接返回结果
+// 多结果时可用 AddOutputDataPtr() 组包，再返回 GetOutputPackage()。
 ```
 
 ### 2. 完善的真值评估
 
 ```cpp
 // 推荐：完整的评估流程设置
-auto algorithm = FactoryMethod::Create("my_algorithm");
+auto algorithm = std::dynamic_pointer_cast<MethodPresetProfiler>(
+    FactoryMethod::Create("my_algorithm"));
+if (!algorithm) throw std::runtime_error("Plugin is unavailable: my_algorithm");
 
 // 设置算法标识（用于评估结果区分）
 algorithm->SetEvaluatorAlgorithm("MyAlgo_v1.2");
@@ -709,7 +716,7 @@ DataPtr Run() override {
 ### 输出数据 | Output Data
 - 算法通过`Build()`或`Run()`的返回值返回结果数据
 - 返回值类型：`DataPtr`，可通过`GetDataPtr<T>()`获取具体类型
-- ⚠️ 注意：当前版本不支持`AddOutputDataPtr()`和`GetOutputPackage()`，应直接使用返回值
+- 警告 注意：当前版本不支持`AddOutputDataPtr()`和`GetOutputPackage()`，应直接使用返回值
 
 ### 真值数据支持 | Ground Truth Support
 - 支持位姿真值评估（与输出位姿相同格式）

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="444" viewBox="0 0 1040 444" role="img" aria-labelledby="title desc">
+  <title id="title">PoMVG GUI copyright export workflow</title>
+  <desc id="desc">Choose Copyright Information from the Export menu, check the in-app preview of workspace counts, copyright ownership, module dependencies and copyright details, then use Export HTML to save a self-contained report. View it offline in a browser or print to PDF. This is a schematic, not a screenshot.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M1 1 L7 4.5 L1 8" fill="none" stroke="#176bcc" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #17263a; }
+    .title { font-size: 25px; font-weight: 600; }
+    .step { font-size: 21px; font-weight: 600; }
+    .label { font-size: 19px; }
+    .small { font-size: 17px; fill: #53647b; }
+    .accent { fill: #176bcc; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: 15px; }
+  </style>
+  <rect width="1040" height="444" rx="14" fill="#f4f7fb"/>
+  <text x="28" y="42" class="title">PoMVG GUI: copyright information export</text>
+  <text x="28" y="69" class="small">Current workspace → In-app preview → Self-contained HTML</text>
+
+  <text x="28" y="112" class="step">1  Open the report</text>
+  <rect x="28" y="132" width="252" height="224" rx="10" fill="#ffffff" stroke="#dce4ef"/>
+  <text x="46" y="163" class="label">Top toolbar: Export</text>
+  <rect x="46" y="182" width="216" height="40" rx="6" fill="#eaf3ff"/>
+  <text x="61" y="209" class="label accent">Copyright Information</text>
+  <text x="46" y="250" class="small">Workspace dependencies</text>
+  <text x="46" y="275" class="small">and copyright ownership</text>
+  <text x="46" y="310" class="small">Does not run or change</text>
+  <text x="46" y="334" class="small">the workflow</text>
+
+  <path d="M288 242 H312" fill="none" stroke="#176bcc" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="330" y="112" class="step">2  Check the preview</text>
+  <rect x="330" y="132" width="350" height="224" rx="10" fill="#ffffff" stroke="#dce4ef"/>
+  <text x="348" y="163" class="label">Report Preview</text>
+  <text x="348" y="192" class="small">Module / Owner / Connection counts</text>
+  <path d="M348 208 H662" stroke="#dce4ef"/>
+  <text x="348" y="238" class="label">① Copyright ownership overview</text>
+  <text x="348" y="269" class="label">② Module dependency graph</text>
+  <text x="348" y="300" class="label">③ Module copyright details</text>
+  <rect x="528" y="312" width="134" height="32" rx="6" fill="#176bcc"/>
+  <text x="595" y="334" text-anchor="middle" style="font-size:17px;fill:#ffffff">Export HTML</text>
+
+  <path d="M688 242 H712" fill="none" stroke="#176bcc" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="730" y="112" class="step">3  Save and view</text>
+  <rect x="730" y="132" width="282" height="224" rx="10" fill="#ffffff" stroke="#dce4ef"/>
+  <text x="748" y="163" class="label">Choose a folder and name</text>
+  <rect x="744" y="182" width="254" height="40" rx="6" fill="#eaf3ff"/>
+  <text x="749" y="208" class="mono accent">posdk_copyright_report.html</text>
+  <text x="748" y="250" class="label">View offline in a browser</text>
+  <text x="748" y="280" class="small">Light / Dark appearance</text>
+  <text x="748" y="310" class="small">Print / PDF</text>
+  <text x="748" y="336" class="small">Embedded styles and graph</text>
+
+  <path d="M28 378 H1012" stroke="#dce4ef"/>
+  <text x="28" y="406" class="small">Workspace snapshot ≠ complete runtime call chain. Missing copyright metadata is not filled in automatically.</text>
+  <text x="28" y="430" class="small">Schematic, not a screenshot. Actual content comes from the current workspace.</text>
+</svg>

@@ -1,6 +1,6 @@
 # OpenGV Conventions
 
-The OpenGV library provides some utility functions in its `experiment_helpers` that can generate camera poses, 3D points, and corresponding 2D observations (bearing vectors) with ground truth. Understanding the pose conventions in these simulated data is crucial for correctly importing them into PoSDK for testing and evaluation.
+The OpenGV library provides some utility functions in its `experiment_helpers` that can generate camera poses, 3D points, and corresponding 2D observations (bearing vectors) with ground truth. Understanding the pose conventions in these simulated data is crucial for correctly importing them into PoMVG for testing and evaluation.
 
 ## 1. Pose Conventions in OpenGV Simulation
 
@@ -42,20 +42,20 @@ $$R = ({R_i^w})^T \cdot R_j^w$$
 
  $$\mathbf{t} = (R_i^w)^T \cdot (\mathbf{t}_j - \mathbf{t}_i)$$
 
-```{important} PoSDK Standard Pose Conventions
+```{important} PoMVG Standard Pose Conventions
 >
-> For clarity, we separately describe PoSDK's definitions in detail in [PoSDK Standard Pose Conventions](./posdk.md).
+> For clarity, we separately describe PoMVG's definitions in detail in [PoMVG Standard Pose Conventions](./posdk.md).
 >
 >
 ``` 
 
-## 3. Conversion from OpenGV Simulation Data to PoSDK
+## 3. Conversion from OpenGV Simulation Data to PoMVG
 
 ### 3.1 Global Pose Conversion
 
 Assume we obtain a single camera's global pose `position_opengv` $(\mathbf{t}_w)$ and `rotation_opengv` $(R_b^w)$ from OpenGV simulation:
 
--   PoSDK global pose is initialized in `PoseFormat::RwTw` format, i.e., $\mathbf{x}_c \sim R_w^c \cdot (\mathbf{X}_w - \mathbf{t}_w)$
+-   PoMVG global pose is initialized in `PoseFormat::RwTw` format, i.e., $\mathbf{x}_c \sim R_w^c \cdot (\mathbf{X}_w - \mathbf{t}_w)$
 -   OpenGV's global pose is initialized in `PoseFormat::RcTw` format, i.e., $\mathbf{x}_c \sim (R_c^w)^T \cdot (\mathbf{X}_w - \mathbf{t}_w)$
 
 -   **Conversion**:
@@ -66,7 +66,7 @@ Assume we obtain a single camera's global pose `position_opengv` $(\mathbf{t}_w)
 
 Assume we obtain relative pose $(R_{opengv}, \mathbf{t}_{opengv})$ from OpenGV `extractRelativePose`:
 
--   PoSDK's `RelativePose` definition is $\mathbf{x}_{j} \sim R_{po} \cdot \mathbf{x}_{i} + \mathbf{t}$, where:
+-   PoMVG's `RelativePose` definition is $\mathbf{x}_{j} \sim R_{po} \cdot \mathbf{x}_{i} + \mathbf{t}$, where:
 -  OpenGV's relative pose definition is $\mathbf{x}_{i} \sim R_{opengv} \cdot \mathbf{x}_{j} + \mathbf{t}_{opengv}$, where:
 
 -   **Conversion**:

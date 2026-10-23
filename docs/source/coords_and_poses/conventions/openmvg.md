@@ -48,17 +48,17 @@ Substituting into the second equation:
 So, the relative rotation $R_{ji}$ (from $i$ to $j$) is $R_j R_i^T$, and the relative translation (coordinates of camera $i$'s origin in camera $j$'s coordinate system) $t_{ji}$ is $R_j (C_i - C_j)$.
 OpenMVG usually directly stores and uses this $R, C$ form of global poses.
 
-## Conversion with PoSDK
+## Conversion with PoMVG
 
-PoSDK uses $R_{wc}$ (from camera to world) and $t_{wc}$ (camera center position in world coordinate system) or $R_{cw}$ (from world to camera) and $t_{cw}$ (world origin coordinates in camera coordinate system).
+PoMVG uses $R_{wc}$ (from camera to world) and $t_{wc}$ (camera center position in world coordinate system) or $R_{cw}$ (from world to camera) and $t_{cw}$ (world origin coordinates in camera coordinate system).
 
-If PoSDK uses $R_{cw}$ and $t_{cw}$ (world origin coordinates in camera $i$):
-*   $R_{PoSDK} = R_{OpenMVG}$
-*   $t_{PoSDK} = -R_{OpenMVG} C_{OpenMVG}$
+If PoMVG uses $R_{cw}$ and $t_{cw}$ (world origin coordinates in camera $i$):
+*   $R_{PoMVG} = R_{OpenMVG}$
+*   $t_{PoMVG} = -R_{OpenMVG} C_{OpenMVG}$
 
-If PoSDK uses $R_{wc}$ and $C_{wc}$ (camera center position in world coordinate system, similar to OpenMVG's $C$, but rotation is $R_{wc}$):
-*   $R_{PoSDK} = R_{OpenMVG}^T$
-*   $C_{PoSDK} = C_{OpenMVG}$
+If PoMVG uses $R_{wc}$ and $C_{wc}$ (camera center position in world coordinate system, similar to OpenMVG's $C$, but rotation is $R_{wc}$):
+*   $R_{PoMVG} = R_{OpenMVG}^T$
+*   $C_{PoMVG} = C_{OpenMVG}$
 
 When converting, special attention should be paid to the rotation matrix definition direction and whether it's camera center $C$ or translation vector $t$. 
 -->

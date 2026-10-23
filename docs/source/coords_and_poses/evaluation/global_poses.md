@@ -1,11 +1,11 @@
 # Global Pose Evaluation (GlobalPoses Evaluation)
 
-Global pose evaluation is used to measure the accuracy of camera global pose estimation in the world coordinate system. PoSDK provides multiple evaluation methods, including complete similarity transform alignment evaluation and rotation-only evaluation.
+Global pose evaluation is used to measure the accuracy of camera global pose estimation in the world coordinate system. PoMVG provides multiple evaluation methods, including complete similarity transform alignment evaluation and rotation-only evaluation.
 
 ## Mathematical Definition
 
 ### Global Pose Representation
-In PoSDK, global poses default to `PoseFormat::RwTw` format:
+In PoMVG, global poses default to `PoseFormat::RwTw` format:
 
 $$\mathbf{x}_c \sim R_w^c \cdot (\mathbf{X}_w - \mathbf{t}_w)$$
 
@@ -17,7 +17,7 @@ where:
 
 ## Evaluation Methods
 
-PoSDK provides three main global pose evaluation methods:
+PoMVG provides three main global pose evaluation methods:
 
 ### 1. Complete Similarity Transform Evaluation (EvaluateWithSimilarityTransform)
 
@@ -85,7 +85,7 @@ bool EvaluateRotationsSVD(
 
 ### 1. Rotation Error
 
-$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{gt}^T R_{est}) - 1}{2}\right) \times \frac{180°}{\pi}$$
+$$\text{Rotation Error} = \arccos\left(\frac{\text{trace}(R_{gt}^T R_{est}) - 1}{2}\right) \times \frac{180^\circ}{\pi}$$
 
 **Physical Meaning**: Minimum rotation angle between two rotation matrices, in degrees.
 
@@ -118,7 +118,7 @@ public:
 
 ### Rotation Compensation Optimization
 
-PoSDK uses Ceres optimizer for rotation compensation calculation:
+PoMVG uses Ceres optimizer for rotation compensation calculation:
 
 ```cpp
 // Rotation compensation cost function
@@ -362,7 +362,7 @@ try {
 ---
 
 **Related References**:
-- [PoSDK Pose Conventions](../conventions/posdk.md)
+- [PoMVG Pose Conventions](../conventions/posdk.md)
 - [Relative Pose Evaluation](relative_poses.md)
 - [Global Translation Evaluation](global_translations.md)
 - [Evaluation System Overview](index.md)

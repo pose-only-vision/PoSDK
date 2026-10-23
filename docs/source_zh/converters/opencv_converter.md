@@ -1,7 +1,7 @@
 # OpenCV 数据转换器
 (opencv-converter)=
 
-OpenCV数据转换器提供PoSDK与OpenCV之间的数据类型转换，支持特征点、描述子、匹配和相机模型的双向转换。
+OpenCV数据转换器提供PoMVG与OpenCV之间的数据类型转换，支持特征点、描述子、匹配和相机模型的双向转换。
 
 ---
 
@@ -12,9 +12,9 @@ OpenCV数据转换器提供PoSDK与OpenCV之间的数据类型转换，支持特
 
 ```
 Level 1: FeaturePoints ↔ KeyPoints (SOA批量转换)
-    ↓
+    |
 Level 2: ImageFeatureInfo ↔ CV Features (单图像转换)
-    ↓
+    |
 Level 3: FeaturesInfo ↔ CV Features (多图像批量转换)
 ```
 
@@ -30,7 +30,7 @@ Level 3: FeaturesInfo ↔ CV Features (多图像批量转换)
 ### `CVKeyPoints2FeaturePoints`
 (cv-keypoints-to-featurepoints)=
 
-批量转换OpenCV关键点为PoSDK FeaturePoints
+批量转换OpenCV关键点为PoMVG FeaturePoints
 
 **函数签名**:
 ```cpp
@@ -43,7 +43,7 @@ static bool CVKeyPoints2FeaturePoints(
 | 参数             | 类型                               | 说明                          |
 | ---------------- | ---------------------------------- | ----------------------------- |
 | `keypoints`      | `const std::vector<cv::KeyPoint>&` | [输入] OpenCV关键点集合       |
-| `feature_points` | `FeaturePoints&`                   | [输出] PoSDK特征点（SOA存储） |
+| `feature_points` | `FeaturePoints&`                   | [输出] PoMVG特征点（SOA存储） |
 
 **返回值**: `bool` - 转换是否成功
 
@@ -73,7 +73,7 @@ if (success) {
 ### `FeaturePoints2CVKeyPoints`
 (featurepoints-to-cv-keypoints)=
 
-批量转换PoSDK FeaturePoints为OpenCV关键点
+批量转换PoMVG FeaturePoints为OpenCV关键点
 
 **函数签名**:
 ```cpp
@@ -85,7 +85,7 @@ static bool FeaturePoints2CVKeyPoints(
 **参数说明**:
 | 参数             | 类型                         | 说明                          |
 | ---------------- | ---------------------------- | ----------------------------- |
-| `feature_points` | `const FeaturePoints&`       | [输入] PoSDK特征点（SOA存储） |
+| `feature_points` | `const FeaturePoints&`       | [输入] PoMVG特征点（SOA存储） |
 | `keypoints`      | `std::vector<cv::KeyPoint>&` | [输出] OpenCV关键点集合       |
 
 **返回值**: `bool` - 转换是否成功
@@ -111,36 +111,36 @@ matcher->match(descriptors1, descriptors2, matches);
 ## 描述子转换
 (opencv-descriptor-conversion)=
 
-### `CVDescriptors2DescsSOA`
-(cv-descriptors-to-descs-soa)=
+### `CVDescriptors2Descriptors`
+(cv-descriptors-to-descriptors)=
 
-批量转换OpenCV描述子为DescriptorsSOA
+批量转换OpenCV描述子为PoMVG Descriptors
 
 **函数签名**:
 ```cpp
-static bool CVDescriptors2DescsSOA(
+static bool CVDescriptors2Descriptors(
     const cv::Mat &descriptors_cv,
-    DescsSOA &descriptors_soa_out,
+    Descriptors &descriptors_out,
     const std::string &detector_type = "SIFT");
 ```
 
 **参数说明**:
-| 参数                  | 类型                 | 说明                             |
-| --------------------- | -------------------- | -------------------------------- |
-| `descriptors_cv`      | `const cv::Mat&`     | [输入] OpenCV描述子矩阵 (N×D)    |
-| `descriptors_soa_out` | `DescsSOA&`          | [输出] DescriptorsSOA（SOA格式） |
-| `detector_type`       | `const std::string&` | [输入] 检测器类型（SIFT/ORB/等） |
+| 参数              | 类型                 | 说明                            |
+| ----------------- | -------------------- | ------------------------------- |
+| `descriptors_cv`  | `const cv::Mat&`     | [输入] OpenCV描述子矩阵 (N×D)   |
+| `descriptors_out` | `Descriptors&`       | [输出] PoMVG Descriptors        |
+| `detector_type`   | `const std::string&` | [输入] 检测器类型（SIFT/ORB/等） |
 
 **返回值**: `bool` - 转换是否成功
 
 **支持的描述子类型**:
-| 检测器 | OpenCV类型 | 维度   | PoSDK存储     |
-| ------ | ---------- | ------ | ------------- |
-| SIFT   | `CV_32F`   | 128    | `float` SOA   |
-| SURF   | `CV_32F`   | 64/128 | `float` SOA   |
-| ORB    | `CV_8U`    | 32     | `uint8_t` SOA |
-| BRISK  | `CV_8U`    | 64     | `uint8_t` SOA |
-| AKAZE  | `CV_8U`    | 61     | `uint8_t` SOA |
+| 检测器 | OpenCV类型 | 维度   | PoMVG存储   |
+| ------ | ---------- | ------ | ----------- |
+| SIFT   | `CV_32F`   | 128    | `float`     |
+| SURF   | `CV_32F`   | 64/128 | `float`     |
+| ORB    | `CV_8U`    | 32     | `float`     |
+| BRISK  | `CV_8U`    | 64     | `float`     |
+| AKAZE  | `CV_8U`    | 61     | `float`     |
 
 **使用示例**:
 ```cpp
@@ -149,66 +149,55 @@ cv::Ptr<cv::SIFT> detector = cv::SIFT::create();
 cv::Mat descriptors_cv;
 detector->compute(image, keypoints, descriptors_cv);
 
-// 转换为PoSDK SOA格式
-types::DescsSOA descriptors_soa;
-bool success = OpenCVConverter::CVDescriptors2DescsSOA(
-    descriptors_cv, descriptors_soa, "SIFT");
+// 转换为PoSDK格式
+types::Descriptors descriptors;
+bool success = OpenCVConverter::CVDescriptors2Descriptors(
+    descriptors_cv, descriptors, "SIFT");
 
 if (success) {
-    // SOA格式访问
-    size_t num = descriptors_soa.GetSize();
-    size_t dim = descriptors_soa.GetDim();
-    const float* data = descriptors_soa.GetDataPtr();
-    
-    // data[i * dim + j] 访问第i个描述子的第j维
+    size_t num = descriptors.size();
+    size_t dim = descriptors.dim();
+    const float* data = descriptors.data();
 }
 ```
 
-### `DescsSOA2CVDescriptors`
-(descs-soa-to-cv-descriptors)=
+### `Descriptors2CVDescriptors`
+(descriptors-to-cv-descriptors)=
 
-批量转换DescriptorsSOA为OpenCV描述子
+批量转换PoMVG Descriptors为OpenCV描述子
 
 **函数签名**:
 ```cpp
-static bool DescsSOA2CVDescriptors(
-    const DescsSOA &descriptors_soa,
+static bool Descriptors2CVDescriptors(
+    const Descriptors &descriptors,
     cv::Mat &descriptors_cv_out,
     const std::string &detector_type = "SIFT");
 ```
 
 **参数说明**:
-| 参数                 | 类型                 | 说明                             |
-| -------------------- | -------------------- | -------------------------------- |
-| `descriptors_soa`    | `const DescsSOA&`    | [输入] DescriptorsSOA（SOA格式） |
-| `descriptors_cv_out` | `cv::Mat&`           | [输出] OpenCV描述子矩阵          |
-| `detector_type`      | `const std::string&` | [输入] 检测器类型                |
+| 参数                 | 类型                 | 说明                    |
+| -------------------- | -------------------- | ----------------------- |
+| `descriptors`        | `const Descriptors&` | [输入] PoMVG Descriptors |
+| `descriptors_cv_out` | `cv::Mat&`           | [输出] OpenCV描述子矩阵 |
+| `detector_type`      | `const std::string&` | [输入] 检测器类型        |
 
 **返回值**: `bool` - 转换是否成功
 
 **使用示例**:
 ```cpp
-// PoSDK SOA描述子
-types::DescsSOA descriptors_soa = GetDescriptorsSOA();
+// PoSDK描述子
+types::Descriptors descriptors = GetDescriptors();
 
 // 转换为OpenCV格式（用于匹配）
 cv::Mat descriptors_cv;
-bool success = OpenCVConverter::DescsSOA2CVDescriptors(
-    descriptors_soa, descriptors_cv, "SIFT");
+bool success = OpenCVConverter::Descriptors2CVDescriptors(
+    descriptors, descriptors_cv, "SIFT");
 
 // OpenCV匹配
 cv::BFMatcher matcher(cv::NORM_L2);
 std::vector<cv::DMatch> matches;
 matcher.match(descriptors_cv, descriptors_other, matches);
 ```
-
-### 旧版AOS描述子转换（向后兼容）
-
-#### `CVDescriptors2Descs`
-批量转换OpenCV描述子为PoSDK Descs（AOS格式）
-
-#### `Descs2CVDescriptors`
-批量转换PoSDK Descs为OpenCV描述子（AOS格式）
 
 ---
 
@@ -261,7 +250,7 @@ static bool CVFeatures2ImageFeatureInfoWithDesc(
     const std::vector<cv::KeyPoint> &keypoints,
     const cv::Mat &descriptors_cv,
     ImageFeatureInfo &image_features,
-    Descs &descriptors_out,
+    Descriptors &descriptors_out,
     const std::string &image_path = "",
     const std::string &detector_type = "SIFT");
 ```
@@ -276,7 +265,7 @@ detector->detectAndCompute(image, cv::noArray(), keypoints, descriptors);
 
 // 2. 转换为PoSDK格式
 types::ImageFeatureInfo image_features;
-types::Descs descs;
+types::Descriptors descs;
 OpenCVConverter::CVFeatures2ImageFeatureInfoWithDesc(
     keypoints, descriptors, image_features, descs,
     "image001.jpg", "SIFT");
@@ -306,7 +295,7 @@ static bool ImageFeatureInfo2CVFeatures(
 ```cpp
 static bool ImageFeatureInfo2CVFeaturesWithDesc(
     const ImageFeatureInfo &image_features,
-    const Descs &descriptors,
+    const Descriptors &descriptors,
     std::vector<cv::KeyPoint> &keypoints,
     cv::Mat &descriptors_out,
     const std::string &detector_type = "SIFT");
@@ -342,7 +331,7 @@ static bool CVFeatures2FeaturesInfoWithDesc(
     const std::vector<cv::KeyPoint> &keypoints,
     const cv::Mat &descriptors,
     FeaturesInfoPtr &features_info_ptr,
-    Descs &descriptors_out,
+    Descriptors &descriptors_out,
     const std::string &image_path,
     const std::string &detector_type = "SIFT");
 ```
@@ -351,19 +340,19 @@ static bool CVFeatures2FeaturesInfoWithDesc(
 ```cpp
 // 处理多张图像
 types::FeaturesInfoPtr features_info = std::make_shared<types::FeaturesInfo>();
-types::Descs all_descriptors;
+types::Descriptors all_descriptors;
 
 for (const auto& img_path : image_paths) {
     // 加载图像
     cv::Mat image = cv::imread(img_path);
-    
+
     // 提取特征
     std::vector<cv::KeyPoint> keypoints;
     cv::Mat descriptors;
     detector->detectAndCompute(image, cv::noArray(), keypoints, descriptors);
-    
+
     // 添加到FeaturesInfo
-    types::Descs descs;
+    types::Descriptors descs;
     OpenCVConverter::CVFeatures2FeaturesInfoWithDesc(
         keypoints, descriptors, features_info, descs,
         img_path, "SIFT");
@@ -380,7 +369,7 @@ for (const auto& img_path : image_paths) {
 
 ### `CVDMatch2IdMatch`
 
-转换OpenCV DMatch到PoSDK IdMatch（单个匹配）
+转换OpenCV DMatch到PoMVG IdMatch（单个匹配）
 
 **函数签名**:
 ```cpp
@@ -390,7 +379,7 @@ static void CVDMatch2IdMatch(const cv::DMatch &cv_match, IdMatch &match);
 ### `CVDMatch2IdMatches`
 (cv-dmatch-to-id-matches)=
 
-转换OpenCV DMatch到PoSDK IdMatches（批量转换）
+转换OpenCV DMatch到PoMVG IdMatches（批量转换）
 
 **函数签名**:
 ```cpp
@@ -412,7 +401,7 @@ OpenCVConverter::CVDMatch2IdMatches(cv_matches, id_matches);
 
 ### `CVDMatch2Matches`
 
-转换OpenCV DMatch到PoSDK Matches（带视图对）
+转换OpenCV DMatch到PoMVG Matches（带视图对）
 
 **函数签名**:
 ```cpp
@@ -424,12 +413,12 @@ static bool CVDMatch2Matches(const std::vector<cv::DMatch> &cv_matches,
 
 ### `IdMatch2CVDMatch`
 
-转换PoSDK IdMatch到OpenCV DMatch（单个匹配）
+转换PoMVG IdMatch到OpenCV DMatch（单个匹配）
 
 ### `IdMatches2CVPoints`
 (id-matches-to-cv-points)=
 
-将PoSDK IdMatches转换为OpenCV点对
+将PoMVG IdMatches转换为OpenCV点对
 
 **函数签名**:
 ```cpp
@@ -468,7 +457,7 @@ cv::Mat E = cv::findEssentialMat(points1, points2, focal_length,
 
 ### `MatchesDataPtr2CVPoints`
 
-将PoSDK匹配DataPtr转换为OpenCV点对
+将PoMVG匹配DataPtr转换为OpenCV点对
 
 **函数签名**:
 ```cpp
@@ -489,7 +478,7 @@ static bool MatchesDataPtr2CVPoints(
 ### `CVCalibration2CameraModel`
 (cv-calibration-to-camera-model)=
 
-转换OpenCV相机标定到PoSDK CameraModel
+转换OpenCV相机标定到PoMVG CameraModel
 
 **函数签名**:
 ```cpp
@@ -507,7 +496,7 @@ static bool CVCalibration2CameraModel(
 | `camera_matrix`   | `const cv::Mat&`  | [输入] OpenCV内参矩阵 (3×3) |
 | `dist_coeffs`     | `const cv::Mat&`  | [输入] OpenCV畸变系数       |
 | `image_size`      | `const cv::Size&` | [输入] 图像尺寸             |
-| `camera_model`    | `CameraModel&`    | [输出] PoSDK相机模型        |
+| `camera_model`    | `CameraModel&`    | [输出] PoMVG相机模型        |
 | `distortion_type` | `DistortionType`  | [输入] 畸变类型             |
 
 **使用示例**:
@@ -531,7 +520,7 @@ Vector2d normalized = camera_model.PixelToNormalized(pixel);
 ### `CameraModel2CVCalibration`
 (camera-model-to-cv-calibration)=
 
-转换PoSDK CameraModel到OpenCV相机标定
+转换PoMVG CameraModel到OpenCV相机标定
 
 **函数签名**:
 ```cpp
@@ -554,8 +543,6 @@ OpenCVConverter::CameraModel2CVCalibration(
 cv::undistort(image_distorted, image_undistorted, 
               camera_matrix, dist_coeffs);
 ```
-
----
 
 ---
 
@@ -591,7 +578,7 @@ if (!camera) {
 
 ## 完整工作流示例
 
-### OpenCV特征提取 + PoSDK处理
+### OpenCV特征提取 + PoMVG处理
 ```cpp
 #include <opencv2/features2d.hpp>
 #include "converter_opencv.hpp"
@@ -612,7 +599,7 @@ LOG_INFO_ZH << "检测到 " << keypoints.size() << " 个特征点";
 
 // 2. 转换为PoSDK格式
 types::ImageFeatureInfo image_features;
-types::Descs descs;
+types::Descriptors descs;
 OpenCVConverter::CVFeatures2ImageFeatureInfoWithDesc(
     keypoints, descriptors, image_features, descs,
     "image.jpg", "SIFT");

@@ -10,12 +10,13 @@ The OpenMVG file converter provides direct parsing of OpenMVG tool output files 
 ### Supported Data Types
 (openmvg-supported-data-types)=
 
-| Data Type          | OpenMVG Format    | PoSDK Type         | Conversion Function                      |
-| ------------------ | ----------------- | ------------------ | ---------------------------------------- |
-| **Feature Points** | `.feat` binary    | `ImageFeatureInfo` | [`LoadFeatures`](openmvg-load-features)  |
-| **Matches**        | `.matches` binary | `Matches`          | [`LoadMatches`](openmvg-load-matches)    |
-| **SfM Data**       | `sfm_data.json`   | `GlobalPoses`      | [`LoadSfMData`](openmvg-load-sfm-data)   |
-| **Image Info**     | `sfm_data.json`   | `DataImages`       | [`ToDataImages`](openmvg-to-data-images) |
+| Data Type          | OpenMVG Format    | PoMVG Type         | Conversion Function                                                    |
+| ------------------ | ----------------- | ------------------ | ---------------------------------------------------------------------- |
+| **Feature Points** | `.feat` binary    | `ImageFeatureInfo` | [`LoadFeatures`](openmvg-load-features)                                |
+| **Matches**        | `.matches` binary | `Matches`          | [`LoadMatches`](openmvg-load-matches)                                  |
+| **SfM Data**       | `sfm_data.json`   | `GlobalPoses`      | [`LoadSfMData`](openmvg-load-sfm-data)                                 |
+| **Image Info**     | `sfm_data.json`   | `DataImages`       | [`ToDataImages`](openmvg-to-data-images)                               |
+| **Camera Models**  | `sfm_data.json`   | `CameraModels`     | [`LoadSfMDataIntrinsics`](openmvg-load-sfm-data-intrinsics) / [`ToDataCameraModels`](openmvg-to-data-camera-models) |
 
 ---
 
@@ -161,7 +162,7 @@ if (success) {
 ### `ToDataImages`
 (openmvg-to-data-images)=
 
-Convert OpenMVG SfM data file to PoSDK image data
+Convert OpenMVG SfM data file to PoMVG image data
 
 **Function Signature**:
 ```cpp
@@ -199,7 +200,7 @@ if (success) {
 ### `ToDataFeatures`
 (openmvg-to-data-features)=
 
-Convert OpenMVG feature files to PoSDK feature data
+Convert OpenMVG feature files to PoMVG feature data
 
 **Function Signature**:
 ```cpp
@@ -245,7 +246,7 @@ if (success) {
 ### `ToDataMatches`
 (openmvg-to-data-matches)=
 
-Convert OpenMVG match files to PoSDK match data
+Convert OpenMVG match files to PoMVG match data
 
 **Function Signature**:
 ```cpp
@@ -278,7 +279,7 @@ if (success) {
 ### `ToDataGlobalPoses`
 (openmvg-to-data-global-poses)=
 
-Convert OpenMVG SfM data file to PoSDK global pose data
+Convert OpenMVG SfM data file to PoMVG global pose data
 
 **Function Signature**:
 ```cpp
@@ -309,6 +310,71 @@ if (success) {
     
     const auto& poses = data_global_poses->GetGlobalPosesConst();
     LOG_INFO_ZH << "Loaded " << poses.size() << " global poses";
+}
+```
+
+### `LoadSfMDataIntrinsics`
+(openmvg-load-sfm-data-intrinsics)=
+
+Load intrinsics and view-to-intrinsic mapping from SfM data file
+
+**Function Signature**:
+```cpp
+static bool LoadSfMDataIntrinsics(
+    const std::string &sfm_data_file,
+    types::CameraModels &camera_models);
+```
+
+**Parameter Description**:
+| Parameter       | Type                   | Description                |
+| --------------- | ---------------------- | -------------------------- |
+| `sfm_data_file` | `const std::string&`   | [Input] SfM data file path |
+| `camera_models` | `types::CameraModels&` | [Output] Camera models     |
+
+**Return Value**: `bool` - Whether conversion succeeded
+
+**Usage Example**:
+```cpp
+// Load OpenMVG intrinsics data
+types::CameraModels camera_models;
+bool success = OpenMVGFileConverter::LoadSfMDataIntrinsics(
+    "sfm_data.json", camera_models);
+
+if (success) {
+    LOG_INFO_EN << "Loaded " << camera_models.size() << " camera models";
+}
+```
+
+### `ToDataCameraModels`
+(openmvg-to-data-camera-models)=
+
+Convert OpenMVG SfM data file to PoMVG camera models data
+
+**Function Signature**:
+```cpp
+static bool ToDataCameraModels(
+    const std::string &sfm_data_file,
+    Interface::DataPtr &camera_models_data);
+```
+
+**Parameter Description**:
+| Parameter            | Type                  | Description                       |
+| -------------------- | --------------------- | --------------------------------- |
+| `sfm_data_file`      | `const std::string&`  | [Input] SfM data file path        |
+| `camera_models_data` | `Interface::DataPtr&` | [Output] Camera models data pointer |
+
+**Return Value**: `bool` - Whether conversion succeeded
+
+**Usage Example**:
+```cpp
+// Load OpenMVG camera models
+Interface::DataPtr camera_models_data;
+bool success = OpenMVGFileConverter::ToDataCameraModels(
+    "sfm_data.json", camera_models_data);
+
+if (success) {
+    auto package = std::make_shared<Interface::DataPackage>();
+    package->AddData(camera_models_data);
 }
 ```
 
@@ -374,7 +440,7 @@ package->AddData(global_poses_data);
 package->Save("posdk_project.pb");
 ```
 
-### OpenMVG → PoSDK → Further Processing
+### OpenMVG → PoMVG → Further Processing
 ```cpp
 // Load OpenMVG global poses
 types::GlobalPoses openmvg_poses;
