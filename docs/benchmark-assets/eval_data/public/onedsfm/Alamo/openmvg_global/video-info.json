@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Alamo",
+  "platform": "OpenMVG Global",
+  "points": 49931,
+  "ply_sha256": "e6b152ba107f146963d312c04de4f7f04584658fa629645e303d1e672ea9123f",
+  "original_video_sha256": "491e742403f546422a620ba69f3efc76f8b952bf3a1ef1ea19aa067fd43cc364",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 1530,
+    "fps": 30.0,
+    "duration_seconds": 51.0
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 1530,
+    "fps": 30.0,
+    "duration_seconds": 51.0
+  }
+}

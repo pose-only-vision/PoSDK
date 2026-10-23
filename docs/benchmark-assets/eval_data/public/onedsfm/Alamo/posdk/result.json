@@ -1,0 +1,34 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Alamo",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 627,
+  "registered_views": 613,
+  "points": 136388,
+  "accuracy": {},
+  "timing": {
+    "backend": 104.636,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.543423328621569,
+    "median": 0.4078073454975209,
+    "observations": 836687,
+    "points": 136388,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Alamo/posdk/points.ply",
+    "g2o": "public/onedsfm/Alamo/posdk/poses.g2o",
+    "metadata": "public/onedsfm/Alamo/posdk/result.json",
+    "reprojection": "public/onedsfm/Alamo/posdk/reprojection.json"
+  }
+}

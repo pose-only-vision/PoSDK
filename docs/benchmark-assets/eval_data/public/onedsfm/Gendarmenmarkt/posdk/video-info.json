@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Gendarmenmarkt",
+  "platform": "PoMVG",
+  "points": 96507,
+  "ply_sha256": "ea252146fb9c32f3f442126a7dd621b08827a1449ceb694f81bc70efe7cf55b8",
+  "original_video_sha256": "56401f1b95292c7dc77f6b10f472129ea97060499d6b7bde06782541532264d5",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 796,
+    "fps": 30.0,
+    "duration_seconds": 26.533333
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 796,
+    "fps": 30.0,
+    "duration_seconds": 26.533333
+  }
+}

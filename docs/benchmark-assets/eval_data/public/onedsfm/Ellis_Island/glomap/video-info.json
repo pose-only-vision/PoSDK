@@ -1,0 +1,22 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Ellis_Island",
+  "platform": "GLOMAP",
+  "points": 30035,
+  "ply_sha256": "35410fe6f2e146d73ca2aab2c6fa7b2b4e4d0bb082503ddb9e8df1781fd74618",
+  "original_video_sha256": "2afdc3c5cad87ac31892b1e2e71e5d35e3affaf6123781d6ea6af60ab87dbe0d",
+  "original": {
+    "width": 1920,
+    "height": 1080,
+    "frames": 432,
+    "fps": 30.0,
+    "duration_seconds": 14.4
+  },
+  "playback": {
+    "width": 672,
+    "height": 378,
+    "frames": 432,
+    "fps": 30.0,
+    "duration_seconds": 14.4
+  }
+}

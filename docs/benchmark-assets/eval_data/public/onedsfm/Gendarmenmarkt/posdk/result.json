@@ -1,0 +1,34 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Gendarmenmarkt",
+  "arm": "posdk",
+  "label": "PoMVG",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 742,
+  "registered_views": 742,
+  "points": 96507,
+  "accuracy": {},
+  "timing": {
+    "backend": 45.857,
+    "frontend": null,
+    "pipeline": null,
+    "frontend_reused": true
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.6793138833134544,
+    "median": 0.5300781909204719,
+    "observations": 378243,
+    "points": 96507,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Gendarmenmarkt/posdk/points.ply",
+    "g2o": "public/onedsfm/Gendarmenmarkt/posdk/poses.g2o",
+    "metadata": "public/onedsfm/Gendarmenmarkt/posdk/result.json",
+    "reprojection": "public/onedsfm/Gendarmenmarkt/posdk/reprojection.json"
+  }
+}

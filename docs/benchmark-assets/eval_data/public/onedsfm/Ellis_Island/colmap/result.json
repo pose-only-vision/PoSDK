@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Ellis_Island",
+  "arm": "colmap",
+  "label": "COLMAP",
+  "status": "succeeded",
+  "date": "2026-10-14",
+  "input_views": 247,
+  "registered_views": 218,
+  "points": 38350,
+  "accuracy": {},
+  "timing": {
+    "backend": 213.94640333298594,
+    "frontend": 3.421660708030686,
+    "pipeline": 218.26800287375227
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 1.0391477834664489,
+    "median": 0.8371497211889969,
+    "observations": 237482,
+    "points": 38350,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Ellis_Island/colmap/points.ply",
+    "g2o": "public/onedsfm/Ellis_Island/colmap/poses.g2o",
+    "metadata": "public/onedsfm/Ellis_Island/colmap/result.json",
+    "reprojection": "public/onedsfm/Ellis_Island/colmap/reprojection.json"
+  }
+}

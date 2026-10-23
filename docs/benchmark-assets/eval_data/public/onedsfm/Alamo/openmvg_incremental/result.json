@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Alamo",
+  "arm": "openmvg_incremental",
+  "label": "OpenMVG Incremental",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 627,
+  "registered_views": 548,
+  "points": 141585,
+  "accuracy": {},
+  "timing": {
+    "backend": 1279.6556384169962,
+    "frontend": 36.03092895774171,
+    "pipeline": 1339.2654995829798
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.6412151896425277,
+    "median": 0.45521139604018485,
+    "observations": 883649,
+    "points": 141585,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Alamo/openmvg_incremental/points.ply",
+    "g2o": "public/onedsfm/Alamo/openmvg_incremental/poses.g2o",
+    "metadata": "public/onedsfm/Alamo/openmvg_incremental/result.json",
+    "reprojection": "public/onedsfm/Alamo/openmvg_incremental/reprojection.json"
+  }
+}
