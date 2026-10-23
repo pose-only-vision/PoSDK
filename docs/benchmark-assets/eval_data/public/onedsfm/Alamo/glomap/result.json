@@ -1,0 +1,33 @@
+{
+  "dataset": "onedsfm",
+  "scene": "Alamo",
+  "arm": "glomap",
+  "label": "GLOMAP",
+  "status": "succeeded",
+  "date": "2026-10-16",
+  "input_views": 627,
+  "registered_views": 594,
+  "points": 83131,
+  "accuracy": {},
+  "timing": {
+    "backend": 231.96944637503475,
+    "frontend": 17.883577457861975,
+    "pipeline": 251.8613692917861
+  },
+  "reprojection": {
+    "status": "available",
+    "mean": 0.7281937391251826,
+    "median": 0.48335178567963644,
+    "observations": 707016,
+    "points": 83131,
+    "unit": "px",
+    "aggregation": "per_observation_euclidean",
+    "nonpositive_depth_observations": 0
+  },
+  "downloads": {
+    "ply": "public/onedsfm/Alamo/glomap/points.ply",
+    "g2o": "public/onedsfm/Alamo/glomap/poses.g2o",
+    "metadata": "public/onedsfm/Alamo/glomap/result.json",
+    "reprojection": "public/onedsfm/Alamo/glomap/reprojection.json"
+  }
+}

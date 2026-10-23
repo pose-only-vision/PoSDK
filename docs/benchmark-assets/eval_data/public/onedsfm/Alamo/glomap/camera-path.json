@@ -1,0 +1,187 @@
+{
+  "schema": "benchmark.camera-path.v1",
+  "trajectory": {
+    "coordinateSpace": "posdk.display-world",
+    "keyframes": [
+      {
+        "holdSeconds": 0,
+        "id": "51ab0b7e-3c7c-48e3-916a-d4da4d90130f",
+        "name": "View 01",
+        "transitionMode": "auto",
+        "transitionSeconds": 1.4462193670604389,
+        "view": {
+          "center": [
+            -0.19749753177165985,
+            -0.12964269518852234,
+            0.37416335940361023
+          ],
+          "distance": 0.6810070872306824,
+          "rotation": [
+            -0.04756296053528786,
+            -0.9067074656486511,
+            -0.06237204745411873,
+            0.4144021272659302
+          ],
+          "verticalFovDegrees": 45
+        }
+      },
+      {
+        "holdSeconds": 0,
+        "id": "1fa03622-1371-4a68-8192-9e8f4d6380a9",
+        "name": "View 02",
+        "transitionMode": "auto",
+        "transitionSeconds": 0.9775429202065196,
+        "view": {
+          "center": [
+            -0.19749753177165985,
+            -0.12964269518852234,
+            0.37416335940361023
+          ],
+          "distance": 0.6810070872306824,
+          "rotation": [
+            -0.09350762516260147,
+            -0.9854167103767395,
+            -0.035005949437618256,
+            -0.13778607547283173
+          ],
+          "verticalFovDegrees": 45
+        }
+      },
+      {
+        "holdSeconds": 0,
+        "id": "00ad048c-9743-4bc1-adf1-ad7047ff4aa6",
+        "name": "View 03",
+        "transitionMode": "auto",
+        "transitionSeconds": 1.1000288103038842,
+        "view": {
+          "center": [
+            -0.19749753177165985,
+            -0.12964269518852234,
+            0.37416335940361023
+          ],
+          "distance": 0.824018657207489,
+          "rotation": [
+            0.019363850355148315,
+            -0.9051511883735657,
+            0.00480152340605855,
+            -0.42462143301963806
+          ],
+          "verticalFovDegrees": 45
+        }
+      },
+      {
+        "holdSeconds": 0,
+        "id": "3298d258-213e-4991-b8cd-de8bf652f358",
+        "name": "View 04",
+        "transitionMode": "auto",
+        "transitionSeconds": 1.4790177939120008,
+        "view": {
+          "center": [
+            -0.19749753177165985,
+            -0.12964269518852234,
+            0.37416335940361023
+          ],
+          "distance": 0.3844106197357178,
+          "rotation": [
+            0.017428917810320854,
+            -0.8804836273193359,
+            0.002593143144622445,
+            -0.4737488627433777
+          ],
+          "verticalFovDegrees": 45
+        }
+      },
+      {
+        "holdSeconds": 1,
+        "id": "d9fd1084-45e7-40a6-b90c-d5040e585de8",
+        "name": "View 05",
+        "transitionMode": "auto",
+        "transitionSeconds": 1.0729600186114228,
+        "view": {
+          "center": [
+            -0.19749753177165985,
+            -0.12964269518852234,
+            0.37416335940361023
+          ],
+          "distance": 0.3844106197357178,
+          "rotation": [
+            -0.03258604556322098,
+            -0.9947081804275513,
+            -0.05178024619817734,
+            0.08253949135541916
+          ],
+          "verticalFovDegrees": 45
+        }
+      },
+      {
+        "holdSeconds": 0,
+        "id": "17e4d21a-60a4-4540-ae2e-2589a2625a1c",
+        "name": "View 06",
+        "transitionMode": "auto",
+        "transitionSeconds": 3.279694986492576,
+        "view": {
+          "center": [
+            -0.2824743688106537,
+            -0.12526434659957886,
+            0.42446082830429077
+          ],
+          "distance": 0.3844106197357178,
+          "rotation": [
+            0.01744418777525425,
+            -0.8760105967521667,
+            -0.0403328575193882,
+            0.4802858233451843
+          ],
+          "verticalFovDegrees": 45
+        }
+      },
+      {
+        "holdSeconds": 0,
+        "id": "b1f82a93-2fe6-4005-9c1d-516c80997988",
+        "name": "View 07",
+        "transitionMode": "auto",
+        "transitionSeconds": 8,
+        "view": {
+          "center": [
+            -0.2824743688106537,
+            -0.12526434659957886,
+            0.42446082830429077
+          ],
+          "distance": 1.9429924488067627,
+          "rotation": [
+            0.11879416555166245,
+            -0.978833019733429,
+            -0.029166489839553833,
+            0.16408246755599976
+          ],
+          "verticalFovDegrees": 45
+        }
+      },
+      {
+        "holdSeconds": 0,
+        "id": "95cb42ad-14ce-45f2-a017-d4ab8b2538ab",
+        "name": "View 08",
+        "transitionMode": "auto",
+        "transitionSeconds": 0.75,
+        "view": {
+          "center": [
+            -0.2824742794036865,
+            -0.12526431679725647,
+            0.4244610071182251
+          ],
+          "distance": 9.820799827575684,
+          "rotation": [
+            0.13202562928199768,
+            -0.9680622816085815,
+            -0.11279168725013733,
+            0.18083932995796204
+          ],
+          "verticalFovDegrees": 45
+        }
+      }
+    ],
+    "loop": false,
+    "referenceSceneScale": 1.2676897048950195,
+    "schemaVersion": 1
+  }
+}
