@@ -1,9 +1,15 @@
-# PoSDK for Spatial Visual Computing
+# PoMVG for Spatial Visual Computing
+
+**Author: Qi Cai**
+
+PoMVG provides the visual-geometry GUI and development tools built on the PoSDK plugin framework.
+
+**Latest GUI release: [PoMVG v2.1.2](https://github.com/pose-only-vision/PoSDK/releases/tag/v2.1.2)** · [macOS download](https://posdk.net/#download) · [Changelog / 更新说明](https://github.com/pose-only-vision/PoSDK/releases/tag/v2.1.2)
 
 <div align="center">
 
 <!-- Main Project Logo -->
-<img src="docs/_images/readme.png" alt="PoSDK for Spatial Visual Computing" width="600"/>
+<img src="docs/_images/readme.png" alt="PoMVG for Spatial Visual Computing" width="600"/>
  
 | License                                                                               | Documentation                                                                                            | Continuous Integration                                               | Build                                                                                                      | Code Quality                                                                             | Chat                                                                     |
 | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
@@ -14,7 +20,7 @@
 
 ## Our Vision
 
-PoSDK is designed for **Spatial Visual Computing** applications including camera pose estimation, feature point cloud generation, and advanced 3D reconstruction workflows. Built on innovative **Pose-only Imaging Geometry** theory, PoSDK provides efficient and robust solutions for lightweight, embedded vision computing applications such as robotic navigation, spatial computing, and mixed reality systems.
+PoMVG is designed for **Spatial Visual Computing** applications including camera pose estimation, feature point cloud generation, and advanced 3D reconstruction workflows. Built on innovative **Pose-only Imaging Geometry** theory, PoMVG provides efficient and robust solutions for lightweight, embedded vision computing applications such as robotic navigation, spatial computing, and mixed reality systems.
 
 ## Key Features
 
@@ -28,10 +34,10 @@ PoSDK is designed for **Spatial Visual Computing** applications including camera
 
 ## Architecture Overview
 
-PoSDK employs a comprehensive architecture design that integrates multiple components from data preprocessing to core computation engine:
+PoMVG employs a comprehensive architecture design that integrates multiple components from data preprocessing to core computation engine:
 
 <div align="center">
-<img src="docs/source/_static/structure.png" alt="PoSDK Architecture Overview" width="600"/>
+<img src="docs/source/_static/structure.png" alt="PoMVG Architecture Overview" width="600"/>
 </div>
 
 The architecture demonstrates the complete workflow from input processing through various specialized modules to final platform integration:
@@ -70,14 +76,14 @@ cd docs && ./install_docs.sh
 
 ## LiRPpaper Workflows for Testing
 
-The PoSDK macOS arm64 release includes two built-in workflows for LiRPpaper
+The PoMVG macOS arm64 release includes two built-in workflows for LiRPpaper
 testing:
 
 - **LiRPpaper-Strecha** — test workflow for the Strecha dataset
   (`castle-P30` by default).
 - **LiRPpaper-ETH3D** — test workflow for ETH3D (`facade` by default).
 
-You can run them directly from the signed PoSDK 2.0.0 GUI DMG; no source build
+You can run them directly from the signed and notarized PoMVG 2.1.2 GUI DMG; no source build
 is needed. Open the dataset loader module in Behavior Workspace to download a
 dataset or open its official download page, then associate the downloaded root
 directory with that node.
@@ -106,7 +112,7 @@ cd PoSDK
 
 **Features:**
 - **Resume Installation** - Re-run `./install.sh` if network timeouts occur
-- **Automated Setup** - Downloads dependencies, builds PoSDK, and prepares test data
+- **Automated Setup** - Downloads dependencies, builds PoMVG, and prepares test data
 **For Poor Network Conditions:**
 If automatic download fails, manually download the matching dependency assets
 from [GitHub Releases](https://github.com/pose-only-vision/PoSDK/releases) and
@@ -130,7 +136,7 @@ make -j$(nproc)
 
 ### Output Results 
 
-PoSDK generates comprehensive results in the working directory:
+PoMVG generates comprehensive results in the working directory:
 
 #### Directory Structure 
 - **`globalsfm_pipeline_work/`** - Main working directory (configured in `globalsfm_pipeline.ini`)
@@ -160,20 +166,20 @@ Traditional computer vision methods often face challenges when dealing with larg
 
 ## Platform Integration & Benchmarking 
 
-PoSDK provides comprehensive comparison with mainstream 3D reconstruction platforms:
+PoMVG provides comprehensive comparison with mainstream 3D reconstruction platforms:
 
 | Platform    | Focus                       | Integration Status    |
 | ----------- | --------------------------- | --------------------- |
 | **OpenMVG** | Classic Multi-View Geometry | Fully Integrated      |
 | **COLMAP**  | Industry-leading SfM/MVS    | Fully Integrated      |
 | **GLOMAP**  | Global Optimization SfM     | Fully Integrated      |
-| **PoSDK**   | Pose-only Geometry          | Native Implementation |
+| **PoMVG**   | Pose-only Geometry          | Native Implementation |
 
 **[View Detailed Benchmark Results →](https://posdk.readthedocs.io/en/latest/benchmark_comparison/)**
 
 ## Research Foundation 
 
-PoSDK is built on peer-reviewed research in pose-only imaging geometry:
+PoMVG is built on peer-reviewed research in pose-only imaging geometry:
 
 ### Key Publications
 
@@ -209,7 +215,7 @@ PoSDK is built on peer-reviewed research in pose-only imaging geometry:
 
 ## License Compliance
 
-If you identify any open-source license compliance issues with PoSDK, please notify us immediately through [GitHub Issues](https://github.com/pose-only-vision/PoSDK/issues). We are committed to maintaining compliance with all open-source licenses and will address any concerns promptly.
+If you identify any open-source license compliance issues with PoMVG, please notify us immediately through [GitHub Issues](https://github.com/pose-only-vision/PoSDK/issues). We are committed to maintaining compliance with all open-source licenses and will address any concerns promptly.
 
 ## Community & Support 
 
